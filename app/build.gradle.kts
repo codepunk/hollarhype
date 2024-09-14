@@ -84,4 +84,21 @@ dependencies {
 
     // Compose navigation
     implementation(libs.navigation.compose)
+
+    // Arrow
+    implementation(libs.arrow.core)
+    implementation(libs.arrow.core.retrofit)
+    implementation(libs.arrow.fx.coroutines)
+
+    // Okhttp
+    implementation(libs.okhttp)
+
+    // Retrofit
+    implementation(libs.retrofit)
+
+    // Room
+    implementation(libs.room.ktx)
+    implementation(libs.room.runtime)
+    ksp(libs.room.compiler)
+    implementation(libs.room.paging)
 }
