@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">HollarHype</string>
+
+    <string name="activity">Activity</string>
+    <string name="go_live">Go Live</string>
+    <string name="hype">Hype</string>
+    <string name="groups">Groups</string>
+
+    <string name="content_description_logo">Hollarhype logo</string>
+</resources>
