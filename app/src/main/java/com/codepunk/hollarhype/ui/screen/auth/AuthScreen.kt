@@ -21,8 +21,7 @@ fun AuthScreen(
         modifier = modifier,
         topBar = {
             HHTopAppBar()
-        },
-        containerColor = MaterialTheme.colorScheme.background
+        }
     ) { innerPadding ->
         Box(
             modifier = Modifier
