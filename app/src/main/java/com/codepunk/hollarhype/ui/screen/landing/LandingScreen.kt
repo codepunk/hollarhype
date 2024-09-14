@@ -1,4 +1,4 @@
-package com.codepunk.hollarhype.ui.screen.activity
+package com.codepunk.hollarhype.ui.screen.landing
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -13,7 +13,7 @@ import com.codepunk.hollarhype.ui.component.HHTopAppBar
 import com.codepunk.hollarhype.ui.theme.HollarhypeTheme
 
 @Composable
-fun ActivityScreen(
+fun LandingScreen(
     modifier: Modifier = Modifier
 ) {
     Scaffold(
@@ -28,7 +28,7 @@ fun ActivityScreen(
                 .padding(innerPadding),
             contentAlignment = Alignment.Center
         ) {
-            Greeting(name = "Activity")
+            Greeting(name = "Landing")
         }
     }
 }
@@ -43,16 +43,16 @@ fun Greeting(name: String, modifier: Modifier = Modifier) {
 
 @Preview
 @Composable
-fun ActivityScreenPreviewDark() {
+fun LandingScreenPreviewDark() {
     HollarhypeTheme(darkTheme = true) {
-        ActivityScreen()
+        LandingScreen()
     }
 }
 
 @Preview
 @Composable
-fun ActivityScreenPreviewLight() {
+fun LandingScreenPreviewLight() {
     HollarhypeTheme(darkTheme = false) {
-        ActivityScreen()
+        LandingScreen()
     }
 }

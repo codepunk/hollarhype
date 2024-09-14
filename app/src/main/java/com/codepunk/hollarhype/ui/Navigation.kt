@@ -5,7 +5,7 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.codepunk.hollarhype.ui.screen.home.HomeScreen
+import com.codepunk.hollarhype.ui.screen.auth.AuthScreen
 
 @Composable
 fun Navigation(
@@ -16,10 +16,10 @@ fun Navigation(
     NavHost(
         modifier = modifier,
         navController = navController,
-        startDestination = Route.Home
+        startDestination = Route.Auth
     ) {
-        composable<Route.Home> {
-            HomeScreen()
+        composable<Route.Auth> {
+            AuthScreen()
         }
     }
 }

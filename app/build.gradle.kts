@@ -36,19 +36,47 @@ android {
             )
         }
     }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
     }
+
     kotlinOptions {
         jvmTarget = "17"
     }
+
+    flavorDimensions += "version"
+
+    productFlavors {
+        create("production") {
+            dimension = "version"
+            buildConfigField(
+                type = "String",
+                name = "BASE_URL",
+                value = "\"https://api.hollarhype.com/\""
+            )
+        }
+        create("staging") {
+            dimension = "version"
+            applicationIdSuffix = ".staging"
+            buildConfigField(
+                type = "String",
+                name = "BASE_URL",
+                value = "\"https://api-stg.hollarhype.com/\""
+            )
+        }
+    }
+
     buildFeatures {
+        buildConfig = true
         compose = true
     }
+
     composeOptions {
         kotlinCompilerExtensionVersion = "1.5.1"
     }
+
     packaging {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
