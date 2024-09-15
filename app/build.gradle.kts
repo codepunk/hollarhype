@@ -1,3 +1,5 @@
+import com.android.builder.core.apiVersionFromString
+
 plugins {
     // Supplied by New Project template
     alias(libs.plugins.android.application)
@@ -15,6 +17,7 @@ android {
     compileSdk = 34
 
     defaultConfig {
+        val appName = "Hollarhype"
         applicationId = "com.codepunk.hollarhype"
         minSdk = 24
         targetSdk = 34
@@ -25,6 +28,18 @@ android {
         vectorDrawables {
             useSupportLibrary = true
         }
+
+        buildConfigField(
+            type = "String",
+            name = "APPLICATION_NAME",
+            value = "\"hollarhype\""
+        )
+
+        buildConfigField(
+            type = "long",
+            name = "OK_HTTP_CLIENT_CACHE_SIZE",
+            value = "10 * 1024 * 1024"
+        )
     }
 
     buildTypes {
@@ -109,9 +124,11 @@ dependencies {
 
     // Serialization
     implementation(libs.kotlinx.serialization)
+    implementation(libs.kotlinx.serialization.converter)
 
     // Compose navigation
     implementation(libs.navigation.compose)
+    implementation(libs.hilt.navigation.compose)
 
     // Arrow
     implementation(libs.arrow.core)

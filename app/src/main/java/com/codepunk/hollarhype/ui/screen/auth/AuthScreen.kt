@@ -3,7 +3,6 @@ package com.codepunk.hollarhype.ui.screen.auth
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -15,7 +14,9 @@ import com.codepunk.hollarhype.ui.theme.HollarhypeTheme
 
 @Composable
 fun AuthScreen(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    state: AuthState,
+    onEvent: (AuthEvent) -> Unit = {}
 ) {
     Scaffold(
         modifier = modifier,
@@ -46,7 +47,9 @@ fun Greeting(name: String, modifier: Modifier = Modifier) {
 @Composable
 fun AuthScreenPreviewDark() {
     HollarhypeTheme(darkTheme = true) {
-        AuthScreen()
+        AuthScreen(
+            state = AuthState()
+        )
     }
 }
 
@@ -54,6 +57,8 @@ fun AuthScreenPreviewDark() {
 @Composable
 fun AuthScreenPreviewLight() {
     HollarhypeTheme(darkTheme = false) {
-        AuthScreen()
+        AuthScreen(
+            state = AuthState()
+        )
     }
 }

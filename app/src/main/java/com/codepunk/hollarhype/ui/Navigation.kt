@@ -2,10 +2,13 @@ package com.codepunk.hollarhype.ui
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.codepunk.hollarhype.ui.screen.auth.AuthScreen
+import com.codepunk.hollarhype.ui.screen.auth.AuthState
+import com.codepunk.hollarhype.ui.screen.auth.AuthViewModel
 
 @Composable
 fun Navigation(
@@ -19,7 +22,13 @@ fun Navigation(
         startDestination = Route.Auth
     ) {
         composable<Route.Auth> {
-            AuthScreen()
+            val viewModel: AuthViewModel = hiltViewModel()
+            AuthScreen(
+                modifier = modifier,
+                state = AuthState(mode = AuthState.Mode.INITIAL)
+            ) { event ->
+                viewModel.onEvent(event)
+            }
         }
     }
 }
