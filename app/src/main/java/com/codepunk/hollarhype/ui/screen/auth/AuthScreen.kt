@@ -30,7 +30,7 @@ fun AuthScreen(
                 .padding(innerPadding),
             contentAlignment = Alignment.Center
         ) {
-            Greeting(name = "Auth")
+            Greeting(name = state.mode.toString())
         }
     }
 }

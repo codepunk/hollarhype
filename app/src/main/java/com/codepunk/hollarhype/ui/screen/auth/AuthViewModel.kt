@@ -31,19 +31,19 @@ class AuthViewModel @Inject constructor(
     // region Methods
 
     private fun showAuthOptions() {
-        // TODO
+        state = state.copy(mode = AuthState.Mode.SHOW_AUTH_OPTIONS)
     }
 
     private fun showSignUp() {
-        // TODO
+        state = state.copy(mode = AuthState.Mode.SHOW_SIGN_IN)
     }
 
     private fun showSignIn() {
-        // TODO
+        state = state.copy(mode = AuthState.Mode.SHOW_SIGN_IN)
     }
 
     private fun authenticate() {
-        // TODO
+        state = state.copy(mode = AuthState.Mode.AUTHENTICATING)
     }
 
     fun onEvent(event: AuthEvent) {

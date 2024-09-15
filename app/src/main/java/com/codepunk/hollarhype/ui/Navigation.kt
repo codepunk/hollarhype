@@ -7,7 +7,6 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.codepunk.hollarhype.ui.screen.auth.AuthScreen
-import com.codepunk.hollarhype.ui.screen.auth.AuthState
 import com.codepunk.hollarhype.ui.screen.auth.AuthViewModel
 
 @Composable
@@ -25,7 +24,7 @@ fun Navigation(
             val viewModel: AuthViewModel = hiltViewModel()
             AuthScreen(
                 modifier = modifier,
-                state = AuthState(mode = AuthState.Mode.INITIAL)
+                state = viewModel.state
             ) { event ->
                 viewModel.onEvent(event)
             }
