@@ -49,6 +49,5 @@ fun AuthNavigation(
                 onEvent = onEvent
             )
         }
-
     }
 }

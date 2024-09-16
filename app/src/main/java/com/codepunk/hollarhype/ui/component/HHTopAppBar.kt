@@ -31,7 +31,7 @@ fun HHTopAppBar(
                 contentAlignment = Alignment.Center
             ) {
                 Image(
-                    painter = painterResource(id = R.drawable.navigation_bar_icon),
+                    painter = painterResource(id = R.drawable.app_bar_icon),
                     contentDescription = stringResource(id = R.string.content_description_logo)
                 )
             }
