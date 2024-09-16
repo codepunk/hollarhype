@@ -15,6 +15,7 @@ plugins {
 android {
     namespace = "com.codepunk.hollarhype"
     compileSdk = 35
+    compileSdkPreview = "VanillaIceCream"
 
     defaultConfig {
         applicationId = "com.codepunk.hollarhype"
@@ -150,4 +151,8 @@ dependencies {
     implementation(libs.room.runtime)
     ksp(libs.room.compiler)
     implementation(libs.room.paging)
+
+    // Credentials
+    implementation(libs.credentials.play.services.auth)
+    implementation(libs.credentials)
 }

@@ -25,6 +25,7 @@ arrow = "1.2.4"
 okhttp = "4.12.0"
 retrofit = "2.11.0"
 room = "2.6.1"
+credentials = "1.5.0-alpha02"
 
 [libraries]
 # Supplied by New Project template
@@ -62,6 +63,8 @@ room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "room" }
 room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "room" }
 room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room" }
 room-paging = { group = "androidx.room", name = "room-paging", version.ref = "room" }
+credentials-play-services-auth = { group = "androidx.credentials", name = "credentials-play-services-auth", version.ref = "credentials" }
+credentials = { group = "androidx.credentials", name = "credentials", version.ref = "credentials" }
 
 [plugins]
 # Supplied by New Project template
