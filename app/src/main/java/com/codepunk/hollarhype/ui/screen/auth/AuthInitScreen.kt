@@ -45,8 +45,9 @@ fun AuthInitScreen(
 @Composable
 fun AuthInitScreenPreviewDark() {
     HollarhypeTheme(darkTheme = true) {
-        Scaffold {
+        Scaffold { padding ->
             AuthInitScreen(
+                modifier = Modifier.padding(padding),
                 state = AuthState()
             )
         }
@@ -59,8 +60,9 @@ fun AuthInitScreenPreviewDark() {
 @Composable
 fun AuthInitScreenPreviewLight() {
     HollarhypeTheme(darkTheme = false) {
-        Scaffold {
+        Scaffold { padding ->
             AuthInitScreen(
+                modifier = Modifier.padding(padding),
                 state = AuthState()
             )
         }
@@ -74,8 +76,9 @@ fun AuthInitScreenPreviewLight() {
 @Composable
 fun AuthInitScreenPreviewTabletLight() {
     HollarhypeTheme(darkTheme = false) {
-        Scaffold {
+        Scaffold { padding ->
             AuthInitScreen(
+                modifier = Modifier.padding(padding),
                 state = AuthState()
             )
         }
