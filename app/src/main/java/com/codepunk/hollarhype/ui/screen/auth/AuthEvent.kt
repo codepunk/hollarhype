@@ -4,5 +4,5 @@ sealed interface AuthEvent {
     data object ShowAuthOptions: AuthEvent
     data object ShowSignUp: AuthEvent
     data object ShowSignIn: AuthEvent
-    data object Authenticate: AuthEvent
+    data object Initialize: AuthEvent
 }

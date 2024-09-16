@@ -43,12 +43,12 @@ class AuthViewModel @Inject constructor(
     }
 
     private fun authenticate() {
-        state = state.copy(mode = AuthState.Mode.AUTHENTICATING)
+        state = state.copy(mode = AuthState.Mode.INITIALIZING)
     }
 
     fun onEvent(event: AuthEvent) {
         when (event) {
-            AuthEvent.Authenticate -> authenticate()
+            AuthEvent.Initialize -> authenticate()
             AuthEvent.ShowAuthOptions -> showAuthOptions()
             AuthEvent.ShowSignIn -> showSignIn()
             AuthEvent.ShowSignUp -> showSignUp()
