@@ -14,13 +14,12 @@ plugins {
 
 android {
     namespace = "com.codepunk.hollarhype"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
-        val appName = "Hollarhype"
         applicationId = "com.codepunk.hollarhype"
         minSdk = 24
-        targetSdk = 34
+        targetSdk = 35
         versionCode = 1
         versionName = "1.0"
 
@@ -118,6 +117,11 @@ dependencies {
     debugImplementation(libs.androidx.ui.test.manifest)
 
     // Added by Hollarhype
+    // Material 3 Adaptive
+    implementation(libs.material3.adaptive)
+    implementation(libs.material3.adaptive.layout)
+    implementation(libs.material3.adaptive.navigation)
+
     // Hilt
     implementation(libs.hilt)
     ksp(libs.hilt.compiler)
