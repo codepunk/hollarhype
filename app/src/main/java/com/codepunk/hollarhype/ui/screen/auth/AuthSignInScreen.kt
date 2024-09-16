@@ -17,6 +17,6 @@ fun AuthSignInScreen(
             .fillMaxSize(),
         contentAlignment = Alignment.Center
     ) {
-        Greeting(name = state.mode.toString())
+        Greeting(name = "Sign In")
     }
 }

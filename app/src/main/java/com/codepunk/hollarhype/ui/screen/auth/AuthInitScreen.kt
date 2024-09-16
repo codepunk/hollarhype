@@ -24,18 +24,22 @@ fun AuthInitScreen(
     state: AuthState,
     onEvent: (AuthEvent) -> Unit = {}
 ) {
-    val imageWidth = responsiveLayoutWidth(columns = 4)
-    Box(
-        modifier = modifier.fillMaxSize()
-    ) {
-        Image(
-            modifier = Modifier
-                .width(imageWidth)
-                .padding(start = largePadding, end = largePadding)
-                .align(Alignment.Center),
-            painter = painterResource(R.drawable.hh_logo),
-            contentDescription = stringResource(id = R.string.app_name)
-        )
+    if (state.navigateToAuthOptions) {
+        onEvent(AuthEvent.NavigateToAuthOptions)
+    } else {
+        val imageWidth = responsiveLayoutWidth(columns = 4)
+        Box(
+            modifier = modifier.fillMaxSize()
+        ) {
+            Image(
+                modifier = Modifier
+                    .width(imageWidth)
+                    .padding(start = largePadding, end = largePadding)
+                    .align(Alignment.Center),
+                painter = painterResource(R.drawable.hh_logo),
+                contentDescription = stringResource(id = R.string.app_name)
+            )
+        }
     }
 }
 

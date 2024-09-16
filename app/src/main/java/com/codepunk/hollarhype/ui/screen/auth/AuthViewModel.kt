@@ -4,9 +4,13 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.credentials.CredentialManager
+import androidx.credentials.GetCredentialRequest
+import androidx.credentials.GetPasswordOption
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.codepunk.hollarhype.domain.repository.HollarhypeRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -25,6 +29,9 @@ class AuthViewModel @Inject constructor(
     // region Constructors
 
     init {
+        val getCredentialRequest = GetCredentialRequest(
+            credentialOptions = listOf(GetPasswordOption())
+        )
         authenticate()
     }
 
@@ -32,29 +39,38 @@ class AuthViewModel @Inject constructor(
 
     // region Methods
 
-    private fun showAuthOptions() {
-        state = state.copy(mode = AuthState.Mode.SHOW_AUTH_OPTIONS)
+    private fun navigateToAuthOptions() {
+        state = state.copy(navigateToAuthOptions = true)
     }
 
-    private fun showSignUp() {
-        state = state.copy(mode = AuthState.Mode.SHOW_SIGN_IN)
+    private fun navigateToSignUp() {
+
     }
 
-    private fun showSignIn() {
-        state = state.copy(mode = AuthState.Mode.SHOW_SIGN_IN)
+    private fun navigateToSignIn() {
+
     }
 
     private fun authenticate() {
-        state = state.copy(mode = AuthState.Mode.INITIALIZING)
-
+        viewModelScope.launch {
+            // TODO Try to auto sign in here
+            val success = false
+            if (success) {
+                // Navigate to landing (in main Navigation)
+            } else {
+                // Navigate to auth options
+                //state = state.copy(navigateToAuthOptions = true)
+                navigateToAuthOptions()
+            }
+        }
     }
 
     fun onEvent(event: AuthEvent) {
         when (event) {
             AuthEvent.Initialize -> authenticate()
-            AuthEvent.ShowAuthOptions -> showAuthOptions()
-            AuthEvent.ShowSignIn -> showSignIn()
-            AuthEvent.ShowSignUp -> showSignUp()
+            AuthEvent.NavigateToAuthOptions -> navigateToAuthOptions()
+            AuthEvent.NavigateToSignIn -> navigateToSignIn()
+            AuthEvent.NavigateToSignUp -> navigateToSignUp()
         }
     }
 

@@ -24,9 +24,19 @@ fun AuthNavigation(
     ) {
         composable<AuthRoute.AuthInit> {
             AuthInitScreen(
-                state = state,
-                onEvent = onEvent
-            )
+                state = state
+            ) { event ->
+                when (event) {
+                    is AuthEvent.NavigateToAuthOptions -> {
+                        // TODO This seems a little weird that two different
+                        //  "things" are processing these events. There should be
+                        //  just one.
+                        onEvent(event)
+                        navController.navigate(AuthRoute.AuthOptions)
+                    }
+                    else -> onEvent(event)
+                }
+            }
         }
 
         composable<AuthRoute.AuthOptions> {

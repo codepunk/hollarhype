@@ -26,6 +26,9 @@ fun Navigation(
                 modifier = modifier,
                 state = viewModel.state
             ) { event ->
+                // So the thing is, when we want to actually navigate
+                // AWAY from auth and into Landing, how do we do that?
+                // I guess we also need an AuthEvent.NavigateToLanding
                 viewModel.onEvent(event)
             }
         }

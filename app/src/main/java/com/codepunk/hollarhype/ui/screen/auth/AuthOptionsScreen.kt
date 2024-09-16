@@ -17,6 +17,6 @@ fun AuthOptionsScreen(
             .fillMaxSize(),
         contentAlignment = Alignment.Center
     ) {
-        Greeting(name = state.mode.toString())
+        Greeting(name = "Options")
     }
 }
