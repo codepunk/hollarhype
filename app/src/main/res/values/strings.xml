@@ -10,4 +10,10 @@
 
     <string name="sign_up">Sign Up</string>
     <string name="sign_in">Sign In</string>
+
+    <string name="first_name">First Name</string>
+    <string name="last_name">Last Name</string>
+    <string name="email_address">Email Address</string>
+    <string name="phone_number">Phone Number</string>
+    <string name="disclaimer">By providing your phone number you agree to receive texts from HollarHype containing a one-time password for authentication. We will not text you for any other reason.</string>
 </resources>
