@@ -27,7 +27,6 @@ import com.codepunk.hollarhype.domain.model.User
 import com.codepunk.hollarhype.ui.theme.HollarhypeTheme
 import com.codepunk.hollarhype.ui.theme.buttonCornerRadius
 import com.codepunk.hollarhype.ui.theme.largePadding
-import com.codepunk.hollarhype.ui.theme.mediumPadding
 import com.codepunk.hollarhype.ui.theme.responsiveColumnWidth
 
 @Composable
@@ -41,7 +40,7 @@ fun AuthOptionsScreen(
             .fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(
-            space = mediumPadding,
+            space = largePadding,
             alignment = Alignment.CenterVertically
         )
     ) {
