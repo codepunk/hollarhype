@@ -7,11 +7,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.codepunk.hollarhype.ui.component.HHTopAppBar
 import com.codepunk.hollarhype.ui.theme.HollarhypeTheme
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 
 @Composable
 fun AuthScreen(
     modifier: Modifier = Modifier,
-    state: AuthState,
+    stateFlow: StateFlow<AuthState>,
     onEvent: (AuthEvent) -> Unit = {}
 ) {
     Scaffold(
@@ -22,7 +25,7 @@ fun AuthScreen(
     ) { innerPadding ->
         AuthNavigation(
             paddingValues = innerPadding,
-            state = state,
+            stateFlow = stateFlow,
             onEvent = onEvent
         )
     }
@@ -44,7 +47,7 @@ fun Greeting(
 fun AuthScreenPreviewDark() {
     HollarhypeTheme(darkTheme = true) {
         AuthScreen(
-            state = AuthState()
+            stateFlow = MutableStateFlow(AuthState()).asStateFlow()
         )
     }
 }
@@ -54,7 +57,7 @@ fun AuthScreenPreviewDark() {
 fun AuthScreenPreviewLight() {
     HollarhypeTheme(darkTheme = false) {
         AuthScreen(
-            state = AuthState()
+            stateFlow = MutableStateFlow(AuthState()).asStateFlow()
         )
     }
 }

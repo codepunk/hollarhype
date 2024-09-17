@@ -24,7 +24,7 @@ fun Navigation(
             val viewModel: AuthViewModel = hiltViewModel()
             AuthScreen(
                 modifier = modifier,
-                state = viewModel.state
+                stateFlow = viewModel.stateFlow
             ) { event ->
                 // So the thing is, when we want to actually navigate
                 // AWAY from auth and into Landing, how do we do that?

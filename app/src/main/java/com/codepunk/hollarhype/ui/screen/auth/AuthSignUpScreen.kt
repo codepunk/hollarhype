@@ -5,11 +5,12 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import kotlinx.coroutines.flow.StateFlow
 
 @Composable
 fun AuthSignUpScreen(
     modifier: Modifier = Modifier,
-    state: AuthState,
+    stateFlow: StateFlow<AuthState>,
     onEvent: (AuthEvent) -> Unit = {}
 ) {
     Box(

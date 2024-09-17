@@ -1,15 +1,18 @@
 package com.codepunk.hollarhype.ui.screen.auth
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.credentials.CredentialManager
 import androidx.credentials.GetCredentialRequest
 import androidx.credentials.GetPasswordOption
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import arrow.core.Either
+import arrow.core.left
+import arrow.eval.Eval
+import com.codepunk.hollarhype.domain.model.User
 import com.codepunk.hollarhype.domain.repository.HollarhypeRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -21,8 +24,10 @@ class AuthViewModel @Inject constructor(
 
     // region Variables
 
-    var state by mutableStateOf(AuthState())
-        private set
+    // We use StateFlow here instead of State/mutableStateOf to keep Compose-related
+    // constructs out of ViewModel
+    private val _stateFlow: MutableStateFlow<AuthState> = MutableStateFlow(AuthState())
+    val stateFlow = _stateFlow.asStateFlow()
 
     // endregion Variables
 
@@ -40,7 +45,7 @@ class AuthViewModel @Inject constructor(
     // region Methods
 
     private fun navigateToAuthOptions() {
-        state = state.copy(navigateToAuthOptions = true)
+
     }
 
     private fun navigateToSignUp() {
@@ -54,15 +59,26 @@ class AuthViewModel @Inject constructor(
     private fun authenticate() {
         viewModelScope.launch {
             // TODO Try to auto sign in here
-            val success = false
-            if (success) {
-                // Navigate to landing (in main Navigation)
-            } else {
-                // Navigate to auth options
-                //state = state.copy(navigateToAuthOptions = true)
-                navigateToAuthOptions()
+            val user = Eval.later {
+                val authenticatedUser = IllegalStateException("No user").left()
+                // If we got to this point, authenticated user was just "consumed"
+                onConsumeAuthenticatedUser(authenticatedUser)
+                authenticatedUser
             }
+            _stateFlow.value = _stateFlow.value.copy(
+                authenticatedUser = user
+            )
         }
+    }
+
+    private fun onConsumeAuthenticatedUser(
+        authenticatedUser: Either<Throwable, User>
+    ) {
+        // Authenticated user was just consumed, setting it to an Eval.Now
+        // will mark it as consumed
+        _stateFlow.value = _stateFlow.value.copy(
+            authenticatedUser = Eval.now(authenticatedUser),
+        )
     }
 
     fun onEvent(event: AuthEvent) {

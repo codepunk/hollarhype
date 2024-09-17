@@ -7,12 +7,13 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import kotlinx.coroutines.flow.StateFlow
 
 @Composable
 fun AuthNavigation(
     modifier: Modifier = Modifier,
     paddingValues: PaddingValues,
-    state: AuthState,
+    stateFlow: StateFlow<AuthState>,
     onEvent: (AuthEvent) -> Unit = {}
 ) {
     val navController = rememberNavController()
@@ -24,16 +25,17 @@ fun AuthNavigation(
     ) {
         composable<AuthRoute.AuthInit> {
             AuthInitScreen(
-                state = state
+                stateFlow = stateFlow
             ) { event ->
+                // Pass navigation events up to navController, everything else
+                // will fall through to AuthViewModel
                 when (event) {
-                    is AuthEvent.NavigateToAuthOptions -> {
-                        // TODO This seems a little weird that two different
-                        //  "things" are processing these events. There should be
-                        //  just one.
-                        onEvent(event)
+                    is AuthEvent.NavigateToAuthOptions ->
                         navController.navigate(AuthRoute.AuthOptions)
-                    }
+                    is AuthEvent.NavigateToSignUp ->
+                        navController.navigate(AuthRoute.AuthSignUp)
+                    is AuthEvent.NavigateToSignIn ->
+                        navController.navigate(AuthRoute.AuthSignIn)
                     else -> onEvent(event)
                 }
             }
@@ -41,21 +43,21 @@ fun AuthNavigation(
 
         composable<AuthRoute.AuthOptions> {
             AuthOptionsScreen(
-                state = state,
+                stateFlow = stateFlow,
                 onEvent = onEvent
             )
         }
 
         composable<AuthRoute.AuthSignUp> {
             AuthSignUpScreen(
-                state = state,
+                stateFlow = stateFlow,
                 onEvent = onEvent
             )
         }
 
         composable<AuthRoute.AuthSignIn> {
             AuthSignInScreen(
-                state = state,
+                stateFlow = stateFlow,
                 onEvent = onEvent
             )
         }

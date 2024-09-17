@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -17,29 +18,41 @@ import com.codepunk.hollarhype.R
 import com.codepunk.hollarhype.ui.theme.HollarhypeTheme
 import com.codepunk.hollarhype.ui.theme.largePadding
 import com.codepunk.hollarhype.ui.util.responsiveLayoutWidth
+import com.codepunk.hollarhype.util.consume
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 
 @Composable
 fun AuthInitScreen(
     modifier: Modifier = Modifier,
-    state: AuthState,
+    stateFlow: StateFlow<AuthState>,
     onEvent: (AuthEvent) -> Unit = {}
 ) {
-    if (state.navigateToAuthOptions) {
-        onEvent(AuthEvent.NavigateToAuthOptions)
-    } else {
-        val imageWidth = responsiveLayoutWidth(columns = 4)
-        Box(
-            modifier = modifier.fillMaxSize()
-        ) {
-            Image(
-                modifier = Modifier
-                    .width(imageWidth)
-                    .padding(start = largePadding, end = largePadding)
-                    .align(Alignment.Center),
-                painter = painterResource(R.drawable.hh_logo),
-                contentDescription = stringResource(id = R.string.app_name)
-            )
-        }
+    val state = stateFlow.collectAsState()
+
+    state.value.authenticatedUser.consume { authenticatedUser ->
+        authenticatedUser.fold(
+            ifLeft = {
+                // Silent authentication was unsuccessful
+                onEvent(AuthEvent.NavigateToAuthOptions)
+            },
+            ifRight = {
+                // Silent authentication was successful
+                val imageWidth = responsiveLayoutWidth(columns = 4)
+                Box(
+                    modifier = modifier.fillMaxSize()
+                ) {
+                    Image(
+                        modifier = Modifier
+                            .width(imageWidth)
+                            .padding(start = largePadding, end = largePadding)
+                            .align(Alignment.Center),
+                        painter = painterResource(R.drawable.hh_logo),
+                        contentDescription = stringResource(id = R.string.app_name)
+                    )
+                }
+            }
+        )
     }
 }
 
@@ -52,7 +65,7 @@ fun AuthInitScreenPreviewDark() {
         Scaffold { padding ->
             AuthInitScreen(
                 modifier = Modifier.padding(padding),
-                state = AuthState()
+                stateFlow = MutableStateFlow(AuthState())
             )
         }
     }
@@ -67,7 +80,7 @@ fun AuthInitScreenPreviewLight() {
         Scaffold { padding ->
             AuthInitScreen(
                 modifier = Modifier.padding(padding),
-                state = AuthState()
+                stateFlow = MutableStateFlow(AuthState())
             )
         }
     }
@@ -83,7 +96,7 @@ fun AuthInitScreenPreviewTabletLight() {
         Scaffold { padding ->
             AuthInitScreen(
                 modifier = Modifier.padding(padding),
-                state = AuthState()
+                stateFlow = MutableStateFlow(AuthState())
             )
         }
     }
