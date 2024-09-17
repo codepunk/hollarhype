@@ -7,13 +7,12 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import kotlinx.coroutines.flow.StateFlow
 
 @Composable
 fun AuthNavigation(
     modifier: Modifier = Modifier,
     paddingValues: PaddingValues,
-    stateFlow: StateFlow<AuthState>,
+    state: AuthState,
     onEvent: (AuthEvent) -> Unit = {}
 ) {
     val navController = rememberNavController()
@@ -25,7 +24,7 @@ fun AuthNavigation(
     ) {
         composable<AuthRoute.AuthInit> {
             AuthInitScreen(
-                stateFlow = stateFlow
+                state = state
             ) { event ->
                 // Pass navigation events up to navController, everything else
                 // will fall through to AuthViewModel
@@ -43,21 +42,21 @@ fun AuthNavigation(
 
         composable<AuthRoute.AuthOptions> {
             AuthOptionsScreen(
-                stateFlow = stateFlow,
+                state = state,
                 onEvent = onEvent
             )
         }
 
         composable<AuthRoute.AuthSignUp> {
             AuthSignUpScreen(
-                stateFlow = stateFlow,
+                state = state,
                 onEvent = onEvent
             )
         }
 
         composable<AuthRoute.AuthSignIn> {
             AuthSignInScreen(
-                stateFlow = stateFlow,
+                state = state,
                 onEvent = onEvent
             )
         }

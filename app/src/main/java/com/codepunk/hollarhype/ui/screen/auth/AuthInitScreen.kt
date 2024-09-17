@@ -1,5 +1,6 @@
 package com.codepunk.hollarhype.ui.screen.auth
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -7,7 +8,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -19,18 +19,14 @@ import com.codepunk.hollarhype.ui.theme.HollarhypeTheme
 import com.codepunk.hollarhype.ui.theme.largePadding
 import com.codepunk.hollarhype.ui.util.responsiveLayoutWidth
 import com.codepunk.hollarhype.util.consume
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 
 @Composable
 fun AuthInitScreen(
     modifier: Modifier = Modifier,
-    stateFlow: StateFlow<AuthState>,
+    state: AuthState,
     onEvent: (AuthEvent) -> Unit = {}
 ) {
-    val state = stateFlow.collectAsState()
-
-    state.value.authenticatedUser.consume { authenticatedUser ->
+    state.authenticatedUser.consume { authenticatedUser ->
         authenticatedUser.fold(
             ifLeft = {
                 // Silent authentication was unsuccessful
@@ -65,7 +61,7 @@ fun AuthInitScreenPreviewDark() {
         Scaffold { padding ->
             AuthInitScreen(
                 modifier = Modifier.padding(padding),
-                stateFlow = MutableStateFlow(AuthState())
+                state = AuthState()
             )
         }
     }
@@ -80,7 +76,7 @@ fun AuthInitScreenPreviewLight() {
         Scaffold { padding ->
             AuthInitScreen(
                 modifier = Modifier.padding(padding),
-                stateFlow = MutableStateFlow(AuthState())
+                state = AuthState()
             )
         }
     }
@@ -96,7 +92,7 @@ fun AuthInitScreenPreviewTabletLight() {
         Scaffold { padding ->
             AuthInitScreen(
                 modifier = Modifier.padding(padding),
-                stateFlow = MutableStateFlow(AuthState())
+                state = AuthState()
             )
         }
     }

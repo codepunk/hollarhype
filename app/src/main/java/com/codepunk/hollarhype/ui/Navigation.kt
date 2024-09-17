@@ -1,6 +1,7 @@
 package com.codepunk.hollarhype.ui
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.NavHost
@@ -22,9 +23,10 @@ fun Navigation(
     ) {
         composable<Route.Auth> {
             val viewModel: AuthViewModel = hiltViewModel()
+            val state = viewModel.stateFlow.collectAsState()
             AuthScreen(
                 modifier = modifier,
-                stateFlow = viewModel.stateFlow
+                state = state.value
             ) { event ->
                 // So the thing is, when we want to actually navigate
                 // AWAY from auth and into Landing, how do we do that?
