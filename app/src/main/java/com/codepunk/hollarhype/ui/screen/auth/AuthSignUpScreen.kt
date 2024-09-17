@@ -2,6 +2,7 @@ package com.codepunk.hollarhype.ui.screen.auth
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -17,6 +18,9 @@ fun AuthSignUpScreen(
             .fillMaxSize(),
         contentAlignment = Alignment.Center
     ) {
-        Greeting(name = "Sign Up")
+        Text(
+            text = "Sign Up",
+            modifier = modifier
+        )
     }
 }

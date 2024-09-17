@@ -31,6 +31,18 @@ fun AuthNavigation(
                 when (event) {
                     is AuthEvent.NavigateToAuthOptions ->
                         navController.navigate(AuthRoute.AuthOptions)
+                    else -> onEvent(event)
+                }
+            }
+        }
+
+        composable<AuthRoute.AuthOptions> {
+            AuthOptionsScreen(
+                state = state
+            ) { event ->
+                // Pass navigation events up to navController, everything else
+                // will fall through to AuthViewModel
+                when (event) {
                     is AuthEvent.NavigateToSignUp ->
                         navController.navigate(AuthRoute.AuthSignUp)
                     is AuthEvent.NavigateToSignIn ->
@@ -40,25 +52,26 @@ fun AuthNavigation(
             }
         }
 
-        composable<AuthRoute.AuthOptions> {
-            AuthOptionsScreen(
-                state = state,
-                onEvent = onEvent
-            )
-        }
-
         composable<AuthRoute.AuthSignUp> {
             AuthSignUpScreen(
-                state = state,
-                onEvent = onEvent
-            )
+                state = state
+            ) { event ->
+                // Pass navigation events up to navController, everything else
+                // will fall through to AuthViewModel
+                onEvent(event)
+            }
         }
 
         composable<AuthRoute.AuthSignIn> {
             AuthSignInScreen(
-                state = state,
-                onEvent = onEvent
-            )
+                state = state
+            ) { event ->
+                // Pass navigation events up to navController, everything else
+                // will fall through to AuthViewModel
+                // Pass navigation events up to navController, everything else
+                // will fall through to AuthViewModel
+                onEvent(event)
+            }
         }
     }
 }

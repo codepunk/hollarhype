@@ -1,6 +1,5 @@
 package com.codepunk.hollarhype.ui.theme
 
-import android.app.Activity
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
@@ -12,17 +11,21 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
 
 private val DarkColorScheme = darkColorScheme(
-    primary = Purple80,
-    secondary = PurpleGrey80,
+    primary = HHGreen,
+    secondary = WhiteSmoke,
     tertiary = Pink80,
-    background = BlackSmoke
+    background = BlackSmoke,
+    onPrimary = BlackSmoke,
+    onSecondary = BlackSmoke
 )
 
 private val LightColorScheme = lightColorScheme(
-    primary = Purple40,
-    secondary = PurpleGrey40,
+    primary = HHGreen,
+    secondary = BlackSmoke,
     tertiary = Pink40,
-    background = WhiteSmoke
+    background = WhiteSmoke,
+    onPrimary = BlackSmoke,
+    onSecondary = WhiteSmoke
 
     /* Other default colors to override
     background = Color(0xFFFFFBFE),

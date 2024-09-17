@@ -12,3 +12,8 @@ val Pink40 = Color(0xFF7D5260)
 
 val WhiteSmoke = Color(0xFFf5f5f5)
 val BlackSmoke = Color(0xFF0a0a0a)
+
+val HHMagenta = Color(0xFFFF3BFB)
+val HHOrange = Color(0xFFFFB155)
+val HHGreen = Color(0xFFB4F946)
+val HHBlue = Color(0xFF3BA4FF)
