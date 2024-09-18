@@ -30,7 +30,8 @@ val smallSize = 16.dp
 val mediumSize = 32.dp
 val largeSize = 48.dp
 val xLargeSize = 96.dp
-val xxLargeSize = 114.dp
+val xxLargeSize = 128.dp
+val xxxLargeSize = 182.dp
 
 val smallGutterSize = 16.dp
 val largeGutterSize = 32.dp

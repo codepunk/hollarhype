@@ -2,7 +2,6 @@ package com.codepunk.hollarhype.ui.screen.auth
 
 import android.content.res.Configuration
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -16,16 +15,21 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -35,8 +39,8 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.dp
+import androidx.window.core.layout.WindowHeightSizeClass
+import androidx.window.core.layout.WindowWidthSizeClass
 import com.codepunk.hollarhype.R
 import com.codepunk.hollarhype.ui.preview.ScreenPreviews
 import com.codepunk.hollarhype.ui.theme.HollarhypeTheme
@@ -44,10 +48,13 @@ import com.codepunk.hollarhype.ui.theme.buttonCornerRadius
 import com.codepunk.hollarhype.ui.theme.largeGutterSize
 import com.codepunk.hollarhype.ui.theme.largePadding
 import com.codepunk.hollarhype.ui.theme.layoutMarginWidth
+import com.codepunk.hollarhype.ui.theme.mediumSize
 import com.codepunk.hollarhype.ui.theme.standardButtonWidth
 import com.codepunk.hollarhype.ui.theme.xLargePadding
 import com.codepunk.hollarhype.ui.theme.xLargeSize
 import com.codepunk.hollarhype.ui.theme.xxLargePadding
+import com.codepunk.hollarhype.ui.theme.xxLargeSize
+import com.codepunk.hollarhype.ui.theme.xxxLargeSize
 
 @Composable
 fun AuthSignUpScreen(
@@ -55,9 +62,9 @@ fun AuthSignUpScreen(
     state: AuthState,
     onEvent: (AuthEvent) -> Unit = {}
 ) {
-    val sizeClass = currentWindowAdaptiveInfo().windowSizeClass.windowWidthSizeClass
+    val windowAdaptiveInfo = currentWindowAdaptiveInfo()
     val layoutMargin = remember {
-        layoutMarginWidth(sizeClass)
+        layoutMarginWidth(windowAdaptiveInfo.windowSizeClass.windowWidthSizeClass)
     }
 
     val orientation = LocalConfiguration.current.orientation
@@ -68,20 +75,32 @@ fun AuthSignUpScreen(
             .padding(
                 start = layoutMargin,
                 end = layoutMargin
-            )
+            ),
+        contentAlignment = Alignment.TopCenter
     ) {
         if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            // TODO Come up with user avatar size based on height
-            val avatarSize = xLargeSize
+            val avatarSize = when (windowAdaptiveInfo.windowSizeClass.windowHeightSizeClass) {
+                WindowHeightSizeClass.MEDIUM -> xxLargeSize
+                WindowHeightSizeClass.EXPANDED -> xxxLargeSize
+                else -> xLargeSize
+            }
+
+            val fillMaxWidthFraction = when (windowAdaptiveInfo.windowSizeClass.windowWidthSizeClass) {
+                WindowWidthSizeClass.MEDIUM -> 0.8f
+                WindowWidthSizeClass.EXPANDED -> 0.8f
+                else -> 0.8f
+            }
 
             Row(
-                modifier = Modifier.fillMaxSize()
+                modifier = Modifier
+                    .fillMaxWidth(fillMaxWidthFraction)
+                    .fillMaxHeight()
             ) {
                 Column(
                     modifier = Modifier
-                        .fillMaxWidth(0.4f)
+                        .fillMaxWidth(0.5f)
                         .fillMaxHeight()
-                        .padding(start = xxLargePadding),
+                        .padding(start = xLargePadding, end = xLargePadding),
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.spacedBy(
                         space = xLargePadding,
@@ -110,8 +129,7 @@ fun AuthSignUpScreen(
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .fillMaxHeight()
-                        .padding(end = xxLargePadding),
+                        .fillMaxHeight(),
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.Center
                 ) {
@@ -122,16 +140,25 @@ fun AuthSignUpScreen(
                 }
             }
         } else {
-            // TODO Come up with user avatar size based on width
-            val avatarSize = xLargeSize
+            val avatarSize = when (windowAdaptiveInfo.windowSizeClass.windowWidthSizeClass) {
+                WindowWidthSizeClass.MEDIUM -> xxLargeSize
+                WindowWidthSizeClass.EXPANDED -> xxxLargeSize
+                else -> xLargeSize
+            }
+
+            val fillMaxWidthFraction = when (windowAdaptiveInfo.windowSizeClass.windowWidthSizeClass) {
+                WindowWidthSizeClass.MEDIUM -> 0.8f
+                WindowWidthSizeClass.EXPANDED -> 0.6f
+                else -> 0.8f
+            }
 
             Column(
                 modifier = Modifier
-                    .fillMaxSize()
-                    .padding(xxLargePadding),
+                    .fillMaxWidth(fillMaxWidthFraction)
+                    .fillMaxHeight(),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.spacedBy(
-                    space = xLargePadding,
+                    space = xxLargePadding,
                     alignment = Alignment.CenterVertically
                 )
             ) {
@@ -182,6 +209,7 @@ fun SignUpForm(
     var firstName by remember { mutableStateOf("") }
     var lastName by remember { mutableStateOf("") }
     var emailAddress by remember { mutableStateOf("") }
+    var countryCode by remember { mutableStateOf("+33") }
     var phoneNumber by remember { mutableStateOf("") }
 
     Column(
@@ -189,7 +217,12 @@ fun SignUpForm(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(largePadding)
     ) {
-        TextField(
+        OutlinedTextField(
+            modifier = Modifier
+                .fillMaxWidth(),
+            colors = OutlinedTextFieldDefaults.colors().copy(
+                unfocusedContainerColor = MaterialTheme.colorScheme.primaryContainer
+            ),
             value = firstName,
             label = {
                 Text(
@@ -200,8 +233,13 @@ fun SignUpForm(
             onValueChange = { /* No op */ }
         )
 
-        TextField(
+        OutlinedTextField(
+            modifier = Modifier
+                .fillMaxWidth(),
             value = lastName,
+            colors = OutlinedTextFieldDefaults.colors().copy(
+                unfocusedContainerColor = MaterialTheme.colorScheme.primaryContainer
+            ),
             label = {
                 Text(
                     text = stringResource(id = R.string.last_name),
@@ -211,8 +249,13 @@ fun SignUpForm(
             onValueChange = { /* No op */ }
         )
 
-        TextField(
+        OutlinedTextField(
+            modifier = Modifier
+                .fillMaxWidth(),
             value = emailAddress,
+            colors = OutlinedTextFieldDefaults.colors().copy(
+                unfocusedContainerColor = MaterialTheme.colorScheme.primaryContainer
+            ),
             label = {
                 Text(
                     text = stringResource(id = R.string.email_address),
@@ -222,8 +265,48 @@ fun SignUpForm(
             onValueChange = { /* No op */ }
         )
 
-        Row {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(largePadding)
+        ) {
+            OutlinedButton(
+                shape = RoundedCornerShape(size = buttonCornerRadius),
+                onClick = { /*TODO*/ }
+            ) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        modifier = Modifier.width(mediumSize),
+                        text = countryCode,
+                        color = MaterialTheme.colorScheme.onBackground,
+                        style = MaterialTheme.typography.displaySmall
+                    )
+                    Icon(
+                        imageVector = Icons.Default.KeyboardArrowDown,
+                        tint = MaterialTheme.colorScheme.onBackground,
+                        contentDescription = null
+                    )
+                }
+            }
 
+            OutlinedTextField(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                value = phoneNumber,
+                colors = OutlinedTextFieldDefaults.colors().copy(
+                    unfocusedContainerColor = MaterialTheme.colorScheme.primaryContainer
+                ),
+                label = {
+                    Text(
+                        text = stringResource(id = R.string.phone_number),
+                        style = MaterialTheme.typography.displaySmall
+                    )
+                },
+                onValueChange = { /* No op */ }
+            )
         }
     }
 }

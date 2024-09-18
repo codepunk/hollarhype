@@ -17,22 +17,26 @@ private const val PIXEL_TABLET_PORTRAIT =
 @Preview(
     name = "Pixel 8 Pro",
     uiMode = Configuration.UI_MODE_NIGHT_NO,
-    device = PIXEL_8
+    device = PIXEL_8,
+    group = "Light Mode"
 )
 @Preview(
     name = "Pixel 8 Pro Landscape",
     uiMode = Configuration.UI_MODE_NIGHT_NO,
-    device = PIXEL_8_PRO_LANDSCAPE
+    device = PIXEL_8_PRO_LANDSCAPE,
+    group = "Light Mode"
 )
 @Preview(
     name = "Pixel 8 Pro Dark",
     uiMode = Configuration.UI_MODE_NIGHT_YES,
-    device = PIXEL_8
+    device = PIXEL_8,
+    group = "Dark Mode"
 )
 @Preview(
     name = "Pixel 8 Pro Landscape Dark",
     uiMode = Configuration.UI_MODE_NIGHT_YES,
-    device = PIXEL_8_PRO_LANDSCAPE
+    device = PIXEL_8_PRO_LANDSCAPE,
+    group = "Dark Mode"
 )
 
 // Pixel 5
@@ -40,22 +44,26 @@ private const val PIXEL_TABLET_PORTRAIT =
 @Preview(
     name = "Pixel 5",
     uiMode = Configuration.UI_MODE_NIGHT_NO,
-    device = Devices.PIXEL_5
+    device = Devices.PIXEL_5,
+    group = "Light Mode"
 )
 @Preview(
     name = "Pixel 5 Landscape",
     uiMode = Configuration.UI_MODE_NIGHT_NO,
-    device = PIXEL_5_LANDSCAPE
+    device = PIXEL_5_LANDSCAPE,
+    group = "Light Mode"
 )
 @Preview(
     name = "Pixel 5 Dark",
     uiMode = Configuration.UI_MODE_NIGHT_YES,
-    device = Devices.PIXEL_5
+    device = Devices.PIXEL_5,
+    group = "Dark Mode"
 )
 @Preview(
     name = "Pixel 5 Landscape Dark",
     uiMode = Configuration.UI_MODE_NIGHT_YES,
-    device = PIXEL_5_LANDSCAPE
+    device = PIXEL_5_LANDSCAPE,
+    group = "Dark Mode"
 )
 
 // Pixel Tablet
@@ -63,21 +71,25 @@ private const val PIXEL_TABLET_PORTRAIT =
 @Preview(
     name = "Pixel Tablet Portrait",
     uiMode = Configuration.UI_MODE_NIGHT_NO,
-    device = PIXEL_TABLET_PORTRAIT
+    device = PIXEL_TABLET_PORTRAIT,
+    group = "Light Mode"
 )
 @Preview(
     name = "Pixel Tablet",
     uiMode = Configuration.UI_MODE_NIGHT_NO,
-    device = Devices.PIXEL_TABLET
+    device = Devices.PIXEL_TABLET,
+    group = "Light Mode"
 )
 @Preview(
     name = "Pixel Tablet Portrait Dark",
     uiMode = Configuration.UI_MODE_NIGHT_YES,
-    device = PIXEL_TABLET_PORTRAIT
+    device = PIXEL_TABLET_PORTRAIT,
+    group = "Dark Mode"
 )
 @Preview(
     name = "Pixel Tablet Dark",
     uiMode = Configuration.UI_MODE_NIGHT_YES,
-    device = Devices.PIXEL_TABLET
+    device = Devices.PIXEL_TABLET,
+    group = "Dark Mode"
 )
 annotation class ScreenPreviews
