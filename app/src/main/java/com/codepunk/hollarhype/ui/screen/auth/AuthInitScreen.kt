@@ -48,13 +48,13 @@ fun AuthInitScreen(
     ) {
         Image(
             modifier = Modifier
-                .aspectRatio(1f)
-                .fillMaxWidth()
-                .align(Alignment.Center)
                 .padding(
                     start = xLargePadding,
                     end = xLargePadding
-                ),
+                )
+                .aspectRatio(1f)
+                .fillMaxWidth()
+                .align(Alignment.Center),
             painter = painterResource(R.drawable.hh_logo),
             contentDescription = stringResource(id = R.string.app_name)
         )

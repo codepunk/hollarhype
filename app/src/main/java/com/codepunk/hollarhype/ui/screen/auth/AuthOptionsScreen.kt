@@ -50,13 +50,13 @@ fun AuthOptionsScreen(
     ) {
         Column(
             modifier = Modifier
-                .aspectRatio(1f)
-                .fillMaxWidth()
-                .align(Alignment.Center)
                 .padding(
                     start = xLargePadding,
                     end = xLargePadding
-                ),
+                )
+                .aspectRatio(1f)
+                .fillMaxWidth()
+                .align(Alignment.Center),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(
                 space = largePadding,
