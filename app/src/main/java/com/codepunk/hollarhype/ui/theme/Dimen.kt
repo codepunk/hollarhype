@@ -21,6 +21,7 @@ val mediumPadding = 12.dp
 val smallPadding = 8.dp
 val tinyPadding = 4.dp
 
+val standardButtonWidth = 175.dp
 val buttonCornerRadius = 6.dp
 
 val smallGutterSize = 16.dp
@@ -37,31 +38,20 @@ fun currentWindowDpSize(): DpSize = with(LocalDensity.current) {
 }
 
 @Composable
-fun responsiveMarginWidth(): Dp =
+fun windowClassIsLarge(): Boolean = currentWindowDpSize().width.let { width ->
+    width >= 1200.dp && width < 1600.dp
+}
+
+@Composable
+fun layoutMarginWidth(): Dp =
     when (currentWindowAdaptiveInfo().windowSizeClass.windowWidthSizeClass) {
         WindowWidthSizeClass.COMPACT -> 16.dp
-        WindowWidthSizeClass.MEDIUM -> 32.dp
-        WindowWidthSizeClass.EXPANDED -> (currentWindowDpSize().width - 840.dp).div(2f)
-        else -> 16.dp
+        WindowWidthSizeClass.MEDIUM -> 24.dp
+        WindowWidthSizeClass.EXPANDED -> 24.dp
+        else -> 24.dp
+    }.also {
+        currentWindowDpSize()
     }
 
 @Composable
-fun responsiveColumnCount(): Int =
-    when (currentWindowAdaptiveInfo().windowSizeClass.windowWidthSizeClass) {
-        WindowWidthSizeClass.COMPACT -> 4
-        WindowWidthSizeClass.MEDIUM -> 8
-        WindowWidthSizeClass.EXPANDED -> 12
-        else -> 4
-    }
-
-@Composable
-fun responsiveColumnWidth(gutterWidth: Dp = smallGutterSize, columnSpan: Int = 1): Dp {
-    val currentWindowDpSize = currentWindowDpSize()
-    val marginWidth = responsiveMarginWidth()
-    val columnCount = responsiveColumnCount()
-    val bodyWidth = currentWindowDpSize.width - marginWidth.times(2)
-    val totalGutterWidth = gutterWidth.times(columnCount - 1)
-    val columnWidth = (bodyWidth - totalGutterWidth).div(columnCount)
-    val totalWidth = columnWidth.times(columnSpan) + gutterWidth.times(columnSpan - 1)
-    return totalWidth.coerceIn(0.dp, bodyWidth)
-}
+fun windowClassIsExtraLarge(): Boolean = currentWindowDpSize().width >= 1600.dp

@@ -1,13 +1,12 @@
 package com.codepunk.hollarhype.ui.screen.auth
 
-import android.content.res.Configuration
-import android.widget.EditText
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
@@ -23,17 +22,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Devices
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import arrow.core.right
-import arrow.eval.Eval
 import com.codepunk.hollarhype.R
-import com.codepunk.hollarhype.domain.model.User
+import com.codepunk.hollarhype.ui.preview.ScreenPreviews
 import com.codepunk.hollarhype.ui.theme.HollarhypeTheme
 import com.codepunk.hollarhype.ui.theme.buttonCornerRadius
 import com.codepunk.hollarhype.ui.theme.largePadding
-import com.codepunk.hollarhype.ui.theme.responsiveColumnWidth
 import com.codepunk.hollarhype.ui.theme.xLargePadding
 
 @Composable
@@ -50,7 +44,7 @@ fun AuthSignUpScreen(
     ) {
         Image(
             modifier = Modifier
-                .width(responsiveColumnWidth(columnSpan = 4))
+                .fillMaxWidth()
                 .padding(start = largePadding, end = largePadding),
             painter = painterResource(R.drawable.img_default_user),
             contentDescription = stringResource(id = R.string.app_name)
@@ -132,7 +126,7 @@ fun AuthSignUpScreen(
             style = MaterialTheme.typography.labelSmall
         )
 
-        val buttonWidth = responsiveColumnWidth(columnSpan = 2)
+        val buttonWidth = 200.dp
 
         Button(
             modifier = Modifier
@@ -152,50 +146,14 @@ fun AuthSignUpScreen(
     }
 }
 
-@Preview(
-    uiMode = Configuration.UI_MODE_NIGHT_YES
-)
+@ScreenPreviews
 @Composable
-fun AuthSignUpScreenPreviewDark() {
-    HollarhypeTheme(darkTheme = true) {
+fun AuthSignUpPreviews() {
+    HollarhypeTheme {
         Scaffold { padding ->
             AuthSignUpScreen(
                 modifier = Modifier.padding(padding),
-                state = AuthState(
-                    authenticatedUser = Eval.now(User().right())
-                )
-            )
-        }
-    }
-}
-
-@Preview
-@Composable
-fun AuthSignUpScreenPreviewLight() {
-    HollarhypeTheme(darkTheme = false) {
-        Scaffold { padding ->
-            AuthSignUpScreen(
-                modifier = Modifier.padding(padding),
-                state = AuthState(
-                    authenticatedUser = Eval.now(User().right())
-                )
-            )
-        }
-    }
-}
-
-@Preview(
-    device = Devices.TABLET
-)
-@Composable
-fun AuthSignUpScreenPreviewTabletLight() {
-    HollarhypeTheme(darkTheme = false) {
-        Scaffold { padding ->
-            AuthSignUpScreen(
-                modifier = Modifier.padding(padding),
-                state = AuthState(
-                    authenticatedUser = Eval.now(User().right())
-                )
+                state = AuthState()
             )
         }
     }

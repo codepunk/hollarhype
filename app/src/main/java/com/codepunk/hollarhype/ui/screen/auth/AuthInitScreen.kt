@@ -3,11 +3,20 @@ package com.codepunk.hollarhype.ui.screen.auth
 import android.content.res.Configuration
 import android.util.Log
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -19,9 +28,13 @@ import arrow.core.right
 import arrow.eval.Eval
 import com.codepunk.hollarhype.R
 import com.codepunk.hollarhype.domain.model.User
+import com.codepunk.hollarhype.ui.preview.ScreenPreviews
 import com.codepunk.hollarhype.ui.theme.HollarhypeTheme
+import com.codepunk.hollarhype.ui.theme.buttonCornerRadius
 import com.codepunk.hollarhype.ui.theme.largePadding
-import com.codepunk.hollarhype.ui.theme.responsiveColumnWidth
+import com.codepunk.hollarhype.ui.theme.layoutMarginWidth
+import com.codepunk.hollarhype.ui.theme.standardButtonWidth
+import com.codepunk.hollarhype.ui.theme.xLargePadding
 import com.codepunk.hollarhype.util.consume
 
 @Composable
@@ -35,59 +48,37 @@ fun AuthInitScreen(
             onEvent(AuthEvent.NavigateToAuthOptions)
         }
     }
+
     // Silent authentication was successful
+    val layoutMargin = layoutMarginWidth()
+
     Box(
-        modifier = modifier.fillMaxSize()
+        modifier = modifier
+            .fillMaxSize()
+            .padding(
+                start = layoutMargin,
+                end = layoutMargin
+            )
     ) {
         Image(
             modifier = Modifier
-                .width(responsiveColumnWidth(columnSpan = 4))
-                .padding(start = largePadding, end = largePadding)
-                .align(Alignment.Center),
+                .aspectRatio(1f)
+                .fillMaxWidth()
+                .align(Alignment.Center)
+                .padding(
+                    start = xLargePadding,
+                    end = xLargePadding
+                ),
             painter = painterResource(R.drawable.hh_logo),
             contentDescription = stringResource(id = R.string.app_name)
         )
     }
 }
 
-@Preview(
-    uiMode = Configuration.UI_MODE_NIGHT_YES
-)
+@ScreenPreviews
 @Composable
-fun AuthInitScreenPreviewDark() {
-    HollarhypeTheme(darkTheme = true) {
-        Scaffold { padding ->
-            AuthInitScreen(
-                modifier = Modifier.padding(padding),
-                state = AuthState(
-                    authenticatedUser = Eval.now(User().right())
-                )
-            )
-        }
-    }
-}
-
-@Preview
-@Composable
-fun AuthInitScreenPreviewLight() {
-    HollarhypeTheme(darkTheme = false) {
-        Scaffold { padding ->
-            AuthInitScreen(
-                modifier = Modifier.padding(padding),
-                state = AuthState(
-                    authenticatedUser = Eval.now(User().right())
-                )
-            )
-        }
-    }
-}
-
-@Preview(
-    device = Devices.TABLET
-)
-@Composable
-fun AuthInitScreenPreviewTabletLight() {
-    HollarhypeTheme(darkTheme = false) {
+fun AuthInitScreenPreviews() {
+    HollarhypeTheme {
         Scaffold { padding ->
             AuthInitScreen(
                 modifier = Modifier.padding(padding),
