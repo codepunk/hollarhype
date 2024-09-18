@@ -7,7 +7,9 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -32,12 +34,15 @@ fun AuthInitScreen(
     state.authenticatedUser.consume { authenticatedUser ->
         if (authenticatedUser.isLeft()) {
             onEvent(AuthEvent.NavigateToAuthOptions)
+            return
         }
     }
 
-    // Silent authentication was successful
-    val layoutMargin = layoutMarginWidth()
-
+    // If we made it here, silent authentication was successful
+    val sizeClass = currentWindowAdaptiveInfo().windowSizeClass.windowWidthSizeClass
+    val layoutMargin = remember {
+        layoutMarginWidth(sizeClass)
+    }
     Box(
         modifier = modifier
             .fillMaxSize()

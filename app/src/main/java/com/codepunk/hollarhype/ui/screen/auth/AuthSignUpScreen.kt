@@ -1,15 +1,20 @@
 package com.codepunk.hollarhype.ui.screen.auth
 
+import android.content.res.Configuration
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -17,18 +22,32 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
+import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.codepunk.hollarhype.R
 import com.codepunk.hollarhype.ui.preview.ScreenPreviews
 import com.codepunk.hollarhype.ui.theme.HollarhypeTheme
 import com.codepunk.hollarhype.ui.theme.buttonCornerRadius
+import com.codepunk.hollarhype.ui.theme.largeGutterSize
 import com.codepunk.hollarhype.ui.theme.largePadding
+import com.codepunk.hollarhype.ui.theme.layoutMarginWidth
+import com.codepunk.hollarhype.ui.theme.standardButtonWidth
 import com.codepunk.hollarhype.ui.theme.xLargePadding
+import com.codepunk.hollarhype.ui.theme.xLargeSize
+import com.codepunk.hollarhype.ui.theme.xxLargePadding
 
 @Composable
 fun AuthSignUpScreen(
@@ -36,24 +55,142 @@ fun AuthSignUpScreen(
     state: AuthState,
     onEvent: (AuthEvent) -> Unit = {}
 ) {
-    Column(
-        modifier = Modifier
-            .fillMaxSize(),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
+    val sizeClass = currentWindowAdaptiveInfo().windowSizeClass.windowWidthSizeClass
+    val layoutMargin = remember {
+        layoutMarginWidth(sizeClass)
+    }
+
+    val orientation = LocalConfiguration.current.orientation
+
+    Box(
+        modifier = modifier
+            .fillMaxSize()
+            .padding(
+                start = layoutMargin,
+                end = layoutMargin
+            )
+    ) {
+        if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            // TODO Come up with user avatar size based on height
+            val avatarSize = xLargeSize
+
+            Row(
+                modifier = Modifier.fillMaxSize()
+            ) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth(0.4f)
+                        .fillMaxHeight()
+                        .padding(start = xxLargePadding),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.spacedBy(
+                        space = xLargePadding,
+                        alignment = Alignment.CenterVertically
+                    )
+                ) {
+                    UserAvatar(
+                        modifier = Modifier
+                            .width(avatarSize),
+                        onEvent = onEvent
+                    )
+
+                    SignUpSubmit(
+                        modifier = Modifier
+                            .fillMaxWidth(),
+                        onEvent = onEvent
+                    )
+                }
+
+                Spacer(
+                    modifier = Modifier
+                        .width(largeGutterSize)
+                        .fillMaxHeight()
+                )
+
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .fillMaxHeight()
+                        .padding(end = xxLargePadding),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center
+                ) {
+                    SignUpForm(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                    )
+                }
+            }
+        } else {
+            // TODO Come up with user avatar size based on width
+            val avatarSize = xLargeSize
+
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(xxLargePadding),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.spacedBy(
+                    space = xLargePadding,
+                    alignment = Alignment.CenterVertically
+                )
+            ) {
+                UserAvatar(
+                    modifier = Modifier
+                        .width(avatarSize),
+                    onEvent = onEvent
+                )
+
+                SignUpForm(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                )
+
+                SignUpSubmit(
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    onEvent = onEvent
+                )
+            }
+        }
+    }
+}
+
+@Composable
+fun UserAvatar(
+    modifier: Modifier = Modifier,
+    onEvent: (AuthEvent) -> Unit
+) {
+    Box(
+        modifier = modifier
+            .aspectRatio(1f)
     ) {
         Image(
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(start = largePadding, end = largePadding),
+                .fillMaxSize()
+                .clip(CircleShape),
             painter = painterResource(R.drawable.img_default_user),
             contentDescription = stringResource(id = R.string.app_name)
         )
+    }
+}
 
-        Spacer(modifier = Modifier.height(xLargePadding))
+@Composable
+fun SignUpForm(
+    modifier: Modifier = Modifier
+) {
+    var firstName by remember { mutableStateOf("") }
+    var lastName by remember { mutableStateOf("") }
+    var emailAddress by remember { mutableStateOf("") }
+    var phoneNumber by remember { mutableStateOf("") }
 
+    Column(
+        modifier = modifier,
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(largePadding)
+    ) {
         TextField(
-            value = "",
+            value = firstName,
             label = {
                 Text(
                     text = stringResource(id = R.string.first_name),
@@ -63,10 +200,8 @@ fun AuthSignUpScreen(
             onValueChange = { /* No op */ }
         )
 
-        Spacer(modifier = Modifier.height(largePadding))
-
         TextField(
-            value = "",
+            value = lastName,
             label = {
                 Text(
                     text = stringResource(id = R.string.last_name),
@@ -76,10 +211,8 @@ fun AuthSignUpScreen(
             onValueChange = { /* No op */ }
         )
 
-        Spacer(modifier = Modifier.height(largePadding))
-
         TextField(
-            value = "",
+            value = emailAddress,
             label = {
                 Text(
                     text = stringResource(id = R.string.email_address),
@@ -89,48 +222,31 @@ fun AuthSignUpScreen(
             onValueChange = { /* No op */ }
         )
 
-        Spacer(modifier = Modifier.height(largePadding))
-
         Row {
-            Button(
-                modifier = Modifier,
-                shape = RoundedCornerShape(size = buttonCornerRadius),
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = MaterialTheme.colorScheme.secondary,
-                    contentColor = MaterialTheme.colorScheme.onSecondary
-                ),
-                onClick = { onEvent(AuthEvent.NavigateToSignIn) }
-            ) {
-                Text(
-                    text = "+1",
-                    style = MaterialTheme.typography.displaySmall
-                )
-            }
 
-            TextField(
-                value = "",
-                label = {
-                    Text(
-                        text = stringResource(id = R.string.phone_number),
-                        style = MaterialTheme.typography.displaySmall
-                    )
-                },
-                onValueChange = { /* No op */ }
-            )
         }
+    }
+}
 
-        Spacer(modifier = Modifier.height(largePadding))
-
+@Composable
+fun SignUpSubmit(
+    modifier: Modifier = Modifier,
+    onEvent: (AuthEvent) -> Unit
+) {
+    Column(
+        modifier = modifier,
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(largePadding)
+    ) {
         Text(
             text = stringResource(id = R.string.disclaimer),
-            style = MaterialTheme.typography.labelSmall
+            style = MaterialTheme.typography.labelSmall,
+            textAlign = TextAlign.Center
         )
-
-        val buttonWidth = 200.dp
 
         Button(
             modifier = Modifier
-                .width(buttonWidth),
+                .width(standardButtonWidth),
             shape = RoundedCornerShape(size = buttonCornerRadius),
             colors = ButtonDefaults.buttonColors(
                 containerColor = MaterialTheme.colorScheme.secondary,

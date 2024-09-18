@@ -8,13 +8,14 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.DpSize
-import androidx.compose.ui.unit.coerceIn
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.toSize
 import androidx.window.core.layout.WindowWidthSizeClass
 
 val touchSize = 48.dp
 
+val xxxLargePadding = 96.dp
+val xxLargePadding = 48.dp
 val xLargePadding = 32.dp
 val largePadding = 16.dp
 val mediumPadding = 12.dp
@@ -23,6 +24,13 @@ val tinyPadding = 4.dp
 
 val standardButtonWidth = 175.dp
 val buttonCornerRadius = 6.dp
+
+val tinySize = 8.dp
+val smallSize = 16.dp
+val mediumSize = 32.dp
+val largeSize = 48.dp
+val xLargeSize = 96.dp
+val xxLargeSize = 114.dp
 
 val smallGutterSize = 16.dp
 val largeGutterSize = 32.dp
@@ -43,14 +51,16 @@ fun windowClassIsLarge(): Boolean = currentWindowDpSize().width.let { width ->
 }
 
 @Composable
-fun layoutMarginWidth(): Dp =
-    when (currentWindowAdaptiveInfo().windowSizeClass.windowWidthSizeClass) {
+fun layoutMarginWidth(): Dp = layoutMarginWidth(
+    currentWindowAdaptiveInfo().windowSizeClass.windowWidthSizeClass
+)
+
+fun layoutMarginWidth(sizeClass: WindowWidthSizeClass): Dp =
+    when (sizeClass) {
         WindowWidthSizeClass.COMPACT -> 16.dp
         WindowWidthSizeClass.MEDIUM -> 24.dp
         WindowWidthSizeClass.EXPANDED -> 24.dp
         else -> 24.dp
-    }.also {
-        currentWindowDpSize()
     }
 
 @Composable
