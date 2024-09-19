@@ -37,6 +37,9 @@ class AuthViewModel @Inject constructor(
         val getCredentialRequest = GetCredentialRequest(
             credentialOptions = listOf(GetPasswordOption())
         )
+
+        // TODO Authenticate w/credentials
+
         authenticate()
     }
 

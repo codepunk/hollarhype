@@ -13,23 +13,26 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.toSize
 import androidx.window.core.layout.WindowSizeClass
 import androidx.window.core.layout.WindowWidthSizeClass
+import kotlin.math.pow
 
 val touchSize = 48.dp
 
-val sizeTiny = 4.dp
-val sizeSmall = 8.dp
-val sizeMediumSmall = 12.dp
-val sizeMedium = 16.dp
-val sizeMediumLarge = 24.dp
-val sizeLarge = 32.dp
-val sizeXLarge = 48.dp
-val sizeXxLarge = 64.dp
-val sizeXxxLarge = 96.dp
-val sizeHuge = 128.dp
-val sizeXHuge = 192.dp
-val sizeXxHuge = 256.dp
-val sizeXxxHuge = 384.dp
-val sizeGigantic = 512.dp
+enum class Size(private val factor: Int) {
+    MIN(1),         // 2.dp until 4.dp
+    TINY(2),        // 4.dp until 8.dp
+    SMALL(3),       // 8.dp until 16.dp
+    MEDIUM(4),      // 16.dp until 32.dp
+    LARGE(5),       // 32.dp until 64.dp
+    X_LARGE(6),     // 64.dp until 128.dp
+    XX_LARGE(7),    // 128.dp until 256.dp
+    XXX_LARGE(8),   // 256.dp until 512.dp
+    HUGE(9);        // 512.dp until 1024.dp
+
+    @Suppress("MemberVisibilityCanBePrivate")
+    val range: OpenEndRange<Dp> = Dp(2f.pow(factor)).rangeUntil(Dp(2f.pow(factor + 1)))
+    val value = range.start
+    val mid: Dp = (range.start + range.endExclusive).div(2f)
+}
 
 val smallGutterSize = 16.dp
 val largeGutterSize = 32.dp

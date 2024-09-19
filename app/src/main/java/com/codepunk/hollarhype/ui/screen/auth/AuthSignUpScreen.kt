@@ -1,6 +1,7 @@
 package com.codepunk.hollarhype.ui.screen.auth
 
 import android.content.res.Configuration
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -47,14 +48,8 @@ import com.codepunk.hollarhype.ui.theme.HollarhypeTheme
 import com.codepunk.hollarhype.ui.theme.buttonCornerRadius
 import com.codepunk.hollarhype.ui.theme.currentWindowAdaptiveInfoCustom
 import com.codepunk.hollarhype.ui.theme.layoutMargin
-import com.codepunk.hollarhype.ui.theme.sizeGigantic
-import com.codepunk.hollarhype.ui.theme.sizeLarge
-import com.codepunk.hollarhype.ui.theme.sizeMedium
-import com.codepunk.hollarhype.ui.theme.sizeSmall
-import com.codepunk.hollarhype.ui.theme.sizeXHuge
-import com.codepunk.hollarhype.ui.theme.sizeXLarge
-import com.codepunk.hollarhype.ui.theme.sizeXxxHuge
-import com.codepunk.hollarhype.ui.theme.sizeXxxLarge
+import com.codepunk.hollarhype.ui.theme.Size
+import com.codepunk.hollarhype.ui.theme.largeGutterSize
 import com.codepunk.hollarhype.ui.theme.standardButtonWidth
 
 @Composable
@@ -64,6 +59,17 @@ fun AuthSignUpScreen(
     onEvent: (AuthEvent) -> Unit = {}
 ) {
     val layoutMargin = layoutMargin().times(2)
+
+    Log.d("Size", "MIN=${Size.MIN}")
+    Log.d("Size", "TINY=${Size.TINY}")
+    Log.d("Size", "SMALL=${Size.SMALL}")
+    Log.d("Size", "MEDIUM=${Size.MEDIUM}")
+    Log.d("Size", "LARGE=${Size.LARGE}")
+    Log.d("Size", "X_LARGE=${Size.X_LARGE}")
+    Log.d("Size", "XX_LARGE=${Size.XX_LARGE}")
+    Log.d("Size", "XXX_LARGE=${Size.XXX_LARGE}")
+    Log.d("Size", "HUGE=${Size.HUGE}")
+
     Box(
         modifier = modifier
             .fillMaxSize()
@@ -88,18 +94,18 @@ fun AuthSignUpPortrait(
 ) {
     val sizeClass = currentWindowAdaptiveInfoCustom().windowSizeClass.windowWidthSizeClass
     val avatarSize = if (sizeClass == WindowWidthSizeClass.COMPACT) {
-        sizeXxxLarge
+        Size.X_LARGE.mid
     } else {
-        sizeXHuge
+        Size.XX_LARGE.mid
     }
 
     Column(
         modifier = Modifier
-            .widthIn(max = sizeXxxHuge)
+            .widthIn(max = Size.XXX_LARGE.mid)
             .fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(
-            space = sizeLarge,
+            space = Size.LARGE.value,
             alignment = Alignment.CenterVertically
         )
     ) {
@@ -126,9 +132,9 @@ fun AuthSignUpLandscape(
 ) {
     val sizeClass = currentWindowAdaptiveInfoCustom().windowSizeClass.windowHeightSizeClass
     val avatarSize = if (sizeClass == WindowHeightSizeClass.COMPACT) {
-        sizeXxxLarge
+        Size.X_LARGE.mid
     } else {
-        sizeXHuge
+        Size.XX_LARGE.mid
     }
 
     Row(
@@ -144,11 +150,11 @@ fun AuthSignUpLandscape(
         ) {
             Column(
                 modifier = Modifier
-                    .widthIn(max = sizeGigantic)
+                    .widthIn(max = Size.HUGE.value)
                     .fillMaxWidth(),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.spacedBy(
-                    space = sizeLarge,
+                    space = Size.LARGE.value,
                     alignment = Alignment.CenterVertically
                 )
             ) {
@@ -166,7 +172,7 @@ fun AuthSignUpLandscape(
 
         Spacer(
             modifier = Modifier
-                .width(sizeXLarge)
+                .width(largeGutterSize)
                 .fillMaxHeight()
         )
 
@@ -178,7 +184,7 @@ fun AuthSignUpLandscape(
         ) {
             SignUpForm(
                 modifier = Modifier
-                    .widthIn(max = sizeGigantic)
+                    .widthIn(max = Size.HUGE.value)
                     .fillMaxWidth()
             )
         }
@@ -216,7 +222,7 @@ fun SignUpForm(
     Column(
         modifier = modifier,
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(sizeSmall)
+        verticalArrangement = Arrangement.spacedBy(Size.SMALL.value)
     ) {
         OutlinedTextField(
             modifier = Modifier.fillMaxWidth(),
@@ -269,7 +275,7 @@ fun SignUpForm(
         Row(
             modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(sizeSmall)
+            horizontalArrangement = Arrangement.spacedBy(Size.SMALL.value)
         ) {
             OutlinedButton(
                 shape = RoundedCornerShape(size = buttonCornerRadius),
@@ -279,7 +285,7 @@ fun SignUpForm(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
-                        modifier = Modifier.width(sizeLarge),
+                        modifier = Modifier.width(Size.LARGE.value),
                         text = countryCode,
                         color = MaterialTheme.colorScheme.onBackground,
                         style = MaterialTheme.typography.displaySmall
@@ -319,7 +325,7 @@ fun SignUpSubmit(
     Column(
         modifier = modifier,
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(sizeMedium)
+        verticalArrangement = Arrangement.spacedBy(Size.MEDIUM.value)
     ) {
         Text(
             text = stringResource(id = R.string.disclaimer),

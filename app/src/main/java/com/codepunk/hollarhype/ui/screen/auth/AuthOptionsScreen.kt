@@ -27,10 +27,8 @@ import com.codepunk.hollarhype.domain.model.User
 import com.codepunk.hollarhype.ui.preview.ScreenPreviews
 import com.codepunk.hollarhype.ui.theme.HollarhypeTheme
 import com.codepunk.hollarhype.ui.theme.buttonCornerRadius
-import com.codepunk.hollarhype.ui.theme.sizeMedium
 import com.codepunk.hollarhype.ui.theme.layoutMargin
-import com.codepunk.hollarhype.ui.theme.sizeGigantic
-import com.codepunk.hollarhype.ui.theme.sizeXxxHuge
+import com.codepunk.hollarhype.ui.theme.Size
 import com.codepunk.hollarhype.ui.theme.standardButtonWidth
 
 @Composable
@@ -47,12 +45,12 @@ fun AuthOptionsScreen(
     ) {
         Column(
             modifier = Modifier
-                .widthIn(max = sizeXxxHuge)
+                .widthIn(max = Size.XXX_LARGE.mid)
                 .fillMaxSize()
                 .align(Alignment.Center),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(
-                space = sizeMedium,
+                space = Size.MEDIUM.value,
                 alignment = Alignment.CenterVertically
             )
         ) {
