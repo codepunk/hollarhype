@@ -18,7 +18,7 @@ import com.codepunk.hollarhype.R
 import com.codepunk.hollarhype.domain.model.User
 import com.codepunk.hollarhype.ui.preview.ScreenPreviews
 import com.codepunk.hollarhype.ui.theme.HollarhypeTheme
-import com.codepunk.hollarhype.ui.theme.Size
+import com.codepunk.hollarhype.ui.theme.LayoutSize
 import com.codepunk.hollarhype.ui.theme.layoutMargin
 import com.codepunk.hollarhype.util.consume
 
@@ -48,7 +48,7 @@ fun AuthInitScreen(
     ) {
         Image(
             modifier = Modifier
-                .widthIn(max = Size.HUGE.value)
+                .widthIn(max = LayoutSize.HUGE.value)
                 .fillMaxSize()
                 .align(Alignment.Center),
             painter = painterResource(R.drawable.hh_logo),

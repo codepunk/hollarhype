@@ -28,7 +28,7 @@ import com.codepunk.hollarhype.ui.preview.ScreenPreviews
 import com.codepunk.hollarhype.ui.theme.HollarhypeTheme
 import com.codepunk.hollarhype.ui.theme.buttonCornerRadius
 import com.codepunk.hollarhype.ui.theme.layoutMargin
-import com.codepunk.hollarhype.ui.theme.Size
+import com.codepunk.hollarhype.ui.theme.LayoutSize
 import com.codepunk.hollarhype.ui.theme.standardButtonWidth
 
 @Composable
@@ -45,12 +45,12 @@ fun AuthOptionsScreen(
     ) {
         Column(
             modifier = Modifier
-                .widthIn(max = Size.XXX_LARGE.mid)
+                .widthIn(max = LayoutSize.XXX_LARGE.mid)
                 .fillMaxSize()
                 .align(Alignment.Center),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(
-                space = Size.MEDIUM.value,
+                space = LayoutSize.MEDIUM.value,
                 alignment = Alignment.CenterVertically
             )
         ) {
