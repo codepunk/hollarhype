@@ -15,9 +15,7 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -29,10 +27,10 @@ import com.codepunk.hollarhype.domain.model.User
 import com.codepunk.hollarhype.ui.preview.ScreenPreviews
 import com.codepunk.hollarhype.ui.theme.HollarhypeTheme
 import com.codepunk.hollarhype.ui.theme.buttonCornerRadius
-import com.codepunk.hollarhype.ui.theme.largePadding
-import com.codepunk.hollarhype.ui.theme.layoutMarginWidth
+import com.codepunk.hollarhype.ui.theme.sizeMedium
+import com.codepunk.hollarhype.ui.theme.layoutMargin
 import com.codepunk.hollarhype.ui.theme.standardButtonWidth
-import com.codepunk.hollarhype.ui.theme.xLargePadding
+import com.codepunk.hollarhype.ui.theme.sizeLarge
 
 @Composable
 fun AuthOptionsScreen(
@@ -40,10 +38,7 @@ fun AuthOptionsScreen(
     state: AuthState,
     onEvent: (AuthEvent) -> Unit = {}
 ) {
-    val sizeClass = currentWindowAdaptiveInfo().windowSizeClass.windowWidthSizeClass
-    val layoutMargin = remember {
-        layoutMarginWidth(sizeClass)
-    }
+    val layoutMargin = layoutMargin()
     Box(
         modifier = modifier
             .fillMaxSize()
@@ -55,15 +50,15 @@ fun AuthOptionsScreen(
         Column(
             modifier = Modifier
                 .padding(
-                    start = xLargePadding,
-                    end = xLargePadding
+                    start = sizeLarge,
+                    end = sizeLarge
                 )
                 .aspectRatio(1f)
                 .fillMaxWidth()
                 .align(Alignment.Center),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(
-                space = largePadding,
+                space = sizeMedium,
                 alignment = Alignment.CenterVertically
             )
         ) {

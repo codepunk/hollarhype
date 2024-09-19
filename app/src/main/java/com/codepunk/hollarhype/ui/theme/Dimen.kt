@@ -1,5 +1,6 @@
 package com.codepunk.hollarhype.ui.theme
 
+import androidx.compose.material3.adaptive.WindowAdaptiveInfo
 import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
 import androidx.compose.material3.adaptive.currentWindowSize
 import androidx.compose.runtime.Composable
@@ -10,31 +11,31 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.toSize
+import androidx.window.core.layout.WindowSizeClass
 import androidx.window.core.layout.WindowWidthSizeClass
 
 val touchSize = 48.dp
 
-val xxxLargePadding = 96.dp
-val xxLargePadding = 48.dp
-val xLargePadding = 32.dp
-val largePadding = 16.dp
-val mediumPadding = 12.dp
-val smallPadding = 8.dp
-val tinyPadding = 4.dp
-
-val standardButtonWidth = 175.dp
-val buttonCornerRadius = 6.dp
-
-val tinySize = 8.dp
-val smallSize = 16.dp
-val mediumSize = 32.dp
-val largeSize = 48.dp
-val xLargeSize = 96.dp
-val xxLargeSize = 128.dp
-val xxxLargeSize = 182.dp
+val sizeTiny = 4.dp
+val sizeSmall = 8.dp
+val sizeMediumSmall = 12.dp
+val sizeMedium = 16.dp
+val sizeMediumLarge = 24.dp
+val sizeLarge = 32.dp
+val sizeXLarge = 48.dp
+val sizeXxLarge = 64.dp
+val sizeXxxLarge = 96.dp
+val sizeHuge = 128.dp
+val sizeXHuge = 192.dp
+val sizeXxHuge = 256.dp
+val sizeXxxHuge = 384.dp
+val sizeGigantic = 512.dp
 
 val smallGutterSize = 16.dp
 val largeGutterSize = 32.dp
+
+val standardButtonWidth = 192.dp
+val buttonCornerRadius = 8.dp
 
 @Composable
 fun currentWindowDpSize(): DpSize = with(LocalDensity.current) {
@@ -47,17 +48,22 @@ fun currentWindowDpSize(): DpSize = with(LocalDensity.current) {
 }
 
 @Composable
-fun windowClassIsLarge(): Boolean = currentWindowDpSize().width.let { width ->
-    width >= 1200.dp && width < 1600.dp
-}
+fun currentWindowAdaptiveInfoCustom(): WindowAdaptiveInfo =
+    currentWindowAdaptiveInfo().run {
+        if (LocalInspectionMode.current) {
+            val dpSize = currentWindowDpSize()
+            WindowAdaptiveInfo(
+                WindowSizeClass.compute(dpSize.width.value, dpSize.height.value),
+                windowPosture
+            )
+        } else {
+            this
+        }
+    }
 
 @Composable
-fun layoutMarginWidth(): Dp = layoutMarginWidth(
-    currentWindowAdaptiveInfo().windowSizeClass.windowWidthSizeClass
-)
-
-fun layoutMarginWidth(sizeClass: WindowWidthSizeClass): Dp =
-    when (sizeClass) {
+fun layoutMargin(): Dp =
+    when (currentWindowAdaptiveInfoCustom().windowSizeClass.windowWidthSizeClass) {
         WindowWidthSizeClass.COMPACT -> 16.dp
         WindowWidthSizeClass.MEDIUM -> 24.dp
         WindowWidthSizeClass.EXPANDED -> 24.dp

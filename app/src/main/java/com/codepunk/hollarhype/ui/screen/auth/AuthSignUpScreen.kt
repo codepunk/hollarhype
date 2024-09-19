@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -26,7 +27,6 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -45,16 +45,17 @@ import com.codepunk.hollarhype.R
 import com.codepunk.hollarhype.ui.preview.ScreenPreviews
 import com.codepunk.hollarhype.ui.theme.HollarhypeTheme
 import com.codepunk.hollarhype.ui.theme.buttonCornerRadius
-import com.codepunk.hollarhype.ui.theme.largeGutterSize
-import com.codepunk.hollarhype.ui.theme.largePadding
-import com.codepunk.hollarhype.ui.theme.layoutMarginWidth
-import com.codepunk.hollarhype.ui.theme.mediumSize
+import com.codepunk.hollarhype.ui.theme.currentWindowAdaptiveInfoCustom
+import com.codepunk.hollarhype.ui.theme.layoutMargin
+import com.codepunk.hollarhype.ui.theme.sizeGigantic
+import com.codepunk.hollarhype.ui.theme.sizeLarge
+import com.codepunk.hollarhype.ui.theme.sizeMedium
+import com.codepunk.hollarhype.ui.theme.sizeSmall
+import com.codepunk.hollarhype.ui.theme.sizeXHuge
+import com.codepunk.hollarhype.ui.theme.sizeXLarge
+import com.codepunk.hollarhype.ui.theme.sizeXxxHuge
+import com.codepunk.hollarhype.ui.theme.sizeXxxLarge
 import com.codepunk.hollarhype.ui.theme.standardButtonWidth
-import com.codepunk.hollarhype.ui.theme.xLargePadding
-import com.codepunk.hollarhype.ui.theme.xLargeSize
-import com.codepunk.hollarhype.ui.theme.xxLargePadding
-import com.codepunk.hollarhype.ui.theme.xxLargeSize
-import com.codepunk.hollarhype.ui.theme.xxxLargeSize
 
 @Composable
 fun AuthSignUpScreen(
@@ -62,13 +63,7 @@ fun AuthSignUpScreen(
     state: AuthState,
     onEvent: (AuthEvent) -> Unit = {}
 ) {
-    val windowAdaptiveInfo = currentWindowAdaptiveInfo()
-    val layoutMargin = remember {
-        layoutMarginWidth(windowAdaptiveInfo.windowSizeClass.windowWidthSizeClass)
-    }
-
-    val orientation = LocalConfiguration.current.orientation
-
+    val layoutMargin = layoutMargin().times(2)
     Box(
         modifier = modifier
             .fillMaxSize()
@@ -76,109 +71,116 @@ fun AuthSignUpScreen(
                 start = layoutMargin,
                 end = layoutMargin
             ),
-        contentAlignment = Alignment.TopCenter
+            contentAlignment = Alignment.Center
     ) {
-        if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            val avatarSize = when (windowAdaptiveInfo.windowSizeClass.windowHeightSizeClass) {
-                WindowHeightSizeClass.MEDIUM -> xxLargeSize
-                WindowHeightSizeClass.EXPANDED -> xxxLargeSize
-                else -> xLargeSize
-            }
-
-            val fillMaxWidthFraction = when (windowAdaptiveInfo.windowSizeClass.windowWidthSizeClass) {
-                WindowWidthSizeClass.MEDIUM -> 0.8f
-                WindowWidthSizeClass.EXPANDED -> 0.8f
-                else -> 0.8f
-            }
-
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth(fillMaxWidthFraction)
-                    .fillMaxHeight()
-            ) {
-                Column(
-                    modifier = Modifier
-                        .fillMaxWidth(0.5f)
-                        .fillMaxHeight()
-                        .padding(start = xLargePadding, end = xLargePadding),
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.spacedBy(
-                        space = xLargePadding,
-                        alignment = Alignment.CenterVertically
-                    )
-                ) {
-                    UserAvatar(
-                        modifier = Modifier
-                            .width(avatarSize),
-                        onEvent = onEvent
-                    )
-
-                    SignUpSubmit(
-                        modifier = Modifier
-                            .fillMaxWidth(),
-                        onEvent = onEvent
-                    )
-                }
-
-                Spacer(
-                    modifier = Modifier
-                        .width(largeGutterSize)
-                        .fillMaxHeight()
-                )
-
-                Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .fillMaxHeight(),
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.Center
-                ) {
-                    SignUpForm(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                    )
-                }
-            }
+        if (LocalConfiguration.current.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            AuthSignUpLandscape(onEvent = onEvent)
         } else {
-            val avatarSize = when (windowAdaptiveInfo.windowSizeClass.windowWidthSizeClass) {
-                WindowWidthSizeClass.MEDIUM -> xxLargeSize
-                WindowWidthSizeClass.EXPANDED -> xxxLargeSize
-                else -> xLargeSize
-            }
+            AuthSignUpPortrait(onEvent = onEvent)
+        }
+    }
+}
 
-            val fillMaxWidthFraction = when (windowAdaptiveInfo.windowSizeClass.windowWidthSizeClass) {
-                WindowWidthSizeClass.MEDIUM -> 0.8f
-                WindowWidthSizeClass.EXPANDED -> 0.6f
-                else -> 0.8f
-            }
+@Composable
+fun AuthSignUpPortrait(
+    modifier: Modifier = Modifier,
+    onEvent: (AuthEvent) -> Unit
+) {
+    val sizeClass = currentWindowAdaptiveInfoCustom().windowSizeClass.windowWidthSizeClass
+    val avatarSize = if (sizeClass == WindowWidthSizeClass.COMPACT) {
+        sizeXxxLarge
+    } else {
+        sizeXHuge
+    }
 
+    Column(
+        modifier = Modifier
+            .widthIn(max = sizeXxxHuge)
+            .fillMaxSize(),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(
+            space = sizeLarge,
+            alignment = Alignment.CenterVertically
+        )
+    ) {
+        UserAvatar(
+            modifier = Modifier.width(avatarSize),
+            onEvent = onEvent
+        )
+
+        SignUpForm(
+            modifier = Modifier.fillMaxWidth()
+        )
+
+        SignUpSubmit(
+            modifier = Modifier.fillMaxWidth(),
+            onEvent = onEvent
+        )
+    }
+}
+
+@Composable
+fun AuthSignUpLandscape(
+    modifier: Modifier = Modifier,
+    onEvent: (AuthEvent) -> Unit
+) {
+    val sizeClass = currentWindowAdaptiveInfoCustom().windowSizeClass.windowHeightSizeClass
+    val avatarSize = if (sizeClass == WindowHeightSizeClass.COMPACT) {
+        sizeXxxLarge
+    } else {
+        sizeXHuge
+    }
+
+    Row(
+        modifier = Modifier
+            .fillMaxSize(),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Box(
+            modifier = Modifier
+                .weight(1f)
+                .fillMaxHeight(),
+            contentAlignment = Alignment.CenterEnd
+        ) {
             Column(
                 modifier = Modifier
-                    .fillMaxWidth(fillMaxWidthFraction)
-                    .fillMaxHeight(),
+                    .widthIn(max = sizeGigantic)
+                    .fillMaxWidth(),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.spacedBy(
-                    space = xxLargePadding,
+                    space = sizeLarge,
                     alignment = Alignment.CenterVertically
                 )
             ) {
                 UserAvatar(
-                    modifier = Modifier
-                        .width(avatarSize),
+                    modifier = Modifier.width(avatarSize),
                     onEvent = onEvent
-                )
-
-                SignUpForm(
-                    modifier = Modifier
-                        .fillMaxWidth()
                 )
 
                 SignUpSubmit(
-                    modifier = Modifier
-                        .fillMaxWidth(),
+                    modifier = Modifier.fillMaxWidth(),
                     onEvent = onEvent
                 )
             }
+        }
+
+        Spacer(
+            modifier = Modifier
+                .width(sizeXLarge)
+                .fillMaxHeight()
+        )
+
+        Box(
+            modifier = Modifier
+                .weight(1f)
+                .fillMaxHeight(),
+            contentAlignment = Alignment.CenterStart
+        ) {
+            SignUpForm(
+                modifier = Modifier
+                    .widthIn(max = sizeGigantic)
+                    .fillMaxWidth()
+            )
         }
     }
 }
@@ -189,14 +191,13 @@ fun UserAvatar(
     onEvent: (AuthEvent) -> Unit
 ) {
     Box(
-        modifier = modifier
-            .aspectRatio(1f)
+        modifier = modifier.aspectRatio(1f)
     ) {
         Image(
             modifier = Modifier
                 .fillMaxSize()
                 .clip(CircleShape),
-            painter = painterResource(R.drawable.img_default_user),
+            painter = painterResource(R.drawable.img_default_user_96),
             contentDescription = stringResource(id = R.string.app_name)
         )
     }
@@ -209,20 +210,20 @@ fun SignUpForm(
     var firstName by remember { mutableStateOf("") }
     var lastName by remember { mutableStateOf("") }
     var emailAddress by remember { mutableStateOf("") }
-    var countryCode by remember { mutableStateOf("+33") }
+    var countryCode by remember { mutableStateOf("+1") }
     var phoneNumber by remember { mutableStateOf("") }
 
     Column(
         modifier = modifier,
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(largePadding)
+        verticalArrangement = Arrangement.spacedBy(sizeSmall)
     ) {
         OutlinedTextField(
-            modifier = Modifier
-                .fillMaxWidth(),
+            modifier = Modifier.fillMaxWidth(),
             colors = OutlinedTextFieldDefaults.colors().copy(
                 unfocusedContainerColor = MaterialTheme.colorScheme.primaryContainer
             ),
+            maxLines = 1,
             value = firstName,
             label = {
                 Text(
@@ -234,12 +235,12 @@ fun SignUpForm(
         )
 
         OutlinedTextField(
-            modifier = Modifier
-                .fillMaxWidth(),
+            modifier = Modifier.fillMaxWidth(),
             value = lastName,
             colors = OutlinedTextFieldDefaults.colors().copy(
                 unfocusedContainerColor = MaterialTheme.colorScheme.primaryContainer
             ),
+            maxLines = 1,
             label = {
                 Text(
                     text = stringResource(id = R.string.last_name),
@@ -250,12 +251,12 @@ fun SignUpForm(
         )
 
         OutlinedTextField(
-            modifier = Modifier
-                .fillMaxWidth(),
+            modifier = Modifier.fillMaxWidth(),
             value = emailAddress,
             colors = OutlinedTextFieldDefaults.colors().copy(
                 unfocusedContainerColor = MaterialTheme.colorScheme.primaryContainer
             ),
+            maxLines = 1,
             label = {
                 Text(
                     text = stringResource(id = R.string.email_address),
@@ -266,20 +267,19 @@ fun SignUpForm(
         )
 
         Row(
-            modifier = Modifier
-                .fillMaxWidth(),
+            modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(largePadding)
+            horizontalArrangement = Arrangement.spacedBy(sizeSmall)
         ) {
             OutlinedButton(
                 shape = RoundedCornerShape(size = buttonCornerRadius),
-                onClick = { /*TODO*/ }
+                onClick = { /* No op */ }
             ) {
                 Row(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
-                        modifier = Modifier.width(mediumSize),
+                        modifier = Modifier.width(sizeLarge),
                         text = countryCode,
                         color = MaterialTheme.colorScheme.onBackground,
                         style = MaterialTheme.typography.displaySmall
@@ -293,12 +293,12 @@ fun SignUpForm(
             }
 
             OutlinedTextField(
-                modifier = Modifier
-                    .fillMaxWidth(),
+                modifier = Modifier.fillMaxWidth(),
                 value = phoneNumber,
                 colors = OutlinedTextFieldDefaults.colors().copy(
                     unfocusedContainerColor = MaterialTheme.colorScheme.primaryContainer
                 ),
+                maxLines = 1,
                 label = {
                     Text(
                         text = stringResource(id = R.string.phone_number),
@@ -319,7 +319,7 @@ fun SignUpSubmit(
     Column(
         modifier = modifier,
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(largePadding)
+        verticalArrangement = Arrangement.spacedBy(sizeMedium)
     ) {
         Text(
             text = stringResource(id = R.string.disclaimer),
@@ -328,8 +328,7 @@ fun SignUpSubmit(
         )
 
         Button(
-            modifier = Modifier
-                .width(standardButtonWidth),
+            modifier = Modifier.width(standardButtonWidth),
             shape = RoundedCornerShape(size = buttonCornerRadius),
             colors = ButtonDefaults.buttonColors(
                 containerColor = MaterialTheme.colorScheme.secondary,
@@ -338,7 +337,7 @@ fun SignUpSubmit(
             onClick = { onEvent(AuthEvent.NavigateToSignIn) }
         ) {
             Text(
-                text = stringResource(id = R.string.sign_in).lowercase(),
+                text = stringResource(id = R.string.sign_up).lowercase(),
                 style = MaterialTheme.typography.displayMedium
             )
         }

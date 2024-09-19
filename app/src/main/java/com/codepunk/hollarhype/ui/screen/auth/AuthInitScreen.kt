@@ -7,9 +7,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -20,8 +18,8 @@ import com.codepunk.hollarhype.R
 import com.codepunk.hollarhype.domain.model.User
 import com.codepunk.hollarhype.ui.preview.ScreenPreviews
 import com.codepunk.hollarhype.ui.theme.HollarhypeTheme
-import com.codepunk.hollarhype.ui.theme.layoutMarginWidth
-import com.codepunk.hollarhype.ui.theme.xLargePadding
+import com.codepunk.hollarhype.ui.theme.layoutMargin
+import com.codepunk.hollarhype.ui.theme.sizeLarge
 import com.codepunk.hollarhype.util.consume
 
 @Composable
@@ -39,10 +37,7 @@ fun AuthInitScreen(
     }
 
     // If we made it here, silent authentication was successful
-    val sizeClass = currentWindowAdaptiveInfo().windowSizeClass.windowWidthSizeClass
-    val layoutMargin = remember {
-        layoutMarginWidth(sizeClass)
-    }
+    val layoutMargin = layoutMargin()
     Box(
         modifier = modifier
             .fillMaxSize()
@@ -54,8 +49,8 @@ fun AuthInitScreen(
         Image(
             modifier = Modifier
                 .padding(
-                    start = xLargePadding,
-                    end = xLargePadding
+                    start = sizeLarge,
+                    end = sizeLarge
                 )
                 .aspectRatio(1f)
                 .fillMaxWidth()
