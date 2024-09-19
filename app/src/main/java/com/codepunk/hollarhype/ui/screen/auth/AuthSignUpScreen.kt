@@ -59,11 +59,6 @@ fun AuthSignUpScreen(
     onEvent: (AuthEvent) -> Unit = {}
 ) {
     val layoutMargin = layoutMargin().times(2)
-
-    LayoutSize.entries.forEach {
-        Log.d("Size", "${it.name}=$it")
-    }
-
     Box(
         modifier = modifier
             .fillMaxSize()

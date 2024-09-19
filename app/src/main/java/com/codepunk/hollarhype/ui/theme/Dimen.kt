@@ -17,19 +17,20 @@ import kotlin.math.pow
 
 // region Classes
 
-enum class LayoutSize(private val factor: Int) {
-    MIN(1),         // 2.dp until 4.dp, mid = 3.dp
-    TINY(2),        // 4.dp until 8.dp, mid = 6.dp
-    SMALL(3),       // 8.dp until 16.dp, mid = 12.dp
-    MEDIUM(4),      // 16.dp until 32.dp, mid = 24.dp
-    LARGE(5),       // 32.dp until 64.dp, mid = 48.dp
-    X_LARGE(6),     // 64.dp until 128.dp, mid = 96.dp
-    XX_LARGE(7),    // 128.dp until 256.dp, mid = 192.dp
-    XXX_LARGE(8),   // 256.dp until 512.dp, mid = 384.dp
-    HUGE(9);        // 512.dp until 1024.dp, mid = 768.dp
+enum class LayoutSize {
+    MIN,         // 2.dp until 4.dp, mid = 3.dp
+    TINY,        // 4.dp until 8.dp, mid = 6.dp
+    SMALL,       // 8.dp until 16.dp, mid = 12.dp
+    MEDIUM,      // 16.dp until 32.dp, mid = 24.dp
+    LARGE,       // 32.dp until 64.dp, mid = 48.dp
+    X_LARGE,     // 64.dp until 128.dp, mid = 96.dp
+    XX_LARGE,    // 128.dp until 256.dp, mid = 192.dp
+    XXX_LARGE,   // 256.dp until 512.dp, mid = 384.dp
+    HUGE;        // 512.dp until 1024.dp, mid = 768.dp
 
     @Suppress("MemberVisibilityCanBePrivate")
-    val range: OpenEndRange<Dp> = Dp(2f.pow(factor)).rangeUntil(Dp(2f.pow(factor + 1)))
+    val range: OpenEndRange<Dp> =
+        Dp(2f.pow(ordinal + 1)).rangeUntil(Dp(2f.pow(ordinal + 2)))
     val value = range.start
     val mid: Dp = (range.start + range.endExclusive).div(2f)
 
