@@ -1,7 +1,6 @@
 package com.codepunk.hollarhype.ui.screen.auth
 
 import android.content.res.Configuration
-import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -29,10 +28,9 @@ import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -58,6 +56,8 @@ fun AuthSignUpScreen(
     state: AuthState,
     onEvent: (AuthEvent) -> Unit = {}
 ) {
+    var formValues = remember { mutableStateOf(FormValues()) }
+
     val layoutMargin = layoutMargin().times(2)
     Box(
         modifier = modifier
@@ -69,9 +69,13 @@ fun AuthSignUpScreen(
             contentAlignment = Alignment.Center
     ) {
         if (LocalConfiguration.current.orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            AuthSignUpLandscape(onEvent = onEvent)
+            AuthSignUpLandscape(
+                formValues = formValues
+            )
         } else {
-            AuthSignUpPortrait(onEvent = onEvent)
+            AuthSignUpPortrait(
+                formValues = formValues
+            )
         }
     }
 }
@@ -79,7 +83,7 @@ fun AuthSignUpScreen(
 @Composable
 fun AuthSignUpPortrait(
     modifier: Modifier = Modifier,
-    onEvent: (AuthEvent) -> Unit
+    formValues: MutableState<FormValues>
 ) {
     val sizeClass = currentWindowAdaptiveInfoCustom().windowSizeClass.windowWidthSizeClass
     val avatarSize = if (sizeClass == WindowWidthSizeClass.COMPACT) {
@@ -99,17 +103,16 @@ fun AuthSignUpPortrait(
         )
     ) {
         UserAvatar(
-            modifier = Modifier.width(avatarSize),
-            onEvent = onEvent
+            modifier = Modifier.width(avatarSize)
         )
 
         SignUpForm(
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
+            formValues = formValues
         )
 
         SignUpSubmit(
-            modifier = Modifier.fillMaxWidth(),
-            onEvent = onEvent
+            modifier = Modifier.fillMaxWidth()
         )
     }
 }
@@ -117,7 +120,7 @@ fun AuthSignUpPortrait(
 @Composable
 fun AuthSignUpLandscape(
     modifier: Modifier = Modifier,
-    onEvent: (AuthEvent) -> Unit
+    formValues: MutableState<FormValues>
 ) {
     val sizeClass = currentWindowAdaptiveInfoCustom().windowSizeClass.windowHeightSizeClass
     val avatarSize = if (sizeClass == WindowHeightSizeClass.COMPACT) {
@@ -148,13 +151,11 @@ fun AuthSignUpLandscape(
                 )
             ) {
                 UserAvatar(
-                    modifier = Modifier.width(avatarSize),
-                    onEvent = onEvent
+                    modifier = Modifier.width(avatarSize)
                 )
 
                 SignUpSubmit(
-                    modifier = Modifier.fillMaxWidth(),
-                    onEvent = onEvent
+                    modifier = Modifier.fillMaxWidth()
                 )
             }
         }
@@ -174,7 +175,8 @@ fun AuthSignUpLandscape(
             SignUpForm(
                 modifier = Modifier
                     .widthIn(max = LayoutSize.HUGE.value)
-                    .fillMaxWidth()
+                    .fillMaxWidth(),
+                formValues = formValues
             )
         }
     }
@@ -182,8 +184,7 @@ fun AuthSignUpLandscape(
 
 @Composable
 fun UserAvatar(
-    modifier: Modifier = Modifier,
-    onEvent: (AuthEvent) -> Unit
+    modifier: Modifier = Modifier
 ) {
     Box(
         modifier = modifier.aspectRatio(1f)
@@ -200,14 +201,9 @@ fun UserAvatar(
 
 @Composable
 fun SignUpForm(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    formValues: MutableState<FormValues>
 ) {
-    var firstName by remember { mutableStateOf("") }
-    var lastName by remember { mutableStateOf("") }
-    var emailAddress by remember { mutableStateOf("") }
-    var countryCode by remember { mutableStateOf("+1") }
-    var phoneNumber by remember { mutableStateOf("") }
-
     Column(
         modifier = modifier,
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -219,19 +215,19 @@ fun SignUpForm(
                 unfocusedContainerColor = MaterialTheme.colorScheme.primaryContainer
             ),
             maxLines = 1,
-            value = firstName,
+            value = formValues.value.firstName,
             label = {
                 Text(
                     text = stringResource(id = R.string.first_name),
                     style = MaterialTheme.typography.displaySmall
                 )
             },
-            onValueChange = { /* No op */ }
+            onValueChange = { formValues.value = formValues.value.copy(firstName = it) }
         )
 
         OutlinedTextField(
             modifier = Modifier.fillMaxWidth(),
-            value = lastName,
+            value = formValues.value.lastName,
             colors = OutlinedTextFieldDefaults.colors().copy(
                 unfocusedContainerColor = MaterialTheme.colorScheme.primaryContainer
             ),
@@ -242,12 +238,12 @@ fun SignUpForm(
                     style = MaterialTheme.typography.displaySmall
                 )
             },
-            onValueChange = { /* No op */ }
+            onValueChange = { formValues.value = formValues.value.copy(lastName = it) }
         )
 
         OutlinedTextField(
             modifier = Modifier.fillMaxWidth(),
-            value = emailAddress,
+            value = formValues.value.emailAddress,
             colors = OutlinedTextFieldDefaults.colors().copy(
                 unfocusedContainerColor = MaterialTheme.colorScheme.primaryContainer
             ),
@@ -258,7 +254,7 @@ fun SignUpForm(
                     style = MaterialTheme.typography.displaySmall
                 )
             },
-            onValueChange = { /* No op */ }
+            onValueChange = { formValues.value = formValues.value.copy(emailAddress = it) }
         )
 
         Row(
@@ -275,7 +271,7 @@ fun SignUpForm(
                 ) {
                     Text(
                         modifier = Modifier.width(LayoutSize.LARGE.value),
-                        text = countryCode,
+                        text = formValues.value.countryCode,
                         color = MaterialTheme.colorScheme.onBackground,
                         style = MaterialTheme.typography.displaySmall
                     )
@@ -289,7 +285,7 @@ fun SignUpForm(
 
             OutlinedTextField(
                 modifier = Modifier.fillMaxWidth(),
-                value = phoneNumber,
+                value = formValues.value.phoneNumber,
                 colors = OutlinedTextFieldDefaults.colors().copy(
                     unfocusedContainerColor = MaterialTheme.colorScheme.primaryContainer
                 ),
@@ -300,7 +296,7 @@ fun SignUpForm(
                         style = MaterialTheme.typography.displaySmall
                     )
                 },
-                onValueChange = { /* No op */ }
+                onValueChange = { formValues.value = formValues.value.copy(phoneNumber = it) }
             )
         }
     }
@@ -308,8 +304,7 @@ fun SignUpForm(
 
 @Composable
 fun SignUpSubmit(
-    modifier: Modifier = Modifier,
-    onEvent: (AuthEvent) -> Unit
+    modifier: Modifier = Modifier
 ) {
     Column(
         modifier = modifier,
@@ -329,7 +324,7 @@ fun SignUpSubmit(
                 containerColor = MaterialTheme.colorScheme.secondary,
                 contentColor = MaterialTheme.colorScheme.onSecondary
             ),
-            onClick = { onEvent(AuthEvent.NavigateToSignIn) }
+            onClick = { TODO("Not yet implemented") }
         ) {
             Text(
                 text = stringResource(id = R.string.sign_up).lowercase(),
@@ -351,3 +346,11 @@ fun AuthSignUpPreviews() {
         }
     }
 }
+
+data class FormValues(
+    val firstName: String = "",
+    val lastName: String = "",
+    val emailAddress: String = "",
+    val countryCode: String = "+1",
+    val phoneNumber: String = ""
+)
