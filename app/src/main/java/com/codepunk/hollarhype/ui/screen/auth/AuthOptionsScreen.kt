@@ -4,11 +4,11 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -29,8 +29,9 @@ import com.codepunk.hollarhype.ui.theme.HollarhypeTheme
 import com.codepunk.hollarhype.ui.theme.buttonCornerRadius
 import com.codepunk.hollarhype.ui.theme.sizeMedium
 import com.codepunk.hollarhype.ui.theme.layoutMargin
+import com.codepunk.hollarhype.ui.theme.sizeGigantic
+import com.codepunk.hollarhype.ui.theme.sizeXxxHuge
 import com.codepunk.hollarhype.ui.theme.standardButtonWidth
-import com.codepunk.hollarhype.ui.theme.sizeLarge
 
 @Composable
 fun AuthOptionsScreen(
@@ -42,19 +43,12 @@ fun AuthOptionsScreen(
     Box(
         modifier = modifier
             .fillMaxSize()
-            .padding(
-                start = layoutMargin,
-                end = layoutMargin
-            )
+            .padding(all = layoutMargin)
     ) {
         Column(
             modifier = Modifier
-                .padding(
-                    start = sizeLarge,
-                    end = sizeLarge
-                )
-                .aspectRatio(1f)
-                .fillMaxWidth()
+                .widthIn(max = sizeXxxHuge)
+                .fillMaxSize()
                 .align(Alignment.Center),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(
@@ -63,8 +57,7 @@ fun AuthOptionsScreen(
             )
         ) {
             Image(
-                modifier = Modifier
-                    .fillMaxWidth(),
+                modifier = Modifier.fillMaxWidth(),
                 painter = painterResource(R.drawable.hh_logo),
                 contentDescription = stringResource(id = R.string.app_name)
             )
