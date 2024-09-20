@@ -69,8 +69,12 @@ class AuthViewModel @Inject constructor(
         Log.d("AuthViewModel", "editAvatar")
     }
 
-    private fun signIn() {
-        Log.d("AuthViewModel", "signIn")
+    private fun phoneNumberChanged() {
+        Log.d("AuthViewModel", "phoneNumberChanged")
+    }
+
+    private fun signIn(regionCode: String, phoneNumber: String) {
+        Log.d("AuthViewModel", "signIn: regionCode=$regionCode, phoneNumber=$phoneNumber")
     }
 
     private fun resendOtp() {
@@ -101,13 +105,14 @@ class AuthViewModel @Inject constructor(
 
     fun onEvent(event: AuthEvent) {
         when (event) {
-            AuthEvent.OnEditAvatar -> editAvatar()
-            AuthEvent.OnResendOtp -> resendOtp()
-            AuthEvent.OnSignIn -> signIn()
-            AuthEvent.Initialize -> authenticate()
-            AuthEvent.NavigateToAuthOptions -> navigateToAuthOptions()
-            AuthEvent.NavigateToSignIn -> navigateToSignIn()
-            AuthEvent.NavigateToSignUp -> navigateToSignUp()
+            is AuthEvent.OnEditAvatar -> editAvatar()
+            is AuthEvent.OnPhoneNumberChanged -> phoneNumberChanged()
+            is AuthEvent.OnResendOtp -> resendOtp()
+            is AuthEvent.OnSignIn -> signIn(event.regionCode, event.phoneNumber)
+            is AuthEvent.Initialize -> authenticate()
+            is AuthEvent.NavigateToAuthOptions -> navigateToAuthOptions()
+            is AuthEvent.NavigateToSignIn -> navigateToSignIn()
+            is AuthEvent.NavigateToSignUp -> navigateToSignUp()
         }
     }
 

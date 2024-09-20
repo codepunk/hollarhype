@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
@@ -41,7 +40,7 @@ fun AuthSignInScreen(
     state: AuthState,
     onEvent: (AuthEvent) -> Unit = {}
 ) {
-    var regionCode by remember { mutableStateOf("") }
+    var regionCode by remember { mutableStateOf("+1") }
     var phoneNumber by remember { mutableStateOf("") }
 
     val layoutMargin = layoutMargin().times(2)
@@ -62,6 +61,7 @@ fun AuthSignInScreen(
                     bottom = LayoutSize.LARGE.value
                 ),
             horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(LayoutSize.MEDIUM.value)
         ) {
             Spacer(
                 modifier = Modifier
@@ -78,10 +78,10 @@ fun AuthSignInScreen(
 
             TextButton(
                 modifier = Modifier.padding(top = LayoutSize.MEDIUM.value),
-                onClick = { onEvent(AuthEvent.OnResendOtp) }
+                onClick = { onEvent(AuthEvent.OnPhoneNumberChanged) }
             ) {
                 Text(
-                    text = stringResource(id = R.string.resend_otp),
+                    text = stringResource(id = R.string.phone_number_changed),
                     color = MaterialTheme.colorScheme.onBackground,
                     style = MaterialTheme.typography.labelMedium,
                     textAlign = TextAlign.Center
@@ -101,7 +101,12 @@ fun AuthSignInScreen(
                     containerColor = MaterialTheme.colorScheme.secondary,
                     contentColor = MaterialTheme.colorScheme.onSecondary
                 ),
-                onClick = { onEvent(AuthEvent.OnSignIn) }
+                onClick = { onEvent(
+                    AuthEvent.OnSignIn(
+                        regionCode = regionCode,
+                        phoneNumber = phoneNumber
+                    )
+                ) }
             ) {
                 Text(
                     text = stringResource(id = R.string.sign_in).lowercase(),

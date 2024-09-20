@@ -2,7 +2,11 @@ package com.codepunk.hollarhype.ui.screen.auth
 
 sealed interface AuthEvent {
     data object OnEditAvatar: AuthEvent
-    data object OnSignIn: AuthEvent
+    data object OnPhoneNumberChanged: AuthEvent
+    data class OnSignIn(
+        val regionCode: String,
+        val phoneNumber: String
+    ): AuthEvent
     data object OnResendOtp: AuthEvent
     data object NavigateToAuthOptions: AuthEvent
     data object NavigateToSignUp: AuthEvent
