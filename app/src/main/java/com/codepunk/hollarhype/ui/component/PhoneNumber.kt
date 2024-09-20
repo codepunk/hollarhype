@@ -63,6 +63,7 @@ fun PhoneNumber(
                 unfocusedContainerColor = MaterialTheme.colorScheme.primaryContainer
             ),
             maxLines = 1,
+            singleLine = true,
             label = {
                 Text(
                     text = stringResource(id = R.string.phone_number),

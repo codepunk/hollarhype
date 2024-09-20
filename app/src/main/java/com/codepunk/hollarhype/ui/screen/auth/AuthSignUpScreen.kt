@@ -346,6 +346,7 @@ fun SignUpForm(
                 unfocusedContainerColor = MaterialTheme.colorScheme.primaryContainer
             ),
             maxLines = 1,
+            singleLine = true,
             value = firstName,
             label = {
                 Text(
@@ -363,6 +364,7 @@ fun SignUpForm(
                 unfocusedContainerColor = MaterialTheme.colorScheme.primaryContainer
             ),
             maxLines = 1,
+            singleLine = true,
             label = {
                 Text(
                     text = stringResource(id = R.string.last_name),
@@ -379,6 +381,7 @@ fun SignUpForm(
                 unfocusedContainerColor = MaterialTheme.colorScheme.primaryContainer
             ),
             maxLines = 1,
+            singleLine = true,
             label = {
                 Text(
                     text = stringResource(id = R.string.email_address),

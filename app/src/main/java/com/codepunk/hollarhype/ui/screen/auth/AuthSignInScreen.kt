@@ -127,7 +127,12 @@ fun AuthSignInScreen(
             onDismiss = { showPicker = false },
             onConfirm = { showPicker = false }
         ) {
-            CountryCodePicker()
+            CountryCodePicker(
+                onItemSelected = { item ->
+                    countryCode = "+${item.countryCode}"
+                    showPicker = false
+                }
+            )
         }
     }
 }
