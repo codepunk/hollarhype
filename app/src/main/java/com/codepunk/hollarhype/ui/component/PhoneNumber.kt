@@ -43,7 +43,7 @@ fun PhoneNumber(
     onCountryCodeClick: () -> Unit = {},
     onPhoneNumberChange: (String) -> Unit = {}
 ) {
-    // TODO We seem to be converting from region code to country code and then back again.
+    // TODO NEXT We seem to be converting from region code to country code and then back again.
     //  Maybe pass more info to this method?
     val phoneNumberUtil: PhoneNumberUtil by remember { mutableStateOf(PhoneNumberUtil.getInstance()) }
     val region = phoneNumberUtil.getRegionCodeForCountryCode(countryCode)
@@ -112,7 +112,7 @@ fun PhoneNumber(
 
 @ComponentPreviews
 @Composable
-fun previewPhoneNumber() {
+fun PreviewPhoneNumber() {
     HollarhypeTheme {
         Surface {
             PhoneNumber(

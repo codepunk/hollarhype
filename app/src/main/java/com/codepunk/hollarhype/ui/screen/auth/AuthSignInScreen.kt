@@ -44,8 +44,8 @@ fun AuthSignInScreen(
     state: AuthState,
     onEvent: (AuthEvent) -> Unit = {}
 ) {
-    var countryCode by remember { mutableIntStateOf(1) }
-    var phoneNumber by remember { mutableStateOf("") }
+    var countryCode by rememberSaveable { mutableIntStateOf(1) }
+    var phoneNumber by rememberSaveable { mutableStateOf("") }
 
     var showPicker by rememberSaveable { mutableStateOf(false) }
 
