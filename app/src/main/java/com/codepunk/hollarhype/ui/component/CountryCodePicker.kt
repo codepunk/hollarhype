@@ -52,7 +52,7 @@ fun CountryCodePicker(
                     region = region,
                     countryName = JavaLocale("", region).displayCountry,
                     countryCode = countryCode,
-                    flagEmoji = "",
+                    flagEmoji = getFlagEmoji(region),
                     phoneFormat = ""
                 )
             }.sortedBy { countryInfo ->
@@ -108,8 +108,12 @@ fun CountryCodePicker(
             items(count = countries.size) { index ->
                 Row(
                     modifier = Modifier.fillMaxWidth()
-                        .height(LayoutSize.LARGE.value)
+                        .height(LayoutSize.LARGE.value),
+                    horizontalArrangement = Arrangement.spacedBy(LayoutSize.SMALL.value)
                 ) {
+                    Text(
+                        text = countries[index].flagEmoji
+                    )
                     Text(
                         modifier = Modifier
                             .weight(1f),
@@ -131,6 +135,15 @@ data class CountryInfo(
     val flagEmoji: String = "",
     val phoneFormat: String = ""
 )
+
+fun getFlagEmoji(region: String): String {
+    if (region.length != 2) return ""
+    val regionUpper = region.uppercase()
+    if (!regionUpper[0].isLetter() || !regionUpper[1].isLetter()) return ""
+    val firstLetter = Character.codePointAt(regionUpper, 0) - 0x41 + 0x1F1E6
+    val secondLetter = Character.codePointAt(regionUpper, 1) - 0x41 + 0x1F1E6
+    return String(Character.toChars(firstLetter)) + String(Character.toChars(secondLetter))
+}
 
 @ScreenPreviews
 @Composable

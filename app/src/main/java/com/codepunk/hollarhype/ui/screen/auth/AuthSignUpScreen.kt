@@ -391,6 +391,7 @@ fun SignUpForm(
         PhoneNumber(
             countryCode = countryCode,
             phoneNumber = phoneNumber,
+            onClickCountryCode = { /* TODO */ },
             onCountryCodeChange = { /* TODO */ },
             onPhoneNumberChange = { onFormValueChange(FormField.PHONE_NUMBER, it) }
         )

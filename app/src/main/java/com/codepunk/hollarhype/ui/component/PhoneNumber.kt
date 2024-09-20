@@ -26,6 +26,7 @@ fun PhoneNumber(
     modifier: Modifier = Modifier,
     countryCode: String,
     phoneNumber: String,
+    onClickCountryCode: () -> Unit,
     onCountryCodeChange: (String) -> Unit,
     onPhoneNumberChange: (String) -> Unit
 ) {
@@ -36,7 +37,7 @@ fun PhoneNumber(
     ) {
         OutlinedButton(
             shape = RoundedCornerShape(size = buttonCornerRadius),
-            onClick = { /* No op */ }
+            onClick = onClickCountryCode
         ) {
             Row(
                 verticalAlignment = Alignment.CenterVertically

@@ -20,12 +20,15 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import com.codepunk.hollarhype.R
+import com.codepunk.hollarhype.ui.component.CountryCodePicker
+import com.codepunk.hollarhype.ui.component.CountryCodePickerDialog
 import com.codepunk.hollarhype.ui.component.PhoneNumber
 import com.codepunk.hollarhype.ui.preview.ScreenPreviews
 import com.codepunk.hollarhype.ui.theme.HollarhypeTheme
@@ -42,6 +45,8 @@ fun AuthSignInScreen(
 ) {
     var countryCode by remember { mutableStateOf("+1") }
     var phoneNumber by remember { mutableStateOf("") }
+
+    var showPicker by rememberSaveable { mutableStateOf(true) }
 
     val layoutMargin = layoutMargin().times(2)
     Box(
@@ -72,6 +77,7 @@ fun AuthSignInScreen(
             PhoneNumber(
                 countryCode = countryCode,
                 phoneNumber = phoneNumber,
+                onClickCountryCode = { showPicker = true },
                 onCountryCodeChange = { countryCode = it },
                 onPhoneNumberChange = { phoneNumber = it }
             )
@@ -113,6 +119,15 @@ fun AuthSignInScreen(
                     style = MaterialTheme.typography.displayMedium
                 )
             }
+        }
+    }
+
+    if (showPicker) {
+        CountryCodePickerDialog(
+            onDismiss = { showPicker = false },
+            onConfirm = { showPicker = false }
+        ) {
+            CountryCodePicker()
         }
     }
 }
