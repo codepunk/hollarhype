@@ -17,21 +17,24 @@ import kotlin.math.pow
 
 // region Classes
 
-enum class LayoutSize {
-    MIN,         // 2.dp until 4.dp, mid = 3.dp
-    TINY,        // 4.dp until 8.dp, mid = 6.dp
-    SMALL,       // 8.dp until 16.dp, mid = 12.dp
-    MEDIUM,      // 16.dp until 32.dp, mid = 24.dp
-    LARGE,       // 32.dp until 64.dp, mid = 48.dp
-    X_LARGE,     // 64.dp until 128.dp, mid = 96.dp
-    XX_LARGE,    // 128.dp until 256.dp, mid = 192.dp
-    XXX_LARGE,   // 256.dp until 512.dp, mid = 384.dp
-    HUGE;        // 512.dp until 1024.dp, mid = 768.dp
+/**
+ * Sizes are based on powers of 2. For useful "in-between" sizes like
+ * 48.dp, 96.dp, 192.dp, etc., use LayoutSize.mid.
+ */
+enum class LayoutSize(val start: Dp, val endExclusive: Dp) {
+    MIN(2.dp, 4.dp),
+    TINY(4.dp, 8.dp),
+    SMALL(8.dp, 16.dp),
+    MEDIUM(16.dp, 32.dp),
+    LARGE(32.dp, 64.dp),
+    X_LARGE(64.dp, 128.dp),
+    XX_LARGE(128.dp, 256.dp),
+    XXX_LARGE(256.dp, 512.dp),
+    HUGE(512.dp, 1024.dp);
 
     @Suppress("MemberVisibilityCanBePrivate")
-    val range: OpenEndRange<Dp> =
-        Dp(2f.pow(ordinal + 1)).rangeUntil(Dp(2f.pow(ordinal + 2)))
-    val value = range.start
+    val range: OpenEndRange<Dp> = start.rangeUntil(endExclusive)
+    val value = start
     val mid: Dp = (range.start + range.endExclusive).div(2f)
 
     override fun toString(): String {
@@ -68,15 +71,13 @@ fun currentWindowDpSize(): DpSize = with(LocalDensity.current) {
 @Composable
 fun currentWindowAdaptiveInfoCustom(): WindowAdaptiveInfo =
     currentWindowAdaptiveInfo().run {
-        if (LocalInspectionMode.current) {
-            val dpSize = currentWindowDpSize()
-            WindowAdaptiveInfo(
-                WindowSizeClass.compute(dpSize.width.value, dpSize.height.value),
-                windowPosture
-            )
-        } else {
-            this
-        }
+        takeUnless { LocalInspectionMode.current }
+            ?: currentWindowDpSize().let { dpSize ->
+                WindowAdaptiveInfo(
+                    WindowSizeClass.compute(dpSize.width.value, dpSize.height.value),
+                    windowPosture
+                )
+            }
     }
 
 @Composable

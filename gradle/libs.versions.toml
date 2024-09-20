@@ -26,6 +26,7 @@ okhttp = "4.12.0"
 retrofit = "2.11.0"
 room = "2.6.1"
 credentials = "1.5.0-alpha02"
+accompanist = "0.36.0"
 
 [libraries]
 # Supplied by New Project template
@@ -66,6 +67,7 @@ room-compiler = { group = "androidx.room", name = "room-compiler", version.ref =
 room-paging = { group = "androidx.room", name = "room-paging", version.ref = "room" }
 credentials-play-services-auth = { group = "androidx.credentials", name = "credentials-play-services-auth", version.ref = "credentials" }
 credentials = { group = "androidx.credentials", name = "credentials", version.ref = "credentials" }
+accompanist = { group = "com.google.accompanist", name = "accompanist-permissions", version.ref = "accompanist" }
 
 [plugins]
 # Supplied by New Project template

@@ -156,4 +156,7 @@ dependencies {
     // Credentials
     implementation(libs.credentials.play.services.auth)
     implementation(libs.credentials)
+
+    // Accompanist
+    implementation(libs.accompanist)
 }

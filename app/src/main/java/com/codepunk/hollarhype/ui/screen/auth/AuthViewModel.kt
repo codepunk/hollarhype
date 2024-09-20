@@ -1,5 +1,6 @@
 package com.codepunk.hollarhype.ui.screen.auth
 
+import android.util.Log
 import androidx.credentials.CredentialManager
 import androidx.credentials.GetCredentialRequest
 import androidx.credentials.GetPasswordOption
@@ -38,6 +39,8 @@ class AuthViewModel @Inject constructor(
             credentialOptions = listOf(GetPasswordOption())
         )
 
+
+
         // TODO Authenticate w/credentials
 
         authenticate()
@@ -46,18 +49,6 @@ class AuthViewModel @Inject constructor(
     // endregion Constructors
 
     // region Methods
-
-    private fun navigateToAuthOptions() {
-
-    }
-
-    private fun navigateToSignUp() {
-
-    }
-
-    private fun navigateToSignIn() {
-
-    }
 
     private fun authenticate() {
         viewModelScope.launch {
@@ -74,6 +65,22 @@ class AuthViewModel @Inject constructor(
         }
     }
 
+    private fun onEditAvatar() {
+        Log.d("AuthViewModel", "onEditAvatar")
+    }
+
+    private fun navigateToAuthOptions() {
+
+    }
+
+    private fun navigateToSignUp() {
+
+    }
+
+    private fun navigateToSignIn() {
+
+    }
+
     private fun onConsumeAuthenticatedUser(
         authenticatedUser: Either<Throwable, User>
     ) {
@@ -86,6 +93,7 @@ class AuthViewModel @Inject constructor(
 
     fun onEvent(event: AuthEvent) {
         when (event) {
+            AuthEvent.EditAvatar -> onEditAvatar()
             AuthEvent.Initialize -> authenticate()
             AuthEvent.NavigateToAuthOptions -> navigateToAuthOptions()
             AuthEvent.NavigateToSignIn -> navigateToSignIn()

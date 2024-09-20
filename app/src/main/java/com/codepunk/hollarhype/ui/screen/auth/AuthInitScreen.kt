@@ -16,6 +16,7 @@ import arrow.core.right
 import arrow.eval.Eval
 import com.codepunk.hollarhype.R
 import com.codepunk.hollarhype.domain.model.User
+import com.codepunk.hollarhype.ui.component.HandlePostNotificationsPermission
 import com.codepunk.hollarhype.ui.preview.ScreenPreviews
 import com.codepunk.hollarhype.ui.theme.HollarhypeTheme
 import com.codepunk.hollarhype.ui.theme.LayoutSize
@@ -28,6 +29,8 @@ fun AuthInitScreen(
     state: AuthState,
     onEvent: (AuthEvent) -> Unit = {}
 ) {
+    HandlePostNotificationsPermission()
+
     // Attempt to consume result of silent authentication
     state.authenticatedUser.consume { authenticatedUser ->
         if (authenticatedUser.isLeft()) {
