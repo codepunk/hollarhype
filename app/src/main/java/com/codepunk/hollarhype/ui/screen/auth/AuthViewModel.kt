@@ -65,8 +65,16 @@ class AuthViewModel @Inject constructor(
         }
     }
 
-    private fun onEditAvatar() {
-        Log.d("AuthViewModel", "onEditAvatar")
+    private fun editAvatar() {
+        Log.d("AuthViewModel", "editAvatar")
+    }
+
+    private fun signIn() {
+        Log.d("AuthViewModel", "signIn")
+    }
+
+    private fun resendOtp() {
+        Log.d("AuthViewModel", "resendOtp")
     }
 
     private fun navigateToAuthOptions() {
@@ -93,7 +101,9 @@ class AuthViewModel @Inject constructor(
 
     fun onEvent(event: AuthEvent) {
         when (event) {
-            AuthEvent.EditAvatar -> onEditAvatar()
+            AuthEvent.OnEditAvatar -> editAvatar()
+            AuthEvent.OnResendOtp -> resendOtp()
+            AuthEvent.OnSignIn -> signIn()
             AuthEvent.Initialize -> authenticate()
             AuthEvent.NavigateToAuthOptions -> navigateToAuthOptions()
             AuthEvent.NavigateToSignIn -> navigateToSignIn()

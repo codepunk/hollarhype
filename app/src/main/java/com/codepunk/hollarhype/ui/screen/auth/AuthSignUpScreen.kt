@@ -17,21 +17,17 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.FilledIconButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -48,6 +44,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.window.core.layout.WindowHeightSizeClass
 import androidx.window.core.layout.WindowWidthSizeClass
 import com.codepunk.hollarhype.R
+import com.codepunk.hollarhype.ui.component.PhoneNumber
 import com.codepunk.hollarhype.ui.preview.ScreenPreviews
 import com.codepunk.hollarhype.ui.theme.HollarhypeTheme
 import com.codepunk.hollarhype.ui.theme.LayoutSize
@@ -56,17 +53,19 @@ import com.codepunk.hollarhype.ui.theme.currentWindowAdaptiveInfoCustom
 import com.codepunk.hollarhype.ui.theme.largeGutterSize
 import com.codepunk.hollarhype.ui.theme.layoutMargin
 import com.codepunk.hollarhype.ui.theme.standardButtonWidth
-import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import kotlin.math.sqrt
 
-@OptIn(ExperimentalPermissionsApi::class)
 @Composable
 fun AuthSignUpScreen(
     modifier: Modifier = Modifier,
     state: AuthState,
     onEvent: (AuthEvent) -> Unit = {}
 ) {
-    val formValues = remember { mutableStateOf(FormValues()) }
+    var firstName by remember { mutableStateOf("") }
+    var lastName by remember { mutableStateOf("") }
+    var emailAddress by remember { mutableStateOf("") }
+    var regionCode by remember { mutableStateOf("+1") }
+    var phoneNumber by remember { mutableStateOf("") }
 
     val layoutMargin = layoutMargin().times(2)
     Box(
@@ -80,16 +79,44 @@ fun AuthSignUpScreen(
     ) {
         if (LocalConfiguration.current.orientation == Configuration.ORIENTATION_LANDSCAPE) {
             AuthSignUpLandscape(
-                formValues = formValues,
-                onEditAvatar = { onEvent(AuthEvent.EditAvatar) },
+                modifier = modifier,
+                firstName = firstName,
+                lastName = lastName,
+                emailAddress = emailAddress,
+                regionCode = regionCode,
+                phoneNumber = phoneNumber,
+                onEditAvatar = { onEvent(AuthEvent.OnEditAvatar) },
+                onFormValueChange = { field, value ->
+                    when (field) {
+                        FormField.FIRST_NAME -> firstName = value
+                        FormField.LAST_NAME -> lastName = value
+                        FormField.EMAIL_ADDRESS -> emailAddress = value
+                        FormField.REGION_CODE -> regionCode = value
+                        FormField.PHONE_NUMBER -> phoneNumber = value
+                    }
+                },
                 onSubmit = {
                     submitForm() // TODO Will need some sort of return value
                 }
             )
         } else {
             AuthSignUpPortrait(
-                formValues = formValues,
-                onEditAvatar = { onEvent(AuthEvent.EditAvatar) },
+                modifier = modifier,
+                firstName = firstName,
+                lastName = lastName,
+                emailAddress = emailAddress,
+                regionCode = regionCode,
+                phoneNumber = phoneNumber,
+                onEditAvatar = { onEvent(AuthEvent.OnEditAvatar) },
+                onFormValueChange = { field, value ->
+                    when (field) {
+                        FormField.FIRST_NAME -> firstName = value
+                        FormField.LAST_NAME -> lastName = value
+                        FormField.EMAIL_ADDRESS -> emailAddress = value
+                        FormField.REGION_CODE -> regionCode = value
+                        FormField.PHONE_NUMBER -> phoneNumber = value
+                    }
+                },
                 onSubmit = {
                     submitForm() // TODO Will need some sort of return value
                 }
@@ -101,8 +128,13 @@ fun AuthSignUpScreen(
 @Composable
 fun AuthSignUpPortrait(
     modifier: Modifier = Modifier,
-    formValues: MutableState<FormValues>,
+    firstName: String,
+    lastName: String,
+    emailAddress: String,
+    regionCode: String,
+    phoneNumber: String,
     onEditAvatar: () -> Unit,
+    onFormValueChange: (FormField, String) -> Unit,
     onSubmit: () -> Unit
 ) {
     val sizeClass = currentWindowAdaptiveInfoCustom().windowSizeClass.windowWidthSizeClass
@@ -129,7 +161,12 @@ fun AuthSignUpPortrait(
 
         SignUpForm(
             modifier = Modifier.fillMaxWidth(),
-            formValues = formValues
+            firstName = firstName,
+            lastName = lastName,
+            emailAddress = emailAddress,
+            regionCode = regionCode,
+            phoneNumber = phoneNumber,
+            onFormValueChange = onFormValueChange
         )
 
         SignUpSubmit(
@@ -142,8 +179,13 @@ fun AuthSignUpPortrait(
 @Composable
 fun AuthSignUpLandscape(
     modifier: Modifier = Modifier,
-    formValues: MutableState<FormValues>,
+    firstName: String,
+    lastName: String,
+    emailAddress: String,
+    regionCode: String,
+    phoneNumber: String,
     onEditAvatar: () -> Unit,
+    onFormValueChange: (FormField, String) -> Unit,
     onSubmit: () -> Unit
 ) {
     val sizeClass = currentWindowAdaptiveInfoCustom().windowSizeClass.windowHeightSizeClass
@@ -202,7 +244,12 @@ fun AuthSignUpLandscape(
                 modifier = Modifier
                     .widthIn(max = LayoutSize.HUGE.value)
                     .fillMaxWidth(),
-                formValues = formValues
+                firstName = firstName,
+                lastName = lastName,
+                emailAddress = emailAddress,
+                regionCode = regionCode,
+                phoneNumber = phoneNumber,
+                onFormValueChange = onFormValueChange
             )
         }
     }
@@ -271,14 +318,26 @@ fun UserAvatar(
     }
 }
 
+enum class FormField {
+    FIRST_NAME,
+    LAST_NAME,
+    EMAIL_ADDRESS,
+    REGION_CODE,
+    PHONE_NUMBER
+}
+
 @Composable
 fun SignUpForm(
     modifier: Modifier = Modifier,
-    formValues: MutableState<FormValues>
+    firstName: String,
+    lastName: String,
+    emailAddress: String,
+    regionCode: String,
+    phoneNumber: String,
+    onFormValueChange: (FormField, String) -> Unit
 ) {
     Column(
         modifier = modifier,
-        horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(LayoutSize.SMALL.value)
     ) {
         OutlinedTextField(
@@ -287,19 +346,19 @@ fun SignUpForm(
                 unfocusedContainerColor = MaterialTheme.colorScheme.primaryContainer
             ),
             maxLines = 1,
-            value = formValues.value.firstName,
+            value = firstName,
             label = {
                 Text(
                     text = stringResource(id = R.string.first_name),
                     style = MaterialTheme.typography.displaySmall
                 )
             },
-            onValueChange = { formValues.value = formValues.value.copy(firstName = it) }
+            onValueChange = { onFormValueChange(FormField.FIRST_NAME, it) }
         )
 
         OutlinedTextField(
             modifier = Modifier.fillMaxWidth(),
-            value = formValues.value.lastName,
+            value = lastName,
             colors = OutlinedTextFieldDefaults.colors(
                 unfocusedContainerColor = MaterialTheme.colorScheme.primaryContainer
             ),
@@ -310,12 +369,12 @@ fun SignUpForm(
                     style = MaterialTheme.typography.displaySmall
                 )
             },
-            onValueChange = { formValues.value = formValues.value.copy(lastName = it) }
+            onValueChange = { onFormValueChange(FormField.LAST_NAME, it) }
         )
 
         OutlinedTextField(
             modifier = Modifier.fillMaxWidth(),
-            value = formValues.value.emailAddress,
+            value = emailAddress,
             colors = OutlinedTextFieldDefaults.colors(
                 unfocusedContainerColor = MaterialTheme.colorScheme.primaryContainer
             ),
@@ -326,51 +385,15 @@ fun SignUpForm(
                     style = MaterialTheme.typography.displaySmall
                 )
             },
-            onValueChange = { formValues.value = formValues.value.copy(emailAddress = it) }
+            onValueChange = { onFormValueChange(FormField.EMAIL_ADDRESS, it) }
         )
 
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(LayoutSize.SMALL.value)
-        ) {
-            OutlinedButton(
-                shape = RoundedCornerShape(size = buttonCornerRadius),
-                onClick = { /* No op */ }
-            ) {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Text(
-                        modifier = Modifier.width(LayoutSize.LARGE.value),
-                        text = formValues.value.countryCode,
-                        color = MaterialTheme.colorScheme.onBackground,
-                        style = MaterialTheme.typography.displaySmall
-                    )
-                    Icon(
-                        imageVector = Icons.Default.KeyboardArrowDown,
-                        tint = MaterialTheme.colorScheme.onBackground,
-                        contentDescription = null
-                    )
-                }
-            }
-
-            OutlinedTextField(
-                modifier = Modifier.fillMaxWidth(),
-                value = formValues.value.phoneNumber,
-                colors = OutlinedTextFieldDefaults.colors(
-                    unfocusedContainerColor = MaterialTheme.colorScheme.primaryContainer
-                ),
-                maxLines = 1,
-                label = {
-                    Text(
-                        text = stringResource(id = R.string.phone_number),
-                        style = MaterialTheme.typography.displaySmall
-                    )
-                },
-                onValueChange = { formValues.value = formValues.value.copy(phoneNumber = it) }
-            )
-        }
+        PhoneNumber(
+            regionCode = regionCode,
+            phoneNumber = phoneNumber,
+            onRegionCodeChange = { /* TODO */ },
+            onPhoneNumberChange = { onFormValueChange(FormField.PHONE_NUMBER, it) }
+        )
     }
 }
 
@@ -406,14 +429,6 @@ fun SignUpSubmit(
         }
     }
 }
-
-data class FormValues(
-    val firstName: String = "",
-    val lastName: String = "",
-    val emailAddress: String = "",
-    val countryCode: String = "+1",
-    val phoneNumber: String = ""
-)
 
 private fun submitForm() {
 

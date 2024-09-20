@@ -16,4 +16,5 @@
     <string name="email_address">Email Address</string>
     <string name="phone_number">Phone Number</string>
     <string name="disclaimer">By providing your phone number you agree to receive texts from HollarHype containing a one-time password for authentication. We will not text you for any other reason.</string>
+    <string name="resend_otp">Resend confirmation code</string>
 </resources>
