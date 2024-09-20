@@ -121,7 +121,8 @@ fun CountryCodePicker(
         }
 
         LazyColumn(
-            modifier = Modifier.fillMaxSize()
+            modifier = Modifier.fillMaxSize(),
+            verticalArrangement = Arrangement.spacedBy(LayoutSize.SMALL.value)
         ) {
             items(count = filteredList.size) { index ->
                 val item = filteredList[index]
