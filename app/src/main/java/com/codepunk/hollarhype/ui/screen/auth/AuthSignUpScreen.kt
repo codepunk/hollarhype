@@ -30,6 +30,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -64,7 +65,7 @@ fun AuthSignUpScreen(
     var firstName by remember { mutableStateOf("") }
     var lastName by remember { mutableStateOf("") }
     var emailAddress by remember { mutableStateOf("") }
-    var countryCode by remember { mutableStateOf("+1") }
+    var countryCode by remember { mutableIntStateOf(1) }
     var phoneNumber by remember { mutableStateOf("") }
 
     val layoutMargin = layoutMargin().times(2)
@@ -91,7 +92,7 @@ fun AuthSignUpScreen(
                         FormField.FIRST_NAME -> firstName = value
                         FormField.LAST_NAME -> lastName = value
                         FormField.EMAIL_ADDRESS -> emailAddress = value
-                        FormField.COUNTRY_CODE -> countryCode = value
+                        FormField.COUNTRY_CODE -> countryCode = value.toIntOrNull() ?: 0
                         FormField.PHONE_NUMBER -> phoneNumber = value
                     }
                 },
@@ -113,7 +114,7 @@ fun AuthSignUpScreen(
                         FormField.FIRST_NAME -> firstName = value
                         FormField.LAST_NAME -> lastName = value
                         FormField.EMAIL_ADDRESS -> emailAddress = value
-                        FormField.COUNTRY_CODE -> countryCode = value
+                        FormField.COUNTRY_CODE -> countryCode = value.toIntOrNull() ?: 0
                         FormField.PHONE_NUMBER -> phoneNumber = value
                     }
                 },
@@ -131,7 +132,7 @@ fun AuthSignUpPortrait(
     firstName: String,
     lastName: String,
     emailAddress: String,
-    countryCode: String,
+    countryCode: Int,
     phoneNumber: String,
     onEditAvatar: () -> Unit,
     onFormValueChange: (FormField, String) -> Unit,
@@ -182,7 +183,7 @@ fun AuthSignUpLandscape(
     firstName: String,
     lastName: String,
     emailAddress: String,
-    countryCode: String,
+    countryCode: Int,
     phoneNumber: String,
     onEditAvatar: () -> Unit,
     onFormValueChange: (FormField, String) -> Unit,
@@ -332,7 +333,7 @@ fun SignUpForm(
     firstName: String,
     lastName: String,
     emailAddress: String,
-    countryCode: String,
+    countryCode: Int,
     phoneNumber: String,
     onFormValueChange: (FormField, String) -> Unit
 ) {
@@ -394,8 +395,7 @@ fun SignUpForm(
         PhoneNumber(
             countryCode = countryCode,
             phoneNumber = phoneNumber,
-            onClickCountryCode = { /* TODO */ },
-            onCountryCodeChange = { /* TODO */ },
+            onCountryCodeClick = { /* TODO */ },
             onPhoneNumberChange = { onFormValueChange(FormField.PHONE_NUMBER, it) }
         )
     }

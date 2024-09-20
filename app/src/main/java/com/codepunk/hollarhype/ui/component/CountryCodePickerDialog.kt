@@ -17,7 +17,6 @@ import com.codepunk.hollarhype.ui.theme.HollarhypeTheme
 fun CountryCodePickerDialog(
     modifier: Modifier = Modifier,
     onDismiss: () -> Unit = {},
-    onConfirm: () -> Unit = {},
     content: @Composable () -> Unit = {}
 ) {
     AlertDialog(
@@ -30,14 +29,7 @@ fun CountryCodePickerDialog(
                 )
             }
         },
-        confirmButton = {
-            TextButton(onClick = { onConfirm() }) {
-                Text(
-                    color = MaterialTheme.colorScheme.onBackground,
-                    text = stringResource(id = R.string.ok)
-                )
-            }
-        },
+        confirmButton = { },
         text = { content() }
     )
 }

@@ -15,6 +15,7 @@
     <string name="first_name">First Name</string>
     <string name="last_name">Last Name</string>
     <string name="email_address">Email Address</string>
+    <string name="country_code">Country Code</string>
     <string name="phone_number">Phone Number</string>
     <string name="disclaimer">By providing your phone number you agree to receive texts from HollarHype containing a one-time password for authentication. We will not text you for any other reason.</string>
     <string name="phone_number_changed">Changed your phone number?</string>

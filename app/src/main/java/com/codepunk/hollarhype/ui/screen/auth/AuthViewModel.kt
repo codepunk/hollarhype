@@ -73,7 +73,7 @@ class AuthViewModel @Inject constructor(
         Log.d("AuthViewModel", "phoneNumberChanged")
     }
 
-    private fun signIn(countryCode: String, phoneNumber: String) {
+    private fun signIn(countryCode: Int, phoneNumber: String) {
         Log.d("AuthViewModel", "signIn: countryCode=$countryCode, phoneNumber=$phoneNumber")
     }
 

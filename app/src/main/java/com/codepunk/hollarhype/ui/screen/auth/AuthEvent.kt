@@ -4,7 +4,7 @@ sealed interface AuthEvent {
     data object OnEditAvatar: AuthEvent
     data object OnPhoneNumberChanged: AuthEvent
     data class OnSignIn(
-        val countryCode: String,
+        val countryCode: Int,
         val phoneNumber: String
     ): AuthEvent
     data object OnResendOtp: AuthEvent

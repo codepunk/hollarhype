@@ -18,6 +18,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -43,10 +44,10 @@ fun AuthSignInScreen(
     state: AuthState,
     onEvent: (AuthEvent) -> Unit = {}
 ) {
-    var countryCode by remember { mutableStateOf("+1") }
+    var countryCode by remember { mutableIntStateOf(1) }
     var phoneNumber by remember { mutableStateOf("") }
 
-    var showPicker by rememberSaveable { mutableStateOf(true) }
+    var showPicker by rememberSaveable { mutableStateOf(false) }
 
     val layoutMargin = layoutMargin().times(2)
     Box(
@@ -77,8 +78,7 @@ fun AuthSignInScreen(
             PhoneNumber(
                 countryCode = countryCode,
                 phoneNumber = phoneNumber,
-                onClickCountryCode = { showPicker = true },
-                onCountryCodeChange = { countryCode = it },
+                onCountryCodeClick = { showPicker = true },
                 onPhoneNumberChange = { phoneNumber = it }
             )
 
@@ -124,12 +124,11 @@ fun AuthSignInScreen(
 
     if (showPicker) {
         CountryCodePickerDialog(
-            onDismiss = { showPicker = false },
-            onConfirm = { showPicker = false }
+            onDismiss = { showPicker = false }
         ) {
             CountryCodePicker(
                 onItemSelected = { item ->
-                    countryCode = "+${item.countryCode}"
+                    countryCode = item.countryCode
                     showPicker = false
                 }
             )
