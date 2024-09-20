@@ -24,9 +24,9 @@ import com.codepunk.hollarhype.ui.theme.buttonCornerRadius
 @Composable
 fun PhoneNumber(
     modifier: Modifier = Modifier,
-    regionCode: String,
+    countryCode: String,
     phoneNumber: String,
-    onRegionCodeChange: (String) -> Unit,
+    onCountryCodeChange: (String) -> Unit,
     onPhoneNumberChange: (String) -> Unit
 ) {
     Row(
@@ -43,7 +43,7 @@ fun PhoneNumber(
             ) {
                 Text(
                     modifier = Modifier.width(LayoutSize.LARGE.value),
-                    text = regionCode,
+                    text = countryCode,
                     color = MaterialTheme.colorScheme.onBackground,
                     style = MaterialTheme.typography.displaySmall
                 )

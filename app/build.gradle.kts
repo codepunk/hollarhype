@@ -159,4 +159,7 @@ dependencies {
 
     // Accompanist
     implementation(libs.accompanist)
+
+    // Google Phone Number library
+    implementation(libs.phonenumber)
 }

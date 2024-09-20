@@ -64,7 +64,7 @@ fun AuthSignUpScreen(
     var firstName by remember { mutableStateOf("") }
     var lastName by remember { mutableStateOf("") }
     var emailAddress by remember { mutableStateOf("") }
-    var regionCode by remember { mutableStateOf("+1") }
+    var countryCode by remember { mutableStateOf("+1") }
     var phoneNumber by remember { mutableStateOf("") }
 
     val layoutMargin = layoutMargin().times(2)
@@ -83,7 +83,7 @@ fun AuthSignUpScreen(
                 firstName = firstName,
                 lastName = lastName,
                 emailAddress = emailAddress,
-                regionCode = regionCode,
+                countryCode = countryCode,
                 phoneNumber = phoneNumber,
                 onEditAvatar = { onEvent(AuthEvent.OnEditAvatar) },
                 onFormValueChange = { field, value ->
@@ -91,7 +91,7 @@ fun AuthSignUpScreen(
                         FormField.FIRST_NAME -> firstName = value
                         FormField.LAST_NAME -> lastName = value
                         FormField.EMAIL_ADDRESS -> emailAddress = value
-                        FormField.REGION_CODE -> regionCode = value
+                        FormField.COUNTRY_CODE -> countryCode = value
                         FormField.PHONE_NUMBER -> phoneNumber = value
                     }
                 },
@@ -105,7 +105,7 @@ fun AuthSignUpScreen(
                 firstName = firstName,
                 lastName = lastName,
                 emailAddress = emailAddress,
-                regionCode = regionCode,
+                countryCode = countryCode,
                 phoneNumber = phoneNumber,
                 onEditAvatar = { onEvent(AuthEvent.OnEditAvatar) },
                 onFormValueChange = { field, value ->
@@ -113,7 +113,7 @@ fun AuthSignUpScreen(
                         FormField.FIRST_NAME -> firstName = value
                         FormField.LAST_NAME -> lastName = value
                         FormField.EMAIL_ADDRESS -> emailAddress = value
-                        FormField.REGION_CODE -> regionCode = value
+                        FormField.COUNTRY_CODE -> countryCode = value
                         FormField.PHONE_NUMBER -> phoneNumber = value
                     }
                 },
@@ -131,7 +131,7 @@ fun AuthSignUpPortrait(
     firstName: String,
     lastName: String,
     emailAddress: String,
-    regionCode: String,
+    countryCode: String,
     phoneNumber: String,
     onEditAvatar: () -> Unit,
     onFormValueChange: (FormField, String) -> Unit,
@@ -164,7 +164,7 @@ fun AuthSignUpPortrait(
             firstName = firstName,
             lastName = lastName,
             emailAddress = emailAddress,
-            regionCode = regionCode,
+            countryCode = countryCode,
             phoneNumber = phoneNumber,
             onFormValueChange = onFormValueChange
         )
@@ -182,7 +182,7 @@ fun AuthSignUpLandscape(
     firstName: String,
     lastName: String,
     emailAddress: String,
-    regionCode: String,
+    countryCode: String,
     phoneNumber: String,
     onEditAvatar: () -> Unit,
     onFormValueChange: (FormField, String) -> Unit,
@@ -247,7 +247,7 @@ fun AuthSignUpLandscape(
                 firstName = firstName,
                 lastName = lastName,
                 emailAddress = emailAddress,
-                regionCode = regionCode,
+                countryCode = countryCode,
                 phoneNumber = phoneNumber,
                 onFormValueChange = onFormValueChange
             )
@@ -322,7 +322,7 @@ enum class FormField {
     FIRST_NAME,
     LAST_NAME,
     EMAIL_ADDRESS,
-    REGION_CODE,
+    COUNTRY_CODE,
     PHONE_NUMBER
 }
 
@@ -332,7 +332,7 @@ fun SignUpForm(
     firstName: String,
     lastName: String,
     emailAddress: String,
-    regionCode: String,
+    countryCode: String,
     phoneNumber: String,
     onFormValueChange: (FormField, String) -> Unit
 ) {
@@ -389,9 +389,9 @@ fun SignUpForm(
         )
 
         PhoneNumber(
-            regionCode = regionCode,
+            countryCode = countryCode,
             phoneNumber = phoneNumber,
-            onRegionCodeChange = { /* TODO */ },
+            onCountryCodeChange = { /* TODO */ },
             onPhoneNumberChange = { onFormValueChange(FormField.PHONE_NUMBER, it) }
         )
     }

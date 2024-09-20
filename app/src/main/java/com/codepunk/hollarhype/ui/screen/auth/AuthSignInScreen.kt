@@ -40,7 +40,7 @@ fun AuthSignInScreen(
     state: AuthState,
     onEvent: (AuthEvent) -> Unit = {}
 ) {
-    var regionCode by remember { mutableStateOf("+1") }
+    var countryCode by remember { mutableStateOf("+1") }
     var phoneNumber by remember { mutableStateOf("") }
 
     val layoutMargin = layoutMargin().times(2)
@@ -70,9 +70,9 @@ fun AuthSignInScreen(
             )
 
             PhoneNumber(
-                regionCode = regionCode,
+                countryCode = countryCode,
                 phoneNumber = phoneNumber,
-                onRegionCodeChange = { regionCode = it },
+                onCountryCodeChange = { countryCode = it },
                 onPhoneNumberChange = { phoneNumber = it }
             )
 
@@ -103,7 +103,7 @@ fun AuthSignInScreen(
                 ),
                 onClick = { onEvent(
                     AuthEvent.OnSignIn(
-                        regionCode = regionCode,
+                        countryCode = countryCode,
                         phoneNumber = phoneNumber
                     )
                 ) }

@@ -10,6 +10,7 @@
 
     <string name="sign_up">Sign Up</string>
     <string name="sign_in">Sign In</string>
+    <string name="verify">Verify</string>
 
     <string name="first_name">First Name</string>
     <string name="last_name">Last Name</string>
@@ -18,4 +19,11 @@
     <string name="disclaimer">By providing your phone number you agree to receive texts from HollarHype containing a one-time password for authentication. We will not text you for any other reason.</string>
     <string name="phone_number_changed">Changed your phone number?</string>
     <string name="resend_otp">Resend confirmation code</string>
+
+    <!-- region Country code picker -->
+
+    <string name="select_country">Select a country</string>
+
+    <!-- endregion Country code picker -->
+
 </resources>
