@@ -1,6 +1,5 @@
 package com.codepunk.hollarhype.ui.component
 
-import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
@@ -38,20 +37,17 @@ import com.google.i18n.phonenumbers.PhoneNumberUtil
 @Composable
 fun PhoneNumber(
     modifier: Modifier = Modifier,
+    regionCode: String,
     countryCode: Int,
     phoneNumber: String,
     onCountryCodeClick: () -> Unit = {},
     onPhoneNumberChange: (String) -> Unit = {}
 ) {
-    // TODO NEXT We seem to be converting from region code to country code and then back again.
-    //  Maybe pass more info to this method? Change countryCode to region up the component chain
     val phoneNumberUtil: PhoneNumberUtil by remember { mutableStateOf(PhoneNumberUtil.getInstance()) }
-    val region = phoneNumberUtil.getRegionCodeForCountryCode(countryCode)
-    Log.d("PhoneNumber", "region=$region")
 
-    val formatted by remember(phoneNumber,region) {
+    val formatted by remember(regionCode, phoneNumber) {
         val parsed = try {
-            val pn = phoneNumberUtil.parse(phoneNumber, region)
+            val pn = phoneNumberUtil.parse(phoneNumber, regionCode)
             phoneNumberUtil.format(pn, PhoneNumberUtil.PhoneNumberFormat.NATIONAL)
         } catch (e: NumberParseException) {
             phoneNumber
@@ -116,6 +112,7 @@ fun PreviewPhoneNumber() {
     HollarhypeTheme {
         Surface {
             PhoneNumber(
+                regionCode = "US",
                 countryCode = 1,
                 phoneNumber = "7325458674"
             )

@@ -30,6 +30,7 @@ import com.codepunk.hollarhype.R
 import com.codepunk.hollarhype.ui.component.CountryCodePicker
 import com.codepunk.hollarhype.ui.component.CountryCodePickerDialog
 import com.codepunk.hollarhype.ui.component.PhoneNumber
+import com.codepunk.hollarhype.ui.component.Region
 import com.codepunk.hollarhype.ui.preview.ScreenPreviews
 import com.codepunk.hollarhype.ui.theme.HollarhypeTheme
 import com.codepunk.hollarhype.ui.theme.LayoutSize
@@ -43,8 +44,8 @@ fun AuthSignInScreen(
     state: AuthState,
     onEvent: (AuthEvent) -> Unit = {}
 ) {
-    var countryCode by rememberSaveable { mutableIntStateOf(1) }
     var phoneNumber by rememberSaveable { mutableStateOf("") }
+    var region by rememberSaveable { mutableStateOf(Region.getDefault()) }
 
     var showPicker by rememberSaveable { mutableStateOf(false) }
 
@@ -75,7 +76,8 @@ fun AuthSignInScreen(
             )
 
             PhoneNumber(
-                countryCode = countryCode,
+                regionCode = region.regionCode,
+                countryCode = region.countryCode,
                 phoneNumber = phoneNumber,
                 onCountryCodeClick = { showPicker = true },
                 onPhoneNumberChange = { phoneNumber = it }
@@ -108,7 +110,7 @@ fun AuthSignInScreen(
                 ),
                 onClick = { onEvent(
                     AuthEvent.OnSignIn(
-                        countryCode = countryCode,
+                        countryCode = region.countryCode,
                         phoneNumber = phoneNumber
                     )
                 ) }
@@ -127,8 +129,8 @@ fun AuthSignInScreen(
             onDismiss = { showPicker = false }
         ) {
             CountryCodePicker(
-                onItemSelected = { _, selectedCountryCode ->
-                    countryCode = selectedCountryCode
+                onItemSelected = {
+                    region = it
                     showPicker = false
                 }
             )

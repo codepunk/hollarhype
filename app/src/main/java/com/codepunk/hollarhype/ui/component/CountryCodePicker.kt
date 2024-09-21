@@ -13,7 +13,6 @@ import androidx.compose.foundation.selection.selectable
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -36,26 +35,16 @@ import com.codepunk.hollarhype.R
 import com.codepunk.hollarhype.ui.preview.ComponentPreviews
 import com.codepunk.hollarhype.ui.theme.HollarhypeTheme
 import com.codepunk.hollarhype.ui.theme.LayoutSize
-import com.google.i18n.phonenumbers.PhoneNumberUtil
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CountryCodePicker(
     modifier: Modifier = Modifier,
-    onItemSelected: (String, Int) -> Unit = { _, _ -> }
+    onItemSelected: (Region) -> Unit = { }
 ) {
     val keyboardController = LocalSoftwareKeyboardController.current
 
-    val supportedRegions by remember {
-        mutableStateOf(
-            PhoneNumberUtil.getInstance().run {
-                supportedRegions.map { regionCode ->
-                    Region.of(regionCode = regionCode, phoneNumberUtil = this)
-                }.sorted()
-            }
-        )
-    }
-
+    val supportedRegions by remember { mutableStateOf(getSupportedRegions()) }
     var query by rememberSaveable { mutableStateOf("") }
 
     val filteredRegions by remember(query) {
@@ -121,7 +110,7 @@ fun CountryCodePicker(
                         .height(LayoutSize.LARGE.value)
                         .selectable(
                             selected = false,
-                            onClick = { onItemSelected(item.regionCode, item.countryCode) }
+                            onClick = { onItemSelected(item) }
                         ),
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.spacedBy(LayoutSize.SMALL.value)

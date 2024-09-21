@@ -29,7 +29,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -47,6 +46,7 @@ import com.codepunk.hollarhype.R
 import com.codepunk.hollarhype.ui.component.CountryCodePicker
 import com.codepunk.hollarhype.ui.component.CountryCodePickerDialog
 import com.codepunk.hollarhype.ui.component.PhoneNumber
+import com.codepunk.hollarhype.ui.component.Region
 import com.codepunk.hollarhype.ui.preview.ScreenPreviews
 import com.codepunk.hollarhype.ui.theme.HollarhypeTheme
 import com.codepunk.hollarhype.ui.theme.LayoutSize
@@ -68,8 +68,8 @@ fun AuthSignUpScreen(
     var firstName by remember { mutableStateOf("") }
     var lastName by remember { mutableStateOf("") }
     var emailAddress by remember { mutableStateOf("") }
-    var countryCode by remember { mutableIntStateOf(1) }
     var phoneNumber by remember { mutableStateOf("") }
+    var region by remember { mutableStateOf(Region.getDefault()) }
 
     var showPicker by rememberSaveable { mutableStateOf(false) }
 
@@ -80,7 +80,7 @@ fun AuthSignUpScreen(
                 firstName = firstName,
                 lastName = lastName,
                 emailAddress = emailAddress,
-                countryCode = countryCode,
+                countryCode = region.countryCode,
                 phoneNumber = phoneNumber
             )
         )
@@ -161,8 +161,8 @@ fun AuthSignUpScreen(
                         firstName = firstName,
                         lastName = lastName,
                         emailAddress = emailAddress,
-                        countryCode = countryCode,
                         phoneNumber = phoneNumber,
+                        region = region,
                         onFirstNameChange = { firstName = it },
                         onLastNameChange = { lastName = it },
                         onEmailAddressChange = { emailAddress = it },
@@ -207,8 +207,8 @@ fun AuthSignUpScreen(
                     firstName = firstName,
                     lastName = lastName,
                     emailAddress = emailAddress,
-                    countryCode = countryCode,
-                    phoneNumber = phoneNumber,   
+                    phoneNumber = phoneNumber,
+                    region = region,
                     onFirstNameChange = { firstName = it },
                     onLastNameChange = { lastName = it },
                     onEmailAddressChange = { emailAddress = it },
@@ -236,8 +236,8 @@ fun AuthSignUpScreen(
             onDismiss = { showPicker = false }
         ) {
             CountryCodePicker(
-                onItemSelected = { _, selectedCountryCode ->
-                    countryCode = selectedCountryCode
+                onItemSelected = {
+                    region = it
                     showPicker = false
                 }
             )
@@ -312,8 +312,8 @@ fun SignUpForm(
     firstName: String,
     lastName: String,
     emailAddress: String,
-    countryCode: Int,
     phoneNumber: String,
+    region: Region,
     onFirstNameChange: (String) -> Unit,
     onLastNameChange: (String) -> Unit,
     onEmailAddressChange: (String) -> Unit,
@@ -376,7 +376,8 @@ fun SignUpForm(
         )
 
         PhoneNumber(
-            countryCode = countryCode,
+            regionCode = region.regionCode,
+            countryCode = region.countryCode,
             phoneNumber = phoneNumber,
             onCountryCodeClick = onShowPicker,
             onPhoneNumberChange = onPhoneNumberChange

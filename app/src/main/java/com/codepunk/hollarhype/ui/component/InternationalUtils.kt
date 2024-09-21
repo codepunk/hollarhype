@@ -1,11 +1,20 @@
 package com.codepunk.hollarhype.ui.component
 
 
+import android.os.Parcelable
 import com.google.i18n.phonenumbers.PhoneNumberUtil
+import kotlinx.parcelize.Parcelize
 import java.util.Locale as Locale
 
 private const val UNICODE_REGIONAL_INDICATOR_SYMBOL_LETTER_A: Int = 0x1F1E6
 private const val UNICODE_CAPITAL_A: Int = 0x41
+
+fun getSupportedRegions(): List<Region> =
+    PhoneNumberUtil.getInstance().run {
+        supportedRegions.map { regionCode ->
+            Region.of(regionCode = regionCode, phoneNumberUtil = this)
+        }.sorted()
+    }
 
 fun getCountryNameForRegion(regionCode: String): String =
     Locale("", regionCode).displayCountry
@@ -21,18 +30,21 @@ fun getFlagEmojiForRegion(regionCode: String): String =
         }
     } ?: ""
 
+@Parcelize
 data class Region(
     val regionCode: String,
     val countryCode: Int,
     val countryName: String,
     val flagEmoji: String
-): Comparable<Region> {
+): Comparable<Region>, Parcelable {
     override fun compareTo(other: Region): Int = compareBy<Region>(
         { if (it.regionCode == Locale.getDefault().country) 0 else 1 },
         { it.regionCode }
     ).compare(this, other)
 
     companion object {
+        fun getDefault(): Region = of(Locale.getDefault().country)
+
         fun of(
             regionCode: String,
             phoneNumberUtil: PhoneNumberUtil = PhoneNumberUtil.getInstance()
