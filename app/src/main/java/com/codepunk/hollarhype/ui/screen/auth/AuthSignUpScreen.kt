@@ -29,15 +29,14 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -45,6 +44,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.window.core.layout.WindowHeightSizeClass
 import androidx.window.core.layout.WindowWidthSizeClass
 import com.codepunk.hollarhype.R
+import com.codepunk.hollarhype.ui.component.CountryCodePicker
+import com.codepunk.hollarhype.ui.component.CountryCodePickerDialog
 import com.codepunk.hollarhype.ui.component.PhoneNumber
 import com.codepunk.hollarhype.ui.preview.ScreenPreviews
 import com.codepunk.hollarhype.ui.theme.HollarhypeTheme
@@ -62,11 +63,28 @@ fun AuthSignUpScreen(
     state: AuthState,
     onEvent: (AuthEvent) -> Unit = {}
 ) {
+    val windowSizeClass = currentWindowAdaptiveInfoCustom().windowSizeClass
+
     var firstName by remember { mutableStateOf("") }
     var lastName by remember { mutableStateOf("") }
     var emailAddress by remember { mutableStateOf("") }
     var countryCode by remember { mutableIntStateOf(1) }
     var phoneNumber by remember { mutableStateOf("") }
+
+    var showPicker by rememberSaveable { mutableStateOf(false) }
+
+    val invokeOnEditAvatar = { onEvent(AuthEvent.OnEditAvatar) }
+    val invokeOnSignup = {
+        onEvent(
+            AuthEvent.OnSignUp(
+                firstName = firstName,
+                lastName = lastName,
+                emailAddress = emailAddress,
+                countryCode = countryCode,
+                phoneNumber = phoneNumber
+            )
+        )
+    }
 
     val layoutMargin = layoutMargin().times(2)
     Box(
@@ -79,138 +97,100 @@ fun AuthSignUpScreen(
             contentAlignment = Alignment.Center
     ) {
         if (LocalConfiguration.current.orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            AuthSignUpLandscape(
-                modifier = modifier,
-                firstName = firstName,
-                lastName = lastName,
-                emailAddress = emailAddress,
-                countryCode = countryCode,
-                phoneNumber = phoneNumber,
-                onEditAvatar = { onEvent(AuthEvent.OnEditAvatar) },
-                onFormValueChange = { field, value ->
-                    when (field) {
-                        FormField.FIRST_NAME -> firstName = value
-                        FormField.LAST_NAME -> lastName = value
-                        FormField.EMAIL_ADDRESS -> emailAddress = value
-                        FormField.COUNTRY_CODE -> countryCode = value.toIntOrNull() ?: 0
-                        FormField.PHONE_NUMBER -> phoneNumber = value
+
+            // region Landscape
+            // --------------------------------------------------
+            // Landscape
+            // --------------------------------------------------
+
+            // Avatar size is based on height
+            val avatarSize = when (windowSizeClass.windowHeightSizeClass) {
+                WindowHeightSizeClass.COMPACT -> LayoutSize.X_LARGE.mid
+                else -> LayoutSize.XX_LARGE.mid
+            }
+
+            Row(
+                modifier = Modifier
+                    .fillMaxSize(),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Box(
+                    modifier = Modifier
+                        .weight(1f)
+                        .fillMaxHeight(),
+                    contentAlignment = Alignment.CenterEnd
+                ) {
+                    Column(
+                        modifier = Modifier
+                            .widthIn(max = LayoutSize.HUGE.value)
+                            .fillMaxWidth(),
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.spacedBy(
+                            space = LayoutSize.LARGE.value,
+                            alignment = Alignment.CenterVertically
+                        )
+                    ) {
+                        UserAvatar(
+                            modifier = Modifier.width(avatarSize),
+                            onClick = invokeOnEditAvatar
+                        )
+
+                        SignUpSubmit(
+                            modifier = Modifier.fillMaxWidth(),
+                            onSubmit = invokeOnSignup
+                        )
                     }
-                },
-                onSubmit = {
-                    submitForm() // TODO Will need some sort of return value
                 }
-            )
+
+                Spacer(
+                    modifier = Modifier
+                        .width(largeGutterSize)
+                        .fillMaxHeight()
+                )
+
+                Box(
+                    modifier = Modifier
+                        .weight(1f)
+                        .fillMaxHeight(),
+                    contentAlignment = Alignment.CenterStart
+                ) {
+                    SignUpForm(
+                        modifier = Modifier
+                            .widthIn(max = LayoutSize.HUGE.value)
+                            .fillMaxWidth(),
+                        firstName = firstName,
+                        lastName = lastName,
+                        emailAddress = emailAddress,
+                        countryCode = countryCode,
+                        phoneNumber = phoneNumber,
+                        onFirstNameChange = { firstName = it },
+                        onLastNameChange = { lastName = it },
+                        onEmailAddressChange = { emailAddress = it },
+                        onPhoneNumberChange = { phoneNumber = it },
+                        onShowPicker = { showPicker = true }
+                    )
+                }
+            }
+
+            // endregion Landscape
+
         } else {
-            AuthSignUpPortrait(
-                modifier = modifier,
-                firstName = firstName,
-                lastName = lastName,
-                emailAddress = emailAddress,
-                countryCode = countryCode,
-                phoneNumber = phoneNumber,
-                onEditAvatar = { onEvent(AuthEvent.OnEditAvatar) },
-                onFormValueChange = { field, value ->
-                    when (field) {
-                        FormField.FIRST_NAME -> firstName = value
-                        FormField.LAST_NAME -> lastName = value
-                        FormField.EMAIL_ADDRESS -> emailAddress = value
-                        FormField.COUNTRY_CODE -> countryCode = value.toIntOrNull() ?: 0
-                        FormField.PHONE_NUMBER -> phoneNumber = value
-                    }
-                },
-                onSubmit = {
-                    submitForm() // TODO Will need some sort of return value
-                }
-            )
-        }
-    }
-}
 
-@Composable
-fun AuthSignUpPortrait(
-    modifier: Modifier = Modifier,
-    firstName: String,
-    lastName: String,
-    emailAddress: String,
-    countryCode: Int,
-    phoneNumber: String,
-    onEditAvatar: () -> Unit,
-    onFormValueChange: (FormField, String) -> Unit,
-    onSubmit: () -> Unit
-) {
-    val sizeClass = currentWindowAdaptiveInfoCustom().windowSizeClass.windowWidthSizeClass
-    val avatarSize = if (sizeClass == WindowWidthSizeClass.COMPACT) {
-        LayoutSize.X_LARGE.mid
-    } else {
-        LayoutSize.XX_LARGE.mid
-    }
+            // region Non-landscape
+            // --------------------------------------------------
+            // Non-landscape
+            // --------------------------------------------------
 
-    Column(
-        modifier = Modifier
-            .widthIn(max = LayoutSize.XXX_LARGE.mid)
-            .fillMaxSize(),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(
-            space = LayoutSize.LARGE.value,
-            alignment = Alignment.CenterVertically
-        )
-    ) {
-        UserAvatar(
-            modifier = Modifier.width(avatarSize),
-            onClick = onEditAvatar
-        )
+            // Avatar size is based on width
+            val avatarSize = when (windowSizeClass.windowWidthSizeClass) {
+                WindowWidthSizeClass.COMPACT -> LayoutSize.X_LARGE.mid
+                else -> LayoutSize.XX_LARGE.mid
+            }
 
-        SignUpForm(
-            modifier = Modifier.fillMaxWidth(),
-            firstName = firstName,
-            lastName = lastName,
-            emailAddress = emailAddress,
-            countryCode = countryCode,
-            phoneNumber = phoneNumber,
-            onFormValueChange = onFormValueChange
-        )
-
-        SignUpSubmit(
-            modifier = Modifier.fillMaxWidth(),
-            onSubmit = onSubmit
-        )
-    }
-}
-
-@Composable
-fun AuthSignUpLandscape(
-    modifier: Modifier = Modifier,
-    firstName: String,
-    lastName: String,
-    emailAddress: String,
-    countryCode: Int,
-    phoneNumber: String,
-    onEditAvatar: () -> Unit,
-    onFormValueChange: (FormField, String) -> Unit,
-    onSubmit: () -> Unit
-) {
-    val sizeClass = currentWindowAdaptiveInfoCustom().windowSizeClass.windowHeightSizeClass
-    val avatarSize = if (sizeClass == WindowHeightSizeClass.COMPACT) {
-        LayoutSize.X_LARGE.mid
-    } else {
-        LayoutSize.XX_LARGE.mid
-    }
-
-    Row(
-        modifier = Modifier
-            .fillMaxSize(),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Box(
-            modifier = Modifier
-                .weight(1f)
-                .fillMaxHeight(),
-            contentAlignment = Alignment.CenterEnd
-        ) {
             Column(
                 modifier = Modifier
-                    .widthIn(max = LayoutSize.HUGE.value)
-                    .fillMaxWidth(),
+                    .widthIn(max = LayoutSize.XXX_LARGE.mid)
+                    .fillMaxSize(),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.spacedBy(
                     space = LayoutSize.LARGE.value,
@@ -219,41 +199,52 @@ fun AuthSignUpLandscape(
             ) {
                 UserAvatar(
                     modifier = Modifier.width(avatarSize),
-                    onClick = onEditAvatar
+                    onClick = invokeOnEditAvatar
+                )
+
+                SignUpForm(
+                    modifier = Modifier.fillMaxWidth(),
+                    firstName = firstName,
+                    lastName = lastName,
+                    emailAddress = emailAddress,
+                    countryCode = countryCode,
+                    phoneNumber = phoneNumber,   
+                    onFirstNameChange = { firstName = it },
+                    onLastNameChange = { lastName = it },
+                    onEmailAddressChange = { emailAddress = it },
+                    onPhoneNumberChange = { phoneNumber = it },
+                    onShowPicker = { showPicker = true }
                 )
 
                 SignUpSubmit(
                     modifier = Modifier.fillMaxWidth(),
-                    onSubmit = onSubmit
+                    onSubmit = invokeOnSignup
                 )
             }
+
+            // endregion Landscape
         }
+    }
 
-        Spacer(
-            modifier = Modifier
-                .width(largeGutterSize)
-                .fillMaxHeight()
-        )
+    // region Country code picker
+    // --------------------------------------------------
+    // Country code picker
+    // --------------------------------------------------
 
-        Box(
-            modifier = Modifier
-                .weight(1f)
-                .fillMaxHeight(),
-            contentAlignment = Alignment.CenterStart
+    if (showPicker) {
+        CountryCodePickerDialog(
+            onDismiss = { showPicker = false }
         ) {
-            SignUpForm(
-                modifier = Modifier
-                    .widthIn(max = LayoutSize.HUGE.value)
-                    .fillMaxWidth(),
-                firstName = firstName,
-                lastName = lastName,
-                emailAddress = emailAddress,
-                countryCode = countryCode,
-                phoneNumber = phoneNumber,
-                onFormValueChange = onFormValueChange
+            CountryCodePicker(
+                onItemSelected = { _, selectedCountryCode ->
+                    countryCode = selectedCountryCode
+                    showPicker = false
+                }
             )
         }
     }
+
+    // endregion Country code picker
 }
 
 @Composable
@@ -264,15 +255,11 @@ fun UserAvatar(
     Box(
         modifier = modifier.aspectRatio(1f)
     ) {
-        var imageSize: Float by remember { mutableFloatStateOf(0f) }
         Image(
             modifier = Modifier
                 .fillMaxSize()
                 .clip(CircleShape)
-                .clickable(onClick = onClick)
-                .onSizeChanged {
-                    imageSize = it.width.toFloat()
-                },
+                .clickable(onClick = onClick),
             painter = painterResource(R.drawable.img_default_user_96),
             contentDescription = stringResource(id = R.string.app_name)
         )
@@ -319,14 +306,6 @@ fun UserAvatar(
     }
 }
 
-enum class FormField {
-    FIRST_NAME,
-    LAST_NAME,
-    EMAIL_ADDRESS,
-    COUNTRY_CODE,
-    PHONE_NUMBER
-}
-
 @Composable
 fun SignUpForm(
     modifier: Modifier = Modifier,
@@ -335,7 +314,11 @@ fun SignUpForm(
     emailAddress: String,
     countryCode: Int,
     phoneNumber: String,
-    onFormValueChange: (FormField, String) -> Unit
+    onFirstNameChange: (String) -> Unit,
+    onLastNameChange: (String) -> Unit,
+    onEmailAddressChange: (String) -> Unit,
+    onPhoneNumberChange: (String) -> Unit,
+    onShowPicker: () -> Unit
 ) {
     Column(
         modifier = modifier,
@@ -355,7 +338,7 @@ fun SignUpForm(
                     style = MaterialTheme.typography.displaySmall
                 )
             },
-            onValueChange = { onFormValueChange(FormField.FIRST_NAME, it) }
+            onValueChange = onFirstNameChange
         )
 
         OutlinedTextField(
@@ -372,7 +355,7 @@ fun SignUpForm(
                     style = MaterialTheme.typography.displaySmall
                 )
             },
-            onValueChange = { onFormValueChange(FormField.LAST_NAME, it) }
+            onValueChange = onLastNameChange
         )
 
         OutlinedTextField(
@@ -389,14 +372,14 @@ fun SignUpForm(
                     style = MaterialTheme.typography.displaySmall
                 )
             },
-            onValueChange = { onFormValueChange(FormField.EMAIL_ADDRESS, it) }
+            onValueChange = onEmailAddressChange
         )
 
         PhoneNumber(
             countryCode = countryCode,
             phoneNumber = phoneNumber,
-            onCountryCodeClick = { /* TODO */ },
-            onPhoneNumberChange = { onFormValueChange(FormField.PHONE_NUMBER, it) }
+            onCountryCodeClick = onShowPicker,
+            onPhoneNumberChange = onPhoneNumberChange
         )
     }
 }
@@ -432,10 +415,6 @@ fun SignUpSubmit(
             )
         }
     }
-}
-
-private fun submitForm() {
-
 }
 
 @ScreenPreviews

@@ -73,6 +73,27 @@ class AuthViewModel @Inject constructor(
         Log.d("AuthViewModel", "phoneNumberChanged")
     }
 
+    private fun signUp(
+        firstName: String,
+        lastName: String,
+        emailAddress: String,
+        countryCode: Int,
+        phoneNumber: String,
+        avatar: Any? = null
+    ) {
+        Log.d(
+            "AuthViewModel", buildString {
+                append("signIn: ")
+                append("firstName=$firstName, ")
+                append("lastName=$lastName, ")
+                append("emailAddress=$emailAddress, ")
+                append("countryCode=$countryCode, ")
+                append("phoneNumber=$phoneNumber, ")
+                append("avatar=$avatar")
+            }
+        )
+    }
+
     private fun signIn(countryCode: Int, phoneNumber: String) {
         Log.d("AuthViewModel", "signIn: countryCode=$countryCode, phoneNumber=$phoneNumber")
     }
@@ -109,6 +130,14 @@ class AuthViewModel @Inject constructor(
             is AuthEvent.OnPhoneNumberChanged -> phoneNumberChanged()
             is AuthEvent.OnResendOtp -> resendOtp()
             is AuthEvent.OnSignIn -> signIn(event.countryCode, event.phoneNumber)
+            is AuthEvent.OnSignUp -> signUp(
+                firstName = event.firstName,
+                lastName = event.lastName,
+                emailAddress = event.emailAddress,
+                countryCode = event.countryCode,
+                phoneNumber = event.phoneNumber,
+                avatar = event.avatar
+            )
             is AuthEvent.Initialize -> authenticate()
             is AuthEvent.NavigateToAuthOptions -> navigateToAuthOptions()
             is AuthEvent.NavigateToSignIn -> navigateToSignIn()
