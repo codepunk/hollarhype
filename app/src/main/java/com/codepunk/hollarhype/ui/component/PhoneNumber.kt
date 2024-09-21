@@ -44,7 +44,7 @@ fun PhoneNumber(
     onPhoneNumberChange: (String) -> Unit = {}
 ) {
     // TODO NEXT We seem to be converting from region code to country code and then back again.
-    //  Maybe pass more info to this method?
+    //  Maybe pass more info to this method? Change countryCode to region up the component chain
     val phoneNumberUtil: PhoneNumberUtil by remember { mutableStateOf(PhoneNumberUtil.getInstance()) }
     val region = phoneNumberUtil.getRegionCodeForCountryCode(countryCode)
     Log.d("PhoneNumber", "region=$region")
