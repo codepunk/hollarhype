@@ -18,7 +18,6 @@ import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.FilledIconButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButtonDefaults
@@ -49,7 +48,13 @@ import com.codepunk.hollarhype.ui.component.PhoneNumber
 import com.codepunk.hollarhype.ui.component.Region
 import com.codepunk.hollarhype.ui.preview.ScreenPreviews
 import com.codepunk.hollarhype.ui.theme.HollarhypeTheme
-import com.codepunk.hollarhype.ui.theme.LayoutSize
+import com.codepunk.hollarhype.ui.theme.Size2xLarge
+import com.codepunk.hollarhype.ui.theme.Size3xLarge
+import com.codepunk.hollarhype.ui.theme.SizeHuge
+import com.codepunk.hollarhype.ui.theme.SizeLarge
+import com.codepunk.hollarhype.ui.theme.SizeMedium
+import com.codepunk.hollarhype.ui.theme.SizeSmall
+import com.codepunk.hollarhype.ui.theme.SizeXLarge
 import com.codepunk.hollarhype.ui.theme.buttonCornerRadius
 import com.codepunk.hollarhype.ui.theme.currentWindowAdaptiveInfoCustom
 import com.codepunk.hollarhype.ui.theme.largeGutterSize
@@ -105,8 +110,8 @@ fun AuthSignUpScreen(
 
             // Avatar size is based on height
             val avatarSize = when (windowSizeClass.windowHeightSizeClass) {
-                WindowHeightSizeClass.COMPACT -> LayoutSize.X_LARGE.mid
-                else -> LayoutSize.XX_LARGE.mid
+                WindowHeightSizeClass.COMPACT -> SizeXLarge.mid
+                else -> Size2xLarge.mid
             }
 
             Row(
@@ -122,11 +127,11 @@ fun AuthSignUpScreen(
                 ) {
                     Column(
                         modifier = Modifier
-                            .widthIn(max = LayoutSize.HUGE.value)
+                            .widthIn(max = SizeHuge.value)
                             .fillMaxWidth(),
                         horizontalAlignment = Alignment.CenterHorizontally,
                         verticalArrangement = Arrangement.spacedBy(
-                            space = LayoutSize.LARGE.value,
+                            space = SizeLarge.value,
                             alignment = Alignment.CenterVertically
                         )
                     ) {
@@ -156,7 +161,7 @@ fun AuthSignUpScreen(
                 ) {
                     SignUpForm(
                         modifier = Modifier
-                            .widthIn(max = LayoutSize.HUGE.value)
+                            .widthIn(max = SizeHuge.value)
                             .fillMaxWidth(),
                         firstName = firstName,
                         lastName = lastName,
@@ -183,17 +188,17 @@ fun AuthSignUpScreen(
 
             // Avatar size is based on width
             val avatarSize = when (windowSizeClass.windowWidthSizeClass) {
-                WindowWidthSizeClass.COMPACT -> LayoutSize.X_LARGE.mid
-                else -> LayoutSize.XX_LARGE.mid
+                WindowWidthSizeClass.COMPACT -> SizeXLarge.mid
+                else -> Size2xLarge.mid
             }
 
             Column(
                 modifier = Modifier
-                    .widthIn(max = LayoutSize.XXX_LARGE.mid)
+                    .widthIn(max = Size3xLarge.mid)
                     .fillMaxSize(),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.spacedBy(
-                    space = LayoutSize.LARGE.value,
+                    space = SizeLarge.value,
                     alignment = Alignment.CenterVertically
                 )
             ) {
@@ -290,7 +295,7 @@ fun UserAvatar(
                 FilledIconButton(
                     modifier = Modifier.fillMaxSize(),
                     colors = IconButtonDefaults.iconButtonColors(
-                        containerColor = MaterialTheme.colorScheme.secondary
+                        containerColor = MaterialTheme.colorScheme.primary
                     ),
                     onClick = onClick
                 ) {
@@ -322,20 +327,20 @@ fun SignUpForm(
 ) {
     Column(
         modifier = modifier,
-        verticalArrangement = Arrangement.spacedBy(LayoutSize.SMALL.value)
+        verticalArrangement = Arrangement.spacedBy(SizeSmall.value)
     ) {
         OutlinedTextField(
             modifier = Modifier.fillMaxWidth(),
             colors = OutlinedTextFieldDefaults.colors(
-                unfocusedContainerColor = MaterialTheme.colorScheme.primaryContainer
+                focusedContainerColor = MaterialTheme.colorScheme.surfaceVariant,
+                unfocusedContainerColor = MaterialTheme.colorScheme.surfaceVariant
             ),
             maxLines = 1,
             singleLine = true,
             value = firstName,
             label = {
                 Text(
-                    text = stringResource(id = R.string.first_name),
-                    style = MaterialTheme.typography.displaySmall
+                    text = stringResource(id = R.string.first_name)
                 )
             },
             onValueChange = onFirstNameChange
@@ -345,14 +350,14 @@ fun SignUpForm(
             modifier = Modifier.fillMaxWidth(),
             value = lastName,
             colors = OutlinedTextFieldDefaults.colors(
-                unfocusedContainerColor = MaterialTheme.colorScheme.primaryContainer
+                focusedContainerColor = MaterialTheme.colorScheme.surfaceVariant,
+                unfocusedContainerColor = MaterialTheme.colorScheme.surfaceVariant
             ),
             maxLines = 1,
             singleLine = true,
             label = {
                 Text(
                     text = stringResource(id = R.string.last_name),
-                    style = MaterialTheme.typography.displaySmall
                 )
             },
             onValueChange = onLastNameChange
@@ -362,14 +367,14 @@ fun SignUpForm(
             modifier = Modifier.fillMaxWidth(),
             value = emailAddress,
             colors = OutlinedTextFieldDefaults.colors(
-                unfocusedContainerColor = MaterialTheme.colorScheme.primaryContainer
+                focusedContainerColor = MaterialTheme.colorScheme.surfaceVariant,
+                unfocusedContainerColor = MaterialTheme.colorScheme.surfaceVariant
             ),
             maxLines = 1,
             singleLine = true,
             label = {
                 Text(
                     text = stringResource(id = R.string.email_address),
-                    style = MaterialTheme.typography.displaySmall
                 )
             },
             onValueChange = onEmailAddressChange
@@ -393,26 +398,22 @@ fun SignUpSubmit(
     Column(
         modifier = modifier,
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(LayoutSize.MEDIUM.mid)
+        verticalArrangement = Arrangement.spacedBy(SizeMedium.mid)
     ) {
         Text(
             text = stringResource(id = R.string.disclaimer),
-            style = MaterialTheme.typography.labelSmall,
+          style = MaterialTheme.typography.bodySmall,
             textAlign = TextAlign.Center
         )
 
         Button(
             modifier = Modifier.width(standardButtonWidth),
             shape = RoundedCornerShape(size = buttonCornerRadius),
-            colors = ButtonDefaults.buttonColors(
-                containerColor = MaterialTheme.colorScheme.secondary,
-                contentColor = MaterialTheme.colorScheme.onSecondary
-            ),
             onClick = { onSubmit() }
         ) {
             Text(
                 text = stringResource(id = R.string.sign_up).lowercase(),
-                style = MaterialTheme.typography.displayMedium
+                style = MaterialTheme.typography.labelLarge
             )
         }
     }

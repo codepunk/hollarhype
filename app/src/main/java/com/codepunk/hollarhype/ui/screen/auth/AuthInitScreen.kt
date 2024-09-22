@@ -10,6 +10,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import arrow.core.right
@@ -19,7 +20,7 @@ import com.codepunk.hollarhype.domain.model.User
 import com.codepunk.hollarhype.ui.component.HandlePostNotificationsPermission
 import com.codepunk.hollarhype.ui.preview.ScreenPreviews
 import com.codepunk.hollarhype.ui.theme.HollarhypeTheme
-import com.codepunk.hollarhype.ui.theme.LayoutSize
+import com.codepunk.hollarhype.ui.theme.SizeHuge
 import com.codepunk.hollarhype.ui.theme.layoutMargin
 import com.codepunk.hollarhype.util.consume
 
@@ -29,7 +30,9 @@ fun AuthInitScreen(
     state: AuthState,
     onEvent: (AuthEvent) -> Unit = {}
 ) {
-    HandlePostNotificationsPermission()
+    if (!LocalInspectionMode.current) {
+        HandlePostNotificationsPermission()
+    }
 
     // Attempt to consume result of silent authentication
     state.authenticatedUser.consume { authenticatedUser ->
@@ -51,7 +54,7 @@ fun AuthInitScreen(
     ) {
         Image(
             modifier = Modifier
-                .widthIn(max = LayoutSize.HUGE.value)
+                .widthIn(max = SizeHuge.value)
                 .fillMaxSize()
                 .align(Alignment.Center),
             painter = painterResource(R.drawable.hh_logo),

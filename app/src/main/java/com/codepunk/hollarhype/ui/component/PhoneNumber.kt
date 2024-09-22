@@ -1,5 +1,6 @@
 package com.codepunk.hollarhype.ui.component
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
@@ -25,12 +26,15 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import com.codepunk.hollarhype.R
 import com.codepunk.hollarhype.ui.preview.ComponentPreviews
 import com.codepunk.hollarhype.ui.theme.HollarhypeTheme
-import com.codepunk.hollarhype.ui.theme.LayoutSize
+import com.codepunk.hollarhype.ui.theme.SizeLarge
+import com.codepunk.hollarhype.ui.theme.SizeSmall
+import com.codepunk.hollarhype.ui.theme.SizeTiny
 import com.google.i18n.phonenumbers.NumberParseException
 import com.google.i18n.phonenumbers.PhoneNumberUtil
 
@@ -59,12 +63,12 @@ fun PhoneNumber(
         modifier = modifier
             .width(IntrinsicSize.Min),
         verticalAlignment = Alignment.Bottom,
-        horizontalArrangement = Arrangement.spacedBy(LayoutSize.SMALL.value)
+        horizontalArrangement = Arrangement.spacedBy(SizeSmall.value)
     ) {
         OutlinedButton(
-            shape = RoundedCornerShape(size = LayoutSize.TINY.value),
+            shape = RoundedCornerShape(size = SizeTiny.value),
             colors = ButtonDefaults.buttonColors(
-                containerColor = MaterialTheme.colorScheme.primaryContainer
+                containerColor = MaterialTheme.colorScheme.surfaceVariant
             ),
             onClick = onCountryCodeClick,
             contentPadding = TextFieldDefaults.contentPaddingWithoutLabel()
@@ -73,10 +77,10 @@ fun PhoneNumber(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    modifier = Modifier.widthIn(min = LayoutSize.LARGE.value),
+                    modifier = Modifier.widthIn(min = SizeLarge.value),
                     text = "+$countryCode",
                     color = MaterialTheme.colorScheme.onBackground,
-                    style = MaterialTheme.typography.bodyMedium
+                    style = MaterialTheme.typography.labelMedium
                 )
                 Icon(
                     imageVector = Icons.Default.ArrowDropDown,
@@ -90,15 +94,16 @@ fun PhoneNumber(
             modifier = Modifier.fillMaxWidth(),
             value = formatted,
             colors = OutlinedTextFieldDefaults.colors(
-                unfocusedContainerColor = MaterialTheme.colorScheme.primaryContainer
+                focusedContainerColor = MaterialTheme.colorScheme.surfaceVariant,
+                unfocusedContainerColor = MaterialTheme.colorScheme.surfaceVariant
             ),
+            textStyle = MaterialTheme.typography.labelMedium,
             maxLines = 1,
             singleLine = true,
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
             label = {
                 Text(
                     text = stringResource(id = R.string.phone_number),
-                    style = MaterialTheme.typography.displaySmall
                 )
             },
             onValueChange = { onPhoneNumberChange(it) }
@@ -113,7 +118,7 @@ fun PreviewPhoneNumber() {
         Surface {
             PhoneNumber(
                 regionCode = "US",
-                countryCode = 1,
+                countryCode = 732,
                 phoneNumber = "7325458674"
             )
         }

@@ -1,6 +1,5 @@
 package com.codepunk.hollarhype.ui.component
 
-import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -34,7 +33,8 @@ import androidx.compose.ui.res.stringResource
 import com.codepunk.hollarhype.R
 import com.codepunk.hollarhype.ui.preview.ComponentPreviews
 import com.codepunk.hollarhype.ui.theme.HollarhypeTheme
-import com.codepunk.hollarhype.ui.theme.LayoutSize
+import com.codepunk.hollarhype.ui.theme.SizeLarge
+import com.codepunk.hollarhype.ui.theme.SizeSmall
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -58,11 +58,11 @@ fun CountryCodePicker(
     Column(
         modifier = modifier
             .fillMaxSize(),
-        verticalArrangement = Arrangement.spacedBy(LayoutSize.SMALL.value)
+        verticalArrangement = Arrangement.spacedBy(SizeSmall.value)
     ) {
         Text(
             modifier = Modifier.fillMaxWidth(),
-            style = MaterialTheme.typography.bodyMedium,
+            style = MaterialTheme.typography.headlineSmall,
             text = "${stringResource(id = R.string.select_country)}:"
         )
 
@@ -100,27 +100,26 @@ fun CountryCodePicker(
 
         LazyColumn(
             modifier = Modifier.fillMaxSize(),
-            verticalArrangement = Arrangement.spacedBy(LayoutSize.SMALL.value)
+            verticalArrangement = Arrangement.spacedBy(SizeSmall.value)
         ) {
             items(count = filteredRegions.size) { index ->
                 val item = filteredRegions[index]
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(LayoutSize.LARGE.value)
+                        .height(SizeLarge.value)
                         .selectable(
                             selected = false,
                             onClick = { onItemSelected(item) }
                         ),
                     verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(LayoutSize.SMALL.value)
+                    horizontalArrangement = Arrangement.spacedBy(SizeSmall.value)
                 ) {
                     Text(
                         text = item.flagEmoji
                     )
                     Text(
-                        modifier = Modifier
-                            .weight(1f),
+                        modifier = Modifier.weight(1f),
                         text = item.countryName
                     )
                     Text(

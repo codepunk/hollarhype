@@ -13,34 +13,28 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.toSize
 import androidx.window.core.layout.WindowSizeClass
 import androidx.window.core.layout.WindowWidthSizeClass
-import kotlin.math.pow
 
 // region Classes
+
+sealed class LayoutSize(val start: Dp, val endExclusive: Dp) {
+    val range: OpenEndRange<Dp> = start.rangeUntil(endExclusive)
+    val value = start
+    val mid: Dp = (range.start + range.endExclusive).div(2f)
+}
 
 /**
  * Sizes are based on powers of 2. For useful "in-between" sizes like
  * 48.dp, 96.dp, 192.dp, etc., use LayoutSize.mid.
  */
-enum class LayoutSize(val start: Dp, val endExclusive: Dp) {
-    MIN(2.dp, 4.dp),
-    TINY(4.dp, 8.dp),
-    SMALL(8.dp, 16.dp),
-    MEDIUM(16.dp, 32.dp),
-    LARGE(32.dp, 64.dp),
-    X_LARGE(64.dp, 128.dp),
-    XX_LARGE(128.dp, 256.dp),
-    XXX_LARGE(256.dp, 512.dp),
-    HUGE(512.dp, 1024.dp);
-
-    @Suppress("MemberVisibilityCanBePrivate")
-    val range: OpenEndRange<Dp> = start.rangeUntil(endExclusive)
-    val value = start
-    val mid: Dp = (range.start + range.endExclusive).div(2f)
-
-    override fun toString(): String {
-        return "Size(range=$range, value=$value, mid=$mid)"
-    }
-}
+data object SizeMin : LayoutSize(2.dp, 4.dp)
+data object SizeTiny : LayoutSize(4.dp, 8.dp)
+data object SizeSmall : LayoutSize(8.dp, 16.dp)
+data object SizeMedium : LayoutSize(16.dp, 32.dp)
+data object SizeLarge : LayoutSize(32.dp, 64.dp)
+data object SizeXLarge : LayoutSize(64.dp, 128.dp)
+data object Size2xLarge : LayoutSize(128.dp, 256.dp)
+data object Size3xLarge : LayoutSize(256.dp, 512.dp)
+data object SizeHuge : LayoutSize(512.dp, 1024.dp)
 
 // endregion Classes
 

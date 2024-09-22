@@ -12,6 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import com.codepunk.hollarhype.ui.preview.ScreenPreviews
 import com.codepunk.hollarhype.ui.theme.HollarhypeTheme
+import com.codepunk.hollarhype.ui.theme.baseline
 
 @Composable
 fun CountryCodePickerDialog(
@@ -24,6 +25,7 @@ fun CountryCodePickerDialog(
         dismissButton = {
             TextButton(onClick = { onDismiss() }) {
                 Text(
+                    style = baseline.labelLarge,
                     color = MaterialTheme.colorScheme.onBackground,
                     text = stringResource(id = R.string.cancel)
                 )

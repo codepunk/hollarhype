@@ -28,6 +28,7 @@ room = "2.6.1"
 credentials = "1.5.0-alpha02"
 accompanist = "0.36.0"
 phoneNumber = "8.13.45"
+googleFonts = "1.7.0"
 
 [libraries]
 # Supplied by New Project template
@@ -70,6 +71,7 @@ credentials-play-services-auth = { group = "androidx.credentials", name = "crede
 credentials = { group = "androidx.credentials", name = "credentials", version.ref = "credentials" }
 accompanist = { group = "com.google.accompanist", name = "accompanist-permissions", version.ref = "accompanist" }
 phonenumber = { group = "com.googlecode.libphonenumber", name = "libphonenumber", version.ref = "phoneNumber" }
+google-fonts = { group = "androidx.compose.ui", name = "ui-text-google-fonts", version.ref = "googleFonts" }
 
 [plugins]
 # Supplied by New Project template

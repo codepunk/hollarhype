@@ -28,7 +28,8 @@ import com.codepunk.hollarhype.ui.preview.ScreenPreviews
 import com.codepunk.hollarhype.ui.theme.HollarhypeTheme
 import com.codepunk.hollarhype.ui.theme.buttonCornerRadius
 import com.codepunk.hollarhype.ui.theme.layoutMargin
-import com.codepunk.hollarhype.ui.theme.LayoutSize
+import com.codepunk.hollarhype.ui.theme.Size3xLarge
+import com.codepunk.hollarhype.ui.theme.SizeMedium
 import com.codepunk.hollarhype.ui.theme.standardButtonWidth
 
 @Composable
@@ -45,12 +46,12 @@ fun AuthOptionsScreen(
     ) {
         Column(
             modifier = Modifier
-                .widthIn(max = LayoutSize.XXX_LARGE.mid)
+                .widthIn(max = Size3xLarge.mid)
                 .fillMaxSize()
                 .align(Alignment.Center),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(
-                space = LayoutSize.MEDIUM.value,
+                space = SizeMedium.value,
                 alignment = Alignment.CenterVertically
             )
         ) {
@@ -67,7 +68,7 @@ fun AuthOptionsScreen(
             ) {
                 Text(
                     text = stringResource(id = R.string.sign_up).lowercase(),
-                    style = MaterialTheme.typography.displayMedium
+                    style = MaterialTheme.typography.labelLarge
                 )
             }
 
@@ -75,14 +76,14 @@ fun AuthOptionsScreen(
                 modifier = Modifier.width(standardButtonWidth),
                 shape = RoundedCornerShape(size = buttonCornerRadius),
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = MaterialTheme.colorScheme.secondary,
-                    contentColor = MaterialTheme.colorScheme.onSecondary
+                    containerColor = MaterialTheme.colorScheme.secondaryContainer,
+                    contentColor = MaterialTheme.colorScheme.onSecondaryContainer
                 ),
                 onClick = { onEvent(AuthEvent.NavigateToSignIn) }
             ) {
                 Text(
                     text = stringResource(id = R.string.sign_in).lowercase(),
-                    style = MaterialTheme.typography.displayMedium
+                    style = MaterialTheme.typography.labelLarge
                 )
             }
         }

@@ -163,4 +163,7 @@ dependencies {
 
     // Google Phone Number library
     implementation(libs.phonenumber)
+
+    // Google Fonts
+    implementation(libs.google.fonts)
 }

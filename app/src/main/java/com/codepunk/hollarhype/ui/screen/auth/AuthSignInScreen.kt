@@ -18,7 +18,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
@@ -33,7 +32,9 @@ import com.codepunk.hollarhype.ui.component.PhoneNumber
 import com.codepunk.hollarhype.ui.component.Region
 import com.codepunk.hollarhype.ui.preview.ScreenPreviews
 import com.codepunk.hollarhype.ui.theme.HollarhypeTheme
-import com.codepunk.hollarhype.ui.theme.LayoutSize
+import com.codepunk.hollarhype.ui.theme.Size3xLarge
+import com.codepunk.hollarhype.ui.theme.SizeLarge
+import com.codepunk.hollarhype.ui.theme.SizeMedium
 import com.codepunk.hollarhype.ui.theme.buttonCornerRadius
 import com.codepunk.hollarhype.ui.theme.layoutMargin
 import com.codepunk.hollarhype.ui.theme.standardButtonWidth
@@ -61,13 +62,13 @@ fun AuthSignInScreen(
     ) {
         Column(
             modifier = Modifier
-                .widthIn(max = LayoutSize.XXX_LARGE.mid)
+                .widthIn(max = Size3xLarge.mid)
                 .fillMaxSize()
                 .padding(
-                    bottom = LayoutSize.LARGE.value
+                    bottom = SizeLarge.value
                 ),
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(LayoutSize.MEDIUM.value)
+            verticalArrangement = Arrangement.spacedBy(SizeMedium.value)
         ) {
             Spacer(
                 modifier = Modifier
@@ -84,13 +85,13 @@ fun AuthSignInScreen(
             )
 
             TextButton(
-                modifier = Modifier.padding(top = LayoutSize.MEDIUM.value),
+                modifier = Modifier.padding(top = SizeMedium.value),
                 onClick = { onEvent(AuthEvent.OnPhoneNumberChanged) }
             ) {
                 Text(
                     text = stringResource(id = R.string.phone_number_changed),
                     color = MaterialTheme.colorScheme.onBackground,
-                    style = MaterialTheme.typography.labelMedium,
+                    style = MaterialTheme.typography.bodyMedium,
                     textAlign = TextAlign.Center
                 )
             }
@@ -104,10 +105,6 @@ fun AuthSignInScreen(
             Button(
                 modifier = Modifier.width(standardButtonWidth),
                 shape = RoundedCornerShape(size = buttonCornerRadius),
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = MaterialTheme.colorScheme.secondary,
-                    contentColor = MaterialTheme.colorScheme.onSecondary
-                ),
                 onClick = { onEvent(
                     AuthEvent.OnSignIn(
                         countryCode = region.countryCode,
@@ -117,7 +114,7 @@ fun AuthSignInScreen(
             ) {
                 Text(
                     text = stringResource(id = R.string.sign_in).lowercase(),
-                    style = MaterialTheme.typography.displayMedium
+                    style = MaterialTheme.typography.labelLarge
                 )
             }
         }
