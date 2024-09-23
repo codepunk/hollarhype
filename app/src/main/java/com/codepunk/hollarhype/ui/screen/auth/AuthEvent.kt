@@ -12,11 +12,14 @@ sealed interface AuthEvent {
     data class OnPhoneNumberChange(val phoneNumber: String): AuthEvent
     data class OnRegionChange(val region: Region): AuthEvent
 
-    // Actions
+    // Navigation
 
     data object OnNavigateToAuthOptions: AuthEvent
     data object OnNavigateToSignIn: AuthEvent
     data object OnNavigateToSignUp: AuthEvent
+
+    // Actions
+
     data object OnEditAvatar: AuthEvent
     data object OnRegisterNewPhoneNumber: AuthEvent
     data object OnSignUp: AuthEvent
