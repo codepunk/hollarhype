@@ -11,6 +11,8 @@ import arrow.core.left
 import arrow.eval.Eval
 import com.codepunk.hollarhype.domain.model.User
 import com.codepunk.hollarhype.domain.repository.HollarhypeRepository
+import com.codepunk.hollarhype.ui.component.Region
+import com.codepunk.hollarhype.util.getFullPhoneNumber
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -73,29 +75,22 @@ class AuthViewModel @Inject constructor(
         Log.d("AuthViewModel", "phoneNumberChanged")
     }
 
-    private fun signUp(
-        firstName: String,
-        lastName: String,
-        emailAddress: String,
-        countryCode: Int,
-        phoneNumber: String,
-        avatar: Any? = null
-    ) {
+    private fun signUp(user: User) {
         Log.d(
             "AuthViewModel", buildString {
-                append("signIn: ")
-                append("firstName=$firstName, ")
-                append("lastName=$lastName, ")
-                append("emailAddress=$emailAddress, ")
-                append("countryCode=$countryCode, ")
-                append("phoneNumber=$phoneNumber, ")
-                append("avatar=$avatar")
+                append("signUp: ")
+                append("authenticatingUser=${_stateFlow.value.authenticatingUser}")
             }
         )
     }
 
-    private fun signIn(countryCode: Int, phoneNumber: String) {
-        Log.d("AuthViewModel", "signIn: countryCode=$countryCode, phoneNumber=$phoneNumber")
+    private fun signIn(fullPhoneNumber: String) {
+        Log.d(
+            "AuthViewModel", buildString {
+                append("signIn: ")
+                append("fullPhoneNumber=$fullPhoneNumber")
+            }
+        )
     }
 
     private fun resendOtp() {
@@ -114,6 +109,56 @@ class AuthViewModel @Inject constructor(
 
     }
 
+    private fun updateFirstName(firstName: String) {
+        with(_stateFlow) {
+            value = value.copy(
+                authenticatingUser = value.authenticatingUser.copy(
+                    firstName = firstName
+                )
+            )
+        }
+    }
+
+    private fun updateLastName(lastName: String) {
+        with(_stateFlow) {
+            value = value.copy(
+                authenticatingUser = value.authenticatingUser.copy(
+                    lastName = lastName
+                )
+            )
+        }
+    }
+
+    private fun updateEmailAddress(emailAddress: String) {
+        with(_stateFlow) {
+            value = value.copy(
+                authenticatingUser = value.authenticatingUser.copy(
+                    emailAddress = emailAddress
+                )
+            )
+        }
+    }
+
+    private fun updateRegion(region: Region) {
+        with(_stateFlow) {
+            value = value.copy(
+                authenticatingUser = value.authenticatingUser.copy(
+                    region = region
+                )
+            )
+        }
+    }
+
+    private fun updatePhoneNumber(phoneNumber: String) {
+        with(_stateFlow) {
+            value = value.copy(
+                authenticatingUser = value.authenticatingUser.copy(
+                    phoneNumber = phoneNumber
+                )
+            )
+        }
+    }
+
     private fun onConsumeAuthenticatedUser(
         authenticatedUser: Either<Throwable, User>
     ) {
@@ -127,21 +172,23 @@ class AuthViewModel @Inject constructor(
     fun onEvent(event: AuthEvent) {
         when (event) {
             is AuthEvent.OnEditAvatar -> editAvatar()
-            is AuthEvent.OnPhoneNumberChanged -> phoneNumberChanged()
+            is AuthEvent.OnRegisterNewPhoneNumber -> phoneNumberChanged()
             is AuthEvent.OnResendOtp -> resendOtp()
-            is AuthEvent.OnSignIn -> signIn(event.countryCode, event.phoneNumber)
+            is AuthEvent.OnSignIn -> signIn(
+                _stateFlow.value.authenticatingUser.getFullPhoneNumber()
+            )
             is AuthEvent.OnSignUp -> signUp(
-                firstName = event.firstName,
-                lastName = event.lastName,
-                emailAddress = event.emailAddress,
-                countryCode = event.countryCode,
-                phoneNumber = event.phoneNumber,
-                avatar = event.avatar
+                _stateFlow.value.authenticatingUser
             )
             is AuthEvent.Initialize -> authenticate()
             is AuthEvent.NavigateToAuthOptions -> navigateToAuthOptions()
             is AuthEvent.NavigateToSignIn -> navigateToSignIn()
             is AuthEvent.NavigateToSignUp -> navigateToSignUp()
+            is AuthEvent.OnFirstNameChange -> updateFirstName(event.firstName)
+            is AuthEvent.OnLastNameChange -> updateLastName(event.lastName)
+            is AuthEvent.OnEmailAddressChange -> updateEmailAddress(event.emailAddress)
+            is AuthEvent.OnRegionChange -> updateRegion(event.region)
+            is AuthEvent.OnPhoneNumberChange -> updatePhoneNumber(event.phoneNumber)
         }
     }
 

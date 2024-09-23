@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -29,7 +28,6 @@ import com.codepunk.hollarhype.R
 import com.codepunk.hollarhype.ui.component.CountryCodePicker
 import com.codepunk.hollarhype.ui.component.CountryCodePickerDialog
 import com.codepunk.hollarhype.ui.component.PhoneNumber
-import com.codepunk.hollarhype.ui.component.Region
 import com.codepunk.hollarhype.ui.preview.ScreenPreviews
 import com.codepunk.hollarhype.ui.theme.HollarhypeTheme
 import com.codepunk.hollarhype.ui.theme.Size3xLarge
@@ -45,10 +43,7 @@ fun AuthSignInScreen(
     state: AuthState,
     onEvent: (AuthEvent) -> Unit = {}
 ) {
-    var phoneNumber by rememberSaveable { mutableStateOf("") }
-    var region by rememberSaveable { mutableStateOf(Region.getDefault()) }
-
-    var showPicker by rememberSaveable { mutableStateOf(false) }
+    var regionPickerVisible by rememberSaveable { mutableStateOf(false) }
 
     val layoutMargin = layoutMargin().times(2)
     Box(
@@ -77,16 +72,16 @@ fun AuthSignInScreen(
             )
 
             PhoneNumber(
-                regionCode = region.regionCode,
-                countryCode = region.countryCode,
-                phoneNumber = phoneNumber,
-                onCountryCodeClick = { showPicker = true },
-                onPhoneNumberChange = { phoneNumber = it }
+                regionCode = state.authenticatingUser.region.regionCode,
+                countryCode = state.authenticatingUser.region.countryCode,
+                phoneNumber = state.authenticatingUser.phoneNumber,
+                onCountryCodeClick = { regionPickerVisible = true },
+                onPhoneNumberChange = { onEvent(AuthEvent.OnPhoneNumberChange(it)) }
             )
 
             TextButton(
                 modifier = Modifier.padding(top = SizeMedium.value),
-                onClick = { onEvent(AuthEvent.OnPhoneNumberChanged) }
+                onClick = { onEvent(AuthEvent.OnRegisterNewPhoneNumber) }
             ) {
                 Text(
                     text = stringResource(id = R.string.phone_number_changed),
@@ -105,12 +100,7 @@ fun AuthSignInScreen(
             Button(
                 modifier = Modifier.width(standardButtonWidth),
                 shape = RoundedCornerShape(size = buttonCornerRadius),
-                onClick = { onEvent(
-                    AuthEvent.OnSignIn(
-                        countryCode = region.countryCode,
-                        phoneNumber = phoneNumber
-                    )
-                ) }
+                onClick = { onEvent(AuthEvent.OnSignIn) }
             ) {
                 Text(
                     text = stringResource(id = R.string.sign_in).lowercase(),
@@ -121,14 +111,14 @@ fun AuthSignInScreen(
 
     }
 
-    if (showPicker) {
+    if (regionPickerVisible) {
         CountryCodePickerDialog(
-            onDismiss = { showPicker = false }
+            onDismiss = { regionPickerVisible = false }
         ) {
             CountryCodePicker(
                 onItemSelected = {
-                    region = it
-                    showPicker = false
+                    onEvent(AuthEvent.OnRegionChange(it))
+                    regionPickerVisible = false
                 }
             )
         }

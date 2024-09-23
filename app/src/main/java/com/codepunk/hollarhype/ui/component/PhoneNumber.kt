@@ -41,7 +41,7 @@ fun PhoneNumber(
     modifier: Modifier = Modifier,
     regionCode: String,
     countryCode: Int,
-    phoneNumber: String = "3472",
+    phoneNumber: String = "",
     onCountryCodeClick: () -> Unit = {},
     onPhoneNumberChange: (String) -> Unit = {}
 ) {
@@ -114,10 +114,9 @@ fun PreviewUSPhoneNumber() {
                 regionCode = region.regionCode,
                 countryCode = region.countryCode,
                 phoneNumber = PhoneNumberUtil.getInstance().run {
-                    getNddPrefixForRegion(region.regionCode, true) +
-                            getNationalSignificantNumber(
-                                getExampleNumber(region.regionCode)
-                            )
+                    getNationalSignificantNumber(
+                        getExampleNumber(region.regionCode)
+                    )
                 }
             )
         }

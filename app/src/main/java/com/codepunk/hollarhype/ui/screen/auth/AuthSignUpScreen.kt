@@ -27,9 +27,8 @@ import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -68,28 +67,7 @@ fun AuthSignUpScreen(
     state: AuthState,
     onEvent: (AuthEvent) -> Unit = {}
 ) {
-    val windowSizeClass = currentWindowAdaptiveInfoCustom().windowSizeClass
-
-    var firstName by remember { mutableStateOf("") }
-    var lastName by remember { mutableStateOf("") }
-    var emailAddress by remember { mutableStateOf("") }
-    var phoneNumber by remember { mutableStateOf("") }
-    var region by remember { mutableStateOf(Region.getDefault()) }
-
-    var showPicker by rememberSaveable { mutableStateOf(false) }
-
-    val invokeOnEditAvatar = { onEvent(AuthEvent.OnEditAvatar) }
-    val invokeOnSignup = {
-        onEvent(
-            AuthEvent.OnSignUp(
-                firstName = firstName,
-                lastName = lastName,
-                emailAddress = emailAddress,
-                countryCode = region.countryCode,
-                phoneNumber = phoneNumber
-            )
-        )
-    }
+    var regionPickerVisible by rememberSaveable { mutableStateOf(false) }
 
     val layoutMargin = layoutMargin().times(2)
     Box(
@@ -102,100 +80,114 @@ fun AuthSignUpScreen(
             contentAlignment = Alignment.Center
     ) {
         if (LocalConfiguration.current.orientation == Configuration.ORIENTATION_LANDSCAPE) {
-
-            // region Landscape
-            // --------------------------------------------------
-            // Landscape
-            // --------------------------------------------------
-
-            // Avatar size is based on height
-            val avatarSize = when (windowSizeClass.windowHeightSizeClass) {
-                WindowHeightSizeClass.COMPACT -> SizeXLarge.mid
-                else -> Size2xLarge.mid
-            }
-
-            Row(
-                modifier = Modifier
-                    .fillMaxSize(),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Box(
-                    modifier = Modifier
-                        .weight(1f)
-                        .fillMaxHeight(),
-                    contentAlignment = Alignment.CenterEnd
-                ) {
-                    Column(
-                        modifier = Modifier
-                            .widthIn(max = SizeHuge.value)
-                            .fillMaxWidth(),
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.spacedBy(
-                            space = SizeLarge.value,
-                            alignment = Alignment.CenterVertically
-                        )
-                    ) {
-                        UserAvatar(
-                            modifier = Modifier.width(avatarSize),
-                            onClick = invokeOnEditAvatar
-                        )
-
-                        SignUpSubmit(
-                            modifier = Modifier.fillMaxWidth(),
-                            onSubmit = invokeOnSignup
-                        )
-                    }
-                }
-
-                Spacer(
-                    modifier = Modifier
-                        .width(largeGutterSize)
-                        .fillMaxHeight()
-                )
-
-                Box(
-                    modifier = Modifier
-                        .weight(1f)
-                        .fillMaxHeight(),
-                    contentAlignment = Alignment.CenterStart
-                ) {
-                    SignUpForm(
-                        modifier = Modifier
-                            .widthIn(max = SizeHuge.value)
-                            .fillMaxWidth(),
-                        firstName = firstName,
-                        lastName = lastName,
-                        emailAddress = emailAddress,
-                        phoneNumber = phoneNumber,
-                        region = region,
-                        onFirstNameChange = { firstName = it },
-                        onLastNameChange = { lastName = it },
-                        onEmailAddressChange = { emailAddress = it },
-                        onPhoneNumberChange = { phoneNumber = it },
-                        onShowPicker = { showPicker = true }
-                    )
-                }
-            }
-
-            // endregion Landscape
-
+            SignUpLandscape(
+                state = state,
+                onEvent = onEvent,
+                onShowRegionPicker = { regionPickerVisible = true }
+            )
         } else {
+            SignUpNonLandscape(
+                state = state,
+                onEvent = onEvent,
+                onShowRegionPicker = { regionPickerVisible = true }
+            )
+        }
+    }
 
-            // region Non-landscape
-            // --------------------------------------------------
-            // Non-landscape
-            // --------------------------------------------------
+    if (regionPickerVisible) {
+        CountryCodePickerDialog(
+            onDismiss = { regionPickerVisible = false }
+        ) {
+            CountryCodePicker(
+                onItemSelected = {
+                    onEvent(AuthEvent.OnRegionChange(it))
+                    regionPickerVisible = false
+                }
+            )
+        }
+    }
 
-            // Avatar size is based on width
-            val avatarSize = when (windowSizeClass.windowWidthSizeClass) {
-                WindowWidthSizeClass.COMPACT -> SizeXLarge.mid
-                else -> Size2xLarge.mid
-            }
+    // endregion Country code picker
+}
 
+@Composable
+fun SignUpNonLandscape(
+    state: AuthState,
+    onEvent: (AuthEvent) -> Unit,
+    onShowRegionPicker: () -> Unit
+) {
+
+    // Avatar size is based on width
+    val windowSizeClass = currentWindowAdaptiveInfoCustom().windowSizeClass.windowWidthSizeClass
+    val avatarSize = when (windowSizeClass) {
+        WindowWidthSizeClass.COMPACT -> SizeXLarge.mid
+        else -> Size2xLarge.mid
+    }
+
+    Column(
+        modifier = Modifier
+            .widthIn(max = Size3xLarge.mid)
+            .fillMaxSize(),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(
+            space = SizeLarge.value,
+            alignment = Alignment.CenterVertically
+        )
+    ) {
+        UserAvatar(
+            modifier = Modifier.width(avatarSize),
+            onClick = { onEvent(AuthEvent.OnEditAvatar) }
+        )
+
+        SignUpForm(
+            modifier = Modifier.fillMaxWidth(),
+            firstName = state.authenticatingUser.firstName,
+            lastName = state.authenticatingUser.lastName,
+            emailAddress = state.authenticatingUser.emailAddress,
+            phoneNumber = state.authenticatingUser.phoneNumber,
+            region = state.authenticatingUser.region,
+            onFirstNameChange = { onEvent(AuthEvent.OnFirstNameChange(it)) },
+            onLastNameChange = { onEvent(AuthEvent.OnLastNameChange(it)) },
+            onEmailAddressChange = { onEvent(AuthEvent.OnEmailAddressChange(it)) },
+            onPhoneNumberChange = { onEvent(AuthEvent.OnPhoneNumberChange(it)) },
+            onShowRegionPicker = onShowRegionPicker
+        )
+
+        SignUpSubmit(
+            modifier = Modifier.fillMaxWidth(),
+            onSubmit = { onEvent(AuthEvent.OnSignUp) }
+        )
+    }
+}
+
+@Composable
+fun SignUpLandscape(
+    state: AuthState,
+    onEvent: (AuthEvent) -> Unit,
+    onShowRegionPicker: () -> Unit
+) {
+    // Avatar size is based on height
+    val windowSizeClass = currentWindowAdaptiveInfoCustom().windowSizeClass.windowHeightSizeClass
+    val avatarSize = when (windowSizeClass) {
+        WindowHeightSizeClass.COMPACT -> SizeXLarge.mid
+        else -> Size2xLarge.mid
+    }
+
+    Row(
+        modifier = Modifier
+            .fillMaxSize(),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Box(
+            modifier = Modifier
+                .weight(1f)
+                .fillMaxHeight(),
+            contentAlignment = Alignment.CenterEnd
+        ) {
             Column(
                 modifier = Modifier
-                    .widthIn(max = Size3xLarge.mid)
-                    .fillMaxSize(),
+                    .widthIn(max = SizeHuge.value)
+                    .fillMaxWidth(),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.spacedBy(
                     space = SizeLarge.value,
@@ -204,52 +196,45 @@ fun AuthSignUpScreen(
             ) {
                 UserAvatar(
                     modifier = Modifier.width(avatarSize),
-                    onClick = invokeOnEditAvatar
-                )
-
-                SignUpForm(
-                    modifier = Modifier.fillMaxWidth(),
-                    firstName = firstName,
-                    lastName = lastName,
-                    emailAddress = emailAddress,
-                    phoneNumber = phoneNumber,
-                    region = region,
-                    onFirstNameChange = { firstName = it },
-                    onLastNameChange = { lastName = it },
-                    onEmailAddressChange = { emailAddress = it },
-                    onPhoneNumberChange = { phoneNumber = it },
-                    onShowPicker = { showPicker = true }
+                    onClick = { onEvent(AuthEvent.OnEditAvatar) }
                 )
 
                 SignUpSubmit(
                     modifier = Modifier.fillMaxWidth(),
-                    onSubmit = invokeOnSignup
+                    onSubmit = { onEvent(AuthEvent.OnSignUp) }
                 )
             }
-
-            // endregion Landscape
         }
-    }
 
-    // region Country code picker
-    // --------------------------------------------------
-    // Country code picker
-    // --------------------------------------------------
+        Spacer(
+            modifier = Modifier
+                .width(largeGutterSize)
+                .fillMaxHeight()
+        )
 
-    if (showPicker) {
-        CountryCodePickerDialog(
-            onDismiss = { showPicker = false }
+        Box(
+            modifier = Modifier
+                .weight(1f)
+                .fillMaxHeight(),
+            contentAlignment = Alignment.CenterStart
         ) {
-            CountryCodePicker(
-                onItemSelected = {
-                    region = it
-                    showPicker = false
-                }
+            SignUpForm(
+                modifier = Modifier
+                    .widthIn(max = SizeHuge.value)
+                    .fillMaxWidth(),
+                firstName = state.authenticatingUser.firstName,
+                lastName = state.authenticatingUser.lastName,
+                emailAddress = state.authenticatingUser.emailAddress,
+                phoneNumber = state.authenticatingUser.phoneNumber,
+                region = state.authenticatingUser.region,
+                onFirstNameChange = { onEvent(AuthEvent.OnFirstNameChange(it)) },
+                onLastNameChange = { onEvent(AuthEvent.OnLastNameChange(it)) },
+                onEmailAddressChange = { onEvent(AuthEvent.OnEmailAddressChange(it)) },
+                onPhoneNumberChange = { onEvent(AuthEvent.OnPhoneNumberChange(it)) },
+                onShowRegionPicker = onShowRegionPicker
             )
         }
     }
-
-    // endregion Country code picker
 }
 
 @Composable
@@ -323,7 +308,7 @@ fun SignUpForm(
     onLastNameChange: (String) -> Unit,
     onEmailAddressChange: (String) -> Unit,
     onPhoneNumberChange: (String) -> Unit,
-    onShowPicker: () -> Unit
+    onShowRegionPicker: () -> Unit
 ) {
     Column(
         modifier = modifier,
@@ -384,7 +369,7 @@ fun SignUpForm(
             regionCode = region.regionCode,
             countryCode = region.countryCode,
             phoneNumber = phoneNumber,
-            onCountryCodeClick = onShowPicker,
+            onCountryCodeClick = { onShowRegionPicker() },
             onPhoneNumberChange = onPhoneNumberChange
         )
     }

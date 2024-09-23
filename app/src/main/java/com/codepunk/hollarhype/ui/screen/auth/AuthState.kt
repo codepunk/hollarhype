@@ -6,6 +6,10 @@ import arrow.eval.Eval
 import com.codepunk.hollarhype.domain.model.User
 
 data class AuthState(
+
+    val authenticatingUser: User = User(),
+
     val authenticatedUser: Eval<Either<Throwable, User>> =
         Eval.now(IllegalStateException("No user").left())
+
 )
