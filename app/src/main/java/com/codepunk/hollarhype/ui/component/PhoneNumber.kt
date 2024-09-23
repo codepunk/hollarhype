@@ -1,6 +1,5 @@
 package com.codepunk.hollarhype.ui.component
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
@@ -26,7 +25,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import com.codepunk.hollarhype.R
@@ -35,7 +33,7 @@ import com.codepunk.hollarhype.ui.theme.HollarhypeTheme
 import com.codepunk.hollarhype.ui.theme.SizeLarge
 import com.codepunk.hollarhype.ui.theme.SizeSmall
 import com.codepunk.hollarhype.ui.theme.SizeTiny
-import com.google.i18n.phonenumbers.NumberParseException
+import com.codepunk.hollarhype.util.PhoneNumberVisualTransformation
 import com.google.i18n.phonenumbers.PhoneNumberUtil
 
 @Composable
@@ -43,20 +41,14 @@ fun PhoneNumber(
     modifier: Modifier = Modifier,
     regionCode: String,
     countryCode: Int,
-    phoneNumber: String,
+    phoneNumber: String = "3472",
     onCountryCodeClick: () -> Unit = {},
     onPhoneNumberChange: (String) -> Unit = {}
 ) {
-    val phoneNumberUtil: PhoneNumberUtil by remember { mutableStateOf(PhoneNumberUtil.getInstance()) }
-
-    val formatted by remember(regionCode, phoneNumber) {
-        val parsed = try {
-            val pn = phoneNumberUtil.parse(phoneNumber, regionCode)
-            phoneNumberUtil.format(pn, PhoneNumberUtil.PhoneNumberFormat.NATIONAL)
-        } catch (e: NumberParseException) {
-            phoneNumber
-        }
-        mutableStateOf(parsed)
+    val visualTransformation by remember(regionCode) {
+        mutableStateOf(
+            PhoneNumberVisualTransformation(regionCode)
+        )
     }
 
     Row(
@@ -92,7 +84,7 @@ fun PhoneNumber(
 
         OutlinedTextField(
             modifier = Modifier.fillMaxWidth(),
-            value = formatted,
+            value = phoneNumber,
             colors = OutlinedTextFieldDefaults.colors(
                 focusedContainerColor = MaterialTheme.colorScheme.surfaceVariant,
                 unfocusedContainerColor = MaterialTheme.colorScheme.surfaceVariant
@@ -106,6 +98,7 @@ fun PhoneNumber(
                     text = stringResource(id = R.string.phone_number),
                 )
             },
+            visualTransformation = visualTransformation,
             onValueChange = { onPhoneNumberChange(it) }
         )
     }
@@ -113,13 +106,39 @@ fun PhoneNumber(
 
 @ComponentPreviews
 @Composable
-fun PreviewPhoneNumber() {
+fun PreviewUSPhoneNumber() {
     HollarhypeTheme {
         Surface {
+            val region = Region.of("US")
             PhoneNumber(
-                regionCode = "US",
-                countryCode = 732,
-                phoneNumber = "7325458674"
+                regionCode = region.regionCode,
+                countryCode = region.countryCode,
+                phoneNumber = PhoneNumberUtil.getInstance().run {
+                    getNddPrefixForRegion(region.regionCode, true) +
+                            getNationalSignificantNumber(
+                                getExampleNumber(region.regionCode)
+                            )
+                }
+            )
+        }
+    }
+}
+
+@ComponentPreviews
+@Composable
+fun PreviewFRPhoneNumber() {
+    HollarhypeTheme {
+        Surface {
+            val region = Region.of("FR")
+            PhoneNumber(
+                regionCode = region.regionCode,
+                countryCode = region.countryCode,
+                phoneNumber = PhoneNumberUtil.getInstance().run {
+                    getNddPrefixForRegion(region.regionCode, true) +
+                            getNationalSignificantNumber(
+                                getExampleNumber(region.regionCode)
+                            )
+                }
             )
         }
     }
