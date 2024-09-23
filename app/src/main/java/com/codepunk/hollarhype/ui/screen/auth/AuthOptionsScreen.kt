@@ -64,7 +64,7 @@ fun AuthOptionsScreen(
             Button(
                 modifier = Modifier.width(standardButtonWidth),
                 shape = RoundedCornerShape(size = buttonCornerRadius),
-                onClick = { onEvent(AuthEvent.OnGoToSignUp) }
+                onClick = { onEvent(AuthEvent.OnNavigateToSignUp) }
             ) {
                 Text(
                     text = stringResource(id = R.string.sign_up).lowercase(),
@@ -79,7 +79,7 @@ fun AuthOptionsScreen(
                     containerColor = MaterialTheme.colorScheme.secondaryContainer,
                     contentColor = MaterialTheme.colorScheme.onSecondaryContainer
                 ),
-                onClick = { onEvent(AuthEvent.OnGoToSignIn) }
+                onClick = { onEvent(AuthEvent.OnNavigateToSignIn) }
             ) {
                 Text(
                     text = stringResource(id = R.string.sign_in).lowercase(),

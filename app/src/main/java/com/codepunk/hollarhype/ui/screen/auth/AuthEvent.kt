@@ -14,9 +14,9 @@ sealed interface AuthEvent {
 
     // Actions
 
-    data object OnGoToAuthOptions: AuthEvent
-    data object OnGoToSignIn: AuthEvent
-    data object OnGoToSignUp: AuthEvent
+    data object OnNavigateToAuthOptions: AuthEvent
+    data object OnNavigateToSignIn: AuthEvent
+    data object OnNavigateToSignUp: AuthEvent
     data object OnEditAvatar: AuthEvent
     data object OnRegisterNewPhoneNumber: AuthEvent
     data object OnSignUp: AuthEvent
