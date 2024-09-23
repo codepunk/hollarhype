@@ -37,7 +37,7 @@ fun AuthInitScreen(
     // Attempt to consume result of silent authentication
     state.authenticatedUser.consume { authenticatedUser ->
         if (authenticatedUser.isLeft()) {
-            onEvent(AuthEvent.GoToAuthOptions)
+            onEvent(AuthEvent.OnGoToAuthOptions)
             return
         }
     }

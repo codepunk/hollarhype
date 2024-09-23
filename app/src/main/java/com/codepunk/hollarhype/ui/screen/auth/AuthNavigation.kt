@@ -29,7 +29,7 @@ fun AuthNavigation(
                 // Pass navigation events up to navController, everything else
                 // will fall through to AuthViewModel
                 when (event) {
-                    is AuthEvent.GoToAuthOptions ->
+                    is AuthEvent.OnGoToAuthOptions ->
                         navController.navigate(AuthRoute.AuthOptions)
                     else -> onEvent(event)
                 }
@@ -43,9 +43,9 @@ fun AuthNavigation(
                 // Pass navigation events up to navController, everything else
                 // will fall through to AuthViewModel
                 when (event) {
-                    is AuthEvent.GoToSignUp ->
+                    is AuthEvent.OnGoToSignUp ->
                         navController.navigate(AuthRoute.AuthSignUp)
-                    is AuthEvent.GoToSignIn ->
+                    is AuthEvent.OnGoToSignIn ->
                         navController.navigate(AuthRoute.AuthSignIn)
                     else -> onEvent(event)
                 }

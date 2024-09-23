@@ -180,9 +180,9 @@ class AuthViewModel @Inject constructor(
             is AuthEvent.OnSignUp -> signUp(
                 _stateFlow.value.authenticatingUser
             )
-            is AuthEvent.GoToAuthOptions -> navigateToAuthOptions()
-            is AuthEvent.GoToSignIn -> navigateToSignIn()
-            is AuthEvent.GoToSignUp -> navigateToSignUp()
+            is AuthEvent.OnGoToAuthOptions -> navigateToAuthOptions()
+            is AuthEvent.OnGoToSignIn -> navigateToSignIn()
+            is AuthEvent.OnGoToSignUp -> navigateToSignUp()
             is AuthEvent.OnFirstNameChange -> updateFirstName(event.firstName)
             is AuthEvent.OnLastNameChange -> updateLastName(event.lastName)
             is AuthEvent.OnEmailAddressChange -> updateEmailAddress(event.emailAddress)
