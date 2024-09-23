@@ -4,6 +4,7 @@ import android.content.Context
 import arrow.retrofit.adapter.either.EitherCallAdapterFactory
 import com.codepunk.hollarhype.BuildConfig
 import com.codepunk.hollarhype.data.remote.interceptor.HollarhypeUserAgentInterceptor
+import com.codepunk.hollarhype.data.remote.webservice.HollarhypeWebservice
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import dagger.Module
 import dagger.Provides
@@ -51,7 +52,8 @@ class RemoteModule {
 
     @Singleton
     @Provides
-    fun provideEitherCallAdapterFactory(): EitherCallAdapterFactory = EitherCallAdapterFactory()
+    fun provideEitherCallAdapterFactory(): EitherCallAdapterFactory =
+        EitherCallAdapterFactory.create()
 
     @Singleton
     @Provides
@@ -70,6 +72,12 @@ class RemoteModule {
         .addCallAdapterFactory(eitherCallAdapterFactory)
         .addConverterFactory(converterFactory)
         .build()
+
+    @Singleton
+    @Provides
+    fun provideHollarhypeWebService(
+        retrofit: Retrofit
+    ): HollarhypeWebservice = retrofit.create(HollarhypeWebservice::class.java)
 
     // endregion Methods
 

@@ -27,4 +27,11 @@
 
     <!-- endregion Country code picker -->
 
+    <!-- region Errors -->
+
+    <string name="error">Error</string>
+    <string name="no_internet_try_again">No internet connection. Please try again later.</string>
+
+    <!-- endregion Errors -->
+
 </resources>

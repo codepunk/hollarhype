@@ -6,11 +6,15 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -33,6 +37,7 @@ import com.codepunk.hollarhype.ui.theme.HollarhypeTheme
 import com.codepunk.hollarhype.ui.theme.Size3xLarge
 import com.codepunk.hollarhype.ui.theme.SizeLarge
 import com.codepunk.hollarhype.ui.theme.SizeMedium
+import com.codepunk.hollarhype.ui.theme.SizeSmall
 import com.codepunk.hollarhype.ui.theme.buttonCornerRadius
 import com.codepunk.hollarhype.ui.theme.layoutMargin
 import com.codepunk.hollarhype.ui.theme.standardButtonWidth
@@ -98,14 +103,24 @@ fun AuthSignInScreen(
             )
 
             Button(
-                modifier = Modifier.width(standardButtonWidth),
+                modifier = Modifier
+                    .height(SizeLarge.mid)
+                    .width(standardButtonWidth),
                 shape = RoundedCornerShape(size = buttonCornerRadius),
+                enabled = (!state.isLoading),
                 onClick = { onEvent(AuthEvent.OnSignIn) }
             ) {
-                Text(
-                    text = stringResource(id = R.string.sign_in).lowercase(),
-                    style = MaterialTheme.typography.labelLarge
-                )
+                if (state.isLoading) {
+                    CircularProgressIndicator(
+                        modifier = Modifier.size(ButtonDefaults.IconSize),
+                        color = MaterialTheme.colorScheme.primary
+                    )
+                } else {
+                    Text(
+                        text = stringResource(id = R.string.sign_in).lowercase(),
+                        style = MaterialTheme.typography.labelLarge
+                    )
+                }
             }
         }
 
@@ -123,6 +138,8 @@ fun AuthSignInScreen(
             )
         }
     }
+
+
 }
 
 @ScreenPreviews
@@ -132,7 +149,9 @@ fun AuthSignInPreviews() {
         Scaffold { padding ->
             AuthSignInScreen(
                 modifier = Modifier.padding(padding),
-                state = AuthState()
+                state = AuthState(
+                    isLoading = true
+                )
             )
         }
     }

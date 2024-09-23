@@ -1,5 +1,6 @@
 package com.codepunk.hollarhype.di.module
 
+import com.codepunk.hollarhype.data.remote.webservice.HollarhypeWebservice
 import com.codepunk.hollarhype.data.repository.HollarhypeRepositoryImpl
 import com.codepunk.hollarhype.domain.repository.HollarhypeRepository
 import dagger.Module
@@ -16,7 +17,11 @@ class DataModule {
 
     @Singleton
     @Provides
-    fun provideHollarhypeRepository(): HollarhypeRepository = HollarhypeRepositoryImpl()
+    fun provideHollarhypeRepository(
+        webservice: HollarhypeWebservice
+    ): HollarhypeRepository = HollarhypeRepositoryImpl(
+        webservice = webservice
+    )
 
     // endregion Methods
 

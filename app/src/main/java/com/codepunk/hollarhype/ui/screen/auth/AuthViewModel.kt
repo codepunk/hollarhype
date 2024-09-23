@@ -1,5 +1,6 @@
 package com.codepunk.hollarhype.ui.screen.auth
 
+import android.database.sqlite.SQLiteOutOfMemoryException
 import android.util.Log
 import androidx.credentials.CredentialManager
 import androidx.credentials.GetCredentialRequest
@@ -7,13 +8,16 @@ import androidx.credentials.GetPasswordOption
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import arrow.core.Either
+import arrow.core.Option
+import arrow.core.Some
 import arrow.core.left
+import arrow.core.right
 import arrow.eval.Eval
 import com.codepunk.hollarhype.domain.model.User
 import com.codepunk.hollarhype.domain.repository.HollarhypeRepository
 import com.codepunk.hollarhype.ui.component.Region
-import com.codepunk.hollarhype.util.getFullPhoneNumber
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
@@ -31,6 +35,10 @@ class AuthViewModel @Inject constructor(
     // constructs out of ViewModel
     private val _stateFlow: MutableStateFlow<AuthState> = MutableStateFlow(AuthState())
     val stateFlow = _stateFlow.asStateFlow()
+
+    private var state: AuthState
+        get() = _stateFlow.value
+        set(value) { _stateFlow.value = value }
 
     // endregion Variables
 
@@ -58,10 +66,10 @@ class AuthViewModel @Inject constructor(
             val user = Eval.later {
                 val authenticatedUser = IllegalStateException("No user").left()
                 // If we got to this point, authenticated user was just "consumed"
-                onConsumeAuthenticatedUser(authenticatedUser)
+                consumeAuthenticatedUser(authenticatedUser)
                 authenticatedUser
             }
-            _stateFlow.value = _stateFlow.value.copy(
+            state = state.copy(
                 authenticatedUser = user
             )
         }
@@ -77,20 +85,46 @@ class AuthViewModel @Inject constructor(
 
     private fun signUp(user: User) {
         Log.d(
-            "AuthViewModel", buildString {
-                append("signUp: ")
-                append("authenticatingUser=${_stateFlow.value.authenticatingUser}")
-            }
+            "AuthViewModel",
+            "signUn: " + listOf(
+                "user=$user"
+            ).joinToString { it }
         )
     }
 
-    private fun signIn(fullPhoneNumber: String) {
-        Log.d(
-            "AuthViewModel", buildString {
-                append("signIn: ")
-                append("fullPhoneNumber=$fullPhoneNumber")
-            }
+    private fun signIn(region: Region, phoneNumber: String) {
+        state = state.copy(
+            isLoading = true
         )
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.login(
+                phoneNumber = phoneNumber,
+                region = region
+            ).collect { result ->
+                result.fold(
+                    ifLeft = { throwable ->
+
+                        // TODO NEXT
+                        //  How do I show these error states?
+                        //
+
+                        Log.e(
+                            this@AuthViewModel.javaClass.simpleName,
+                            "signIn: ${throwable.message}"
+                        )
+
+                        state = state.copy(
+                            isLoading = false
+                        )
+                    },
+                    ifRight = { isSuccess ->
+                        state = state.copy(
+                            isLoading = false
+                        )
+                    }
+                )
+            }
+        }
     }
 
     private fun resendOtp() {
@@ -110,56 +144,46 @@ class AuthViewModel @Inject constructor(
     }
 
     private fun updateFirstName(firstName: String) {
-        with(_stateFlow) {
-            value = value.copy(
-                authenticatingUser = value.authenticatingUser.copy(
-                    firstName = firstName
-                )
+        state = state.copy(
+            authenticatingUser = state.authenticatingUser.copy(
+                firstName = firstName
             )
-        }
+        )
     }
 
     private fun updateLastName(lastName: String) {
-        with(_stateFlow) {
-            value = value.copy(
-                authenticatingUser = value.authenticatingUser.copy(
-                    lastName = lastName
-                )
+        state = state.copy(
+            authenticatingUser = state.authenticatingUser.copy(
+                lastName = lastName
             )
-        }
+        )
     }
 
     private fun updateEmailAddress(emailAddress: String) {
-        with(_stateFlow) {
-            value = value.copy(
-                authenticatingUser = value.authenticatingUser.copy(
-                    emailAddress = emailAddress
-                )
+        state = state.copy(
+            authenticatingUser = state.authenticatingUser.copy(
+                emailAddress = emailAddress
             )
-        }
+        )
     }
 
     private fun updateRegion(region: Region) {
-        with(_stateFlow) {
-            value = value.copy(
-                authenticatingUser = value.authenticatingUser.copy(
-                    region = region
-                )
+        state = state.copy(
+            authenticatingUser = state.authenticatingUser.copy(
+                region = region
             )
-        }
+        )
     }
 
     private fun updatePhoneNumber(phoneNumber: String) {
-        with(_stateFlow) {
-            value = value.copy(
-                authenticatingUser = value.authenticatingUser.copy(
-                    phoneNumber = phoneNumber
-                )
+        state = state.copy(
+            authenticatingUser = state.authenticatingUser.copy(
+                phoneNumber = phoneNumber
             )
-        }
+        )
     }
 
-    private fun onConsumeAuthenticatedUser(
+    private fun consumeAuthenticatedUser(
         authenticatedUser: Either<Throwable, User>
     ) {
         // Authenticated user was just consumed, setting it to an Eval.Now
@@ -175,10 +199,11 @@ class AuthViewModel @Inject constructor(
             is AuthEvent.OnRegisterNewPhoneNumber -> phoneNumberChanged()
             is AuthEvent.OnResendOtp -> resendOtp()
             is AuthEvent.OnSignIn -> signIn(
-                _stateFlow.value.authenticatingUser.getFullPhoneNumber()
+                region = _stateFlow.value.authenticatingUser.region,
+                phoneNumber = _stateFlow.value.authenticatingUser.phoneNumber
             )
             is AuthEvent.OnSignUp -> signUp(
-                _stateFlow.value.authenticatingUser
+                user = _stateFlow.value.authenticatingUser
             )
             is AuthEvent.OnNavigateToAuthOptions -> navigateToAuthOptions()
             is AuthEvent.OnNavigateToSignIn -> navigateToSignIn()

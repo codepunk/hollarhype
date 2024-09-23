@@ -7,6 +7,8 @@ import com.codepunk.hollarhype.domain.model.User
 
 data class AuthState(
 
+    val isLoading: Boolean = false,
+
     val authenticatingUser: User = User(),
 
     val authenticatedUser: Eval<Either<Throwable, User>> =
