@@ -45,7 +45,8 @@ val touchSize = 48.dp
 val smallGutterSize = 16.dp
 val largeGutterSize = 32.dp
 
-val standardButtonWidth = 192.dp
+val standardButtonHeight = SizeLarge.mid
+val standardButtonWidth = Size2xLarge.mid
 val buttonCornerRadius = 8.dp
 
 // endregion Variables

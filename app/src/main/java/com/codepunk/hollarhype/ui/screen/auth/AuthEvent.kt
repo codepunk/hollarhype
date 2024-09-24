@@ -14,11 +14,16 @@ sealed interface AuthEvent {
 
     // Navigation
 
-    data object OnNavigateToAuthOptions: AuthEvent
-    data object OnNavigateToSignIn: AuthEvent
-    data object OnNavigateToSignUp: AuthEvent
+    sealed interface AuthNavigationEvent: AuthEvent {
+        data object OnNavigateToSignIn : AuthNavigationEvent
+        data object OnNavigateToSignUp : AuthNavigationEvent
+    }
 
-    // Actions
+    // One-time acknowledgements
+
+    data object OnAcknowledgeLoginResult: AuthEvent
+
+    // User actions
 
     data object OnEditAvatar: AuthEvent
     data object OnRegisterNewPhoneNumber: AuthEvent

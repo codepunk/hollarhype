@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
@@ -58,6 +59,7 @@ import com.codepunk.hollarhype.ui.theme.buttonCornerRadius
 import com.codepunk.hollarhype.ui.theme.currentWindowAdaptiveInfoCustom
 import com.codepunk.hollarhype.ui.theme.largeGutterSize
 import com.codepunk.hollarhype.ui.theme.layoutMargin
+import com.codepunk.hollarhype.ui.theme.standardButtonHeight
 import com.codepunk.hollarhype.ui.theme.standardButtonWidth
 import kotlin.math.sqrt
 
@@ -392,7 +394,9 @@ fun SignUpSubmit(
         )
 
         Button(
-            modifier = Modifier.width(standardButtonWidth),
+            modifier = Modifier
+                .width(standardButtonWidth)
+                .height(standardButtonHeight),
             shape = RoundedCornerShape(size = buttonCornerRadius),
             onClick = { onSubmit() }
         ) {

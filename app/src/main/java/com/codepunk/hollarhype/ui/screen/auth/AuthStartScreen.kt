@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
@@ -25,19 +26,23 @@ import arrow.eval.Eval
 import com.codepunk.hollarhype.R
 import com.codepunk.hollarhype.domain.model.User
 import com.codepunk.hollarhype.ui.preview.ScreenPreviews
+import com.codepunk.hollarhype.ui.screen.auth.AuthEvent.AuthNavigationEvent
 import com.codepunk.hollarhype.ui.theme.HollarhypeTheme
-import com.codepunk.hollarhype.ui.theme.buttonCornerRadius
-import com.codepunk.hollarhype.ui.theme.layoutMargin
 import com.codepunk.hollarhype.ui.theme.Size3xLarge
 import com.codepunk.hollarhype.ui.theme.SizeMedium
+import com.codepunk.hollarhype.ui.theme.buttonCornerRadius
+import com.codepunk.hollarhype.ui.theme.layoutMargin
+import com.codepunk.hollarhype.ui.theme.standardButtonHeight
 import com.codepunk.hollarhype.ui.theme.standardButtonWidth
 
 @Composable
-fun AuthOptionsScreen(
+fun AuthStartScreen(
     modifier: Modifier = Modifier,
     state: AuthState,
     onEvent: (AuthEvent) -> Unit = {}
 ) {
+    // TODO If auto-authenticating, show spinner ...
+
     val layoutMargin = layoutMargin()
     Box(
         modifier = modifier
@@ -62,9 +67,11 @@ fun AuthOptionsScreen(
             )
 
             Button(
-                modifier = Modifier.width(standardButtonWidth),
+                modifier = Modifier
+                    .width(standardButtonWidth)
+                    .height(standardButtonHeight),
                 shape = RoundedCornerShape(size = buttonCornerRadius),
-                onClick = { onEvent(AuthEvent.OnNavigateToSignUp) }
+                onClick = { onEvent(AuthNavigationEvent.OnNavigateToSignUp) }
             ) {
                 Text(
                     text = stringResource(id = R.string.sign_up).lowercase(),
@@ -73,13 +80,15 @@ fun AuthOptionsScreen(
             }
 
             Button(
-                modifier = Modifier.width(standardButtonWidth),
+                modifier = Modifier
+                    .width(standardButtonWidth)
+                    .height(standardButtonHeight),
                 shape = RoundedCornerShape(size = buttonCornerRadius),
                 colors = ButtonDefaults.buttonColors(
                     containerColor = MaterialTheme.colorScheme.secondaryContainer,
                     contentColor = MaterialTheme.colorScheme.onSecondaryContainer
                 ),
-                onClick = { onEvent(AuthEvent.OnNavigateToSignIn) }
+                onClick = { onEvent(AuthNavigationEvent.OnNavigateToSignIn) }
             ) {
                 Text(
                     text = stringResource(id = R.string.sign_in).lowercase(),
@@ -95,7 +104,7 @@ fun AuthOptionsScreen(
 fun AuthOptionsPreviews() {
     HollarhypeTheme {
         Scaffold { padding ->
-            AuthOptionsScreen(
+            AuthStartScreen(
                 modifier = Modifier.padding(padding),
                 state = AuthState(
                     authenticatedUser = Eval.now(User().right())

@@ -1,6 +1,5 @@
 package com.codepunk.hollarhype.ui.screen.auth
 
-import android.database.sqlite.SQLiteOutOfMemoryException
 import android.util.Log
 import androidx.credentials.CredentialManager
 import androidx.credentials.GetCredentialRequest
@@ -8,10 +7,7 @@ import androidx.credentials.GetPasswordOption
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import arrow.core.Either
-import arrow.core.Option
-import arrow.core.Some
 import arrow.core.left
-import arrow.core.right
 import arrow.eval.Eval
 import com.codepunk.hollarhype.domain.model.User
 import com.codepunk.hollarhype.domain.repository.HollarhypeRepository
@@ -60,6 +56,60 @@ class AuthViewModel @Inject constructor(
 
     // region Methods
 
+    // Data changes
+
+    private fun updateEmailAddress(emailAddress: String) {
+        state = state.copy(
+            authenticatingUser = state.authenticatingUser.copy(
+                emailAddress = emailAddress
+            )
+        )
+    }
+
+    private fun updateFirstName(firstName: String) {
+        state = state.copy(
+            authenticatingUser = state.authenticatingUser.copy(
+                firstName = firstName
+            )
+        )
+    }
+
+    private fun updateLastName(lastName: String) {
+        state = state.copy(
+            authenticatingUser = state.authenticatingUser.copy(
+                lastName = lastName
+            )
+        )
+    }
+
+    private fun updatePhoneNumber(phoneNumber: String) {
+        state = state.copy(
+            authenticatingUser = state.authenticatingUser.copy(
+                phoneNumber = phoneNumber
+            )
+        )
+    }
+
+    private fun updateRegion(region: Region) {
+        state = state.copy(
+            authenticatingUser = state.authenticatingUser.copy(
+                region = region
+            )
+        )
+    }
+
+    // Navigation
+
+    // One-time acknowledgements
+
+    private fun acknowledgeLoginResult() {
+        state = state.copy(
+            isLoginMessageFresh = false
+        )
+    }
+
+    // User actions
+
     private fun authenticate() {
         viewModelScope.launch {
             // TODO Try to auto sign in here
@@ -106,11 +156,13 @@ class AuthViewModel @Inject constructor(
 
                         // TODO NEXT
                         //  How do I show these error states?
-                        //
+                        //  I am looking at "authenticatedUser" here.
+                        //  But if we just had a successful phone #, we're still not
+                        //  authenticated.
 
                         Log.e(
                             this@AuthViewModel.javaClass.simpleName,
-                            "signIn: ${throwable.message}"
+                            "signIn: $throwable"
                         )
 
                         state = state.copy(
@@ -131,58 +183,6 @@ class AuthViewModel @Inject constructor(
         Log.d("AuthViewModel", "resendOtp")
     }
 
-    private fun navigateToAuthOptions() {
-
-    }
-
-    private fun navigateToSignUp() {
-
-    }
-
-    private fun navigateToSignIn() {
-
-    }
-
-    private fun updateFirstName(firstName: String) {
-        state = state.copy(
-            authenticatingUser = state.authenticatingUser.copy(
-                firstName = firstName
-            )
-        )
-    }
-
-    private fun updateLastName(lastName: String) {
-        state = state.copy(
-            authenticatingUser = state.authenticatingUser.copy(
-                lastName = lastName
-            )
-        )
-    }
-
-    private fun updateEmailAddress(emailAddress: String) {
-        state = state.copy(
-            authenticatingUser = state.authenticatingUser.copy(
-                emailAddress = emailAddress
-            )
-        )
-    }
-
-    private fun updateRegion(region: Region) {
-        state = state.copy(
-            authenticatingUser = state.authenticatingUser.copy(
-                region = region
-            )
-        )
-    }
-
-    private fun updatePhoneNumber(phoneNumber: String) {
-        state = state.copy(
-            authenticatingUser = state.authenticatingUser.copy(
-                phoneNumber = phoneNumber
-            )
-        )
-    }
-
     private fun consumeAuthenticatedUser(
         authenticatedUser: Either<Throwable, User>
     ) {
@@ -195,6 +195,26 @@ class AuthViewModel @Inject constructor(
 
     fun onEvent(event: AuthEvent) {
         when (event) {
+
+            // Data changes
+
+            is AuthEvent.OnEmailAddressChange -> updateEmailAddress(event.emailAddress)
+            is AuthEvent.OnFirstNameChange -> updateFirstName(event.firstName)
+            is AuthEvent.OnLastNameChange -> updateLastName(event.lastName)
+            is AuthEvent.OnPhoneNumberChange -> updatePhoneNumber(event.phoneNumber)
+            is AuthEvent.OnRegionChange -> updateRegion(event.region)
+
+            // Navigation
+
+            // AuthNavigationEvents are handled up in AuthNavigation
+            is AuthEvent.AuthNavigationEvent -> { /* No op */ }
+
+            // One-time acknowledgements
+
+            is AuthEvent.OnAcknowledgeLoginResult -> acknowledgeLoginResult()
+
+            // User actions
+
             is AuthEvent.OnEditAvatar -> editAvatar()
             is AuthEvent.OnRegisterNewPhoneNumber -> phoneNumberChanged()
             is AuthEvent.OnResendOtp -> resendOtp()
@@ -205,14 +225,7 @@ class AuthViewModel @Inject constructor(
             is AuthEvent.OnSignUp -> signUp(
                 user = _stateFlow.value.authenticatingUser
             )
-            is AuthEvent.OnNavigateToAuthOptions -> navigateToAuthOptions()
-            is AuthEvent.OnNavigateToSignIn -> navigateToSignIn()
-            is AuthEvent.OnNavigateToSignUp -> navigateToSignUp()
-            is AuthEvent.OnFirstNameChange -> updateFirstName(event.firstName)
-            is AuthEvent.OnLastNameChange -> updateLastName(event.lastName)
-            is AuthEvent.OnEmailAddressChange -> updateEmailAddress(event.emailAddress)
-            is AuthEvent.OnRegionChange -> updateRegion(event.region)
-            is AuthEvent.OnPhoneNumberChange -> updatePhoneNumber(event.phoneNumber)
+
         }
     }
 

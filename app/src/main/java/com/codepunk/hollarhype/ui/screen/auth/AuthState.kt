@@ -7,7 +7,13 @@ import com.codepunk.hollarhype.domain.model.User
 
 data class AuthState(
 
+    // Flags
+
     val isLoading: Boolean = false,
+
+    val isLoginMessageFresh: Boolean = false,
+
+    // Data
 
     val authenticatingUser: User = User(),
 

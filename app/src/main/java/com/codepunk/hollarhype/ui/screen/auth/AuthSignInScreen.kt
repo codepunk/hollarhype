@@ -37,9 +37,9 @@ import com.codepunk.hollarhype.ui.theme.HollarhypeTheme
 import com.codepunk.hollarhype.ui.theme.Size3xLarge
 import com.codepunk.hollarhype.ui.theme.SizeLarge
 import com.codepunk.hollarhype.ui.theme.SizeMedium
-import com.codepunk.hollarhype.ui.theme.SizeSmall
 import com.codepunk.hollarhype.ui.theme.buttonCornerRadius
 import com.codepunk.hollarhype.ui.theme.layoutMargin
+import com.codepunk.hollarhype.ui.theme.standardButtonHeight
 import com.codepunk.hollarhype.ui.theme.standardButtonWidth
 
 @Composable
@@ -104,8 +104,8 @@ fun AuthSignInScreen(
 
             Button(
                 modifier = Modifier
-                    .height(SizeLarge.mid)
-                    .width(standardButtonWidth),
+                    .width(standardButtonWidth)
+                    .height(standardButtonHeight),
                 shape = RoundedCornerShape(size = buttonCornerRadius),
                 enabled = (!state.isLoading),
                 onClick = { onEvent(AuthEvent.OnSignIn) }
@@ -149,9 +149,7 @@ fun AuthSignInPreviews() {
         Scaffold { padding ->
             AuthSignInScreen(
                 modifier = Modifier.padding(padding),
-                state = AuthState(
-                    isLoading = true
-                )
+                state = AuthState()
             )
         }
     }
