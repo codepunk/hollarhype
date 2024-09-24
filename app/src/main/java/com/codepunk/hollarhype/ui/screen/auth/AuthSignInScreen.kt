@@ -40,7 +40,7 @@ import com.codepunk.hollarhype.ui.component.PhoneNumber
 import com.codepunk.hollarhype.ui.preview.ScreenPreviews
 import com.codepunk.hollarhype.ui.screen.auth.AuthEvent.DataChange.OnPhoneNumberChange
 import com.codepunk.hollarhype.ui.screen.auth.AuthEvent.DataChange.OnRegionChange
-import com.codepunk.hollarhype.ui.screen.auth.AuthEvent.OneTimeAcknowledgement.OnAcknowledgeLoginResult
+import com.codepunk.hollarhype.ui.screen.auth.AuthEvent.ReadState.OnReadLoginResult
 import com.codepunk.hollarhype.ui.theme.HollarhypeTheme
 import com.codepunk.hollarhype.ui.theme.Size3xLarge
 import com.codepunk.hollarhype.ui.theme.SizeLarge
@@ -61,9 +61,9 @@ fun AuthSignInScreen(
     val snackBarHostState = remember { SnackbarHostState() }
     var regionPickerVisible by rememberSaveable { mutableStateOf(false) }
 
-    // Handle any results
-    if (state.isLoginMessageFresh) {
-        onEvent(OnAcknowledgeLoginResult)
+    // Handle any unread results
+    if (state.loginResultUnread) {
+        onEvent(OnReadLoginResult)
         val message = state.loginResult.fold(
             ifLeft = { it.message },
             ifRight = {
@@ -144,10 +144,10 @@ fun AuthSignInScreen(
                         .width(standardButtonWidth)
                         .height(standardButtonHeight),
                     shape = RoundedCornerShape(size = buttonCornerRadius),
-                    enabled = (!state.isLoading),
+                    enabled = (!state.loading),
                     onClick = { onEvent(AuthEvent.OnSignIn) }
                 ) {
-                    if (state.isLoading) {
+                    if (state.loading) {
                         CircularProgressIndicator(
                             modifier = Modifier.size(ButtonDefaults.IconSize),
                             color = MaterialTheme.colorScheme.primary

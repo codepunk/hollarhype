@@ -21,10 +21,10 @@ sealed interface AuthEvent {
         data object OnNavigateToSignUp : NavigationEvent
     }
 
-    // One-time acknowledgements
+    // Read state
 
-    sealed interface OneTimeAcknowledgement: AuthEvent {
-        data object OnAcknowledgeLoginResult: OneTimeAcknowledgement
+    sealed interface ReadState: AuthEvent {
+        data object OnReadLoginResult: ReadState
     }
 
     // User actions

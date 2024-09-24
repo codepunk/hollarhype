@@ -10,9 +10,9 @@ data class AuthState(
 
     // Flags
 
-    val isLoading: Boolean = false,
+    val loading: Boolean = false,
 
-    val isLoginMessageFresh: Boolean = false,
+    val loginResultUnread: Boolean = false,
 
     // Data
 

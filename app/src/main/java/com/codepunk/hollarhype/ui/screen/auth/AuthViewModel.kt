@@ -13,7 +13,7 @@ import com.codepunk.hollarhype.domain.model.User
 import com.codepunk.hollarhype.domain.repository.HollarhypeRepository
 import com.codepunk.hollarhype.util.intl.Region
 import com.codepunk.hollarhype.ui.screen.auth.AuthEvent.DataChange
-import com.codepunk.hollarhype.ui.screen.auth.AuthEvent.OneTimeAcknowledgement
+import com.codepunk.hollarhype.ui.screen.auth.AuthEvent.ReadState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -102,11 +102,11 @@ class AuthViewModel @Inject constructor(
 
     // Navigation
 
-    // One-time acknowledgements
+    // Read state
 
-    private fun acknowledgeLoginResult() {
+    private fun readLoginResult() {
         state = state.copy(
-            isLoginMessageFresh = false
+            loginResultUnread = false
         )
     }
 
@@ -146,7 +146,7 @@ class AuthViewModel @Inject constructor(
 
     private fun signIn(region: Region, phoneNumber: String) {
         state = state.copy(
-            isLoading = true
+            loading = true
         )
         viewModelScope.launch(Dispatchers.IO) {
             repository.login(
@@ -154,8 +154,8 @@ class AuthViewModel @Inject constructor(
                 region = region
             ).collect { result ->
                 state = state.copy(
-                    isLoading = false,
-                    isLoginMessageFresh = true,
+                    loading = false,
+                    loginResultUnread = true,
                     loginResult = result
                 )
 
@@ -220,9 +220,9 @@ class AuthViewModel @Inject constructor(
             // AuthNavigationEvents are handled up in AuthNavigation
             is AuthEvent.NavigationEvent -> { /* No op */ }
 
-            // One-time acknowledgements
+            // Read state
 
-            is OneTimeAcknowledgement.OnAcknowledgeLoginResult -> acknowledgeLoginResult()
+            is ReadState.OnReadLoginResult -> readLoginResult()
 
             // User actions
 
