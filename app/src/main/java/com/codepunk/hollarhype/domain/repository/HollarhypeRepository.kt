@@ -1,7 +1,7 @@
 package com.codepunk.hollarhype.domain.repository
 
 import arrow.core.Either
-import com.codepunk.hollarhype.util.Region
+import com.codepunk.hollarhype.util.intl.Region
 import kotlinx.coroutines.flow.Flow
 
 interface HollarhypeRepository {

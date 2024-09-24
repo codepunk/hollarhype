@@ -11,7 +11,7 @@ import arrow.core.left
 import arrow.eval.Eval
 import com.codepunk.hollarhype.domain.model.User
 import com.codepunk.hollarhype.domain.repository.HollarhypeRepository
-import com.codepunk.hollarhype.util.Region
+import com.codepunk.hollarhype.util.intl.Region
 import com.codepunk.hollarhype.ui.screen.auth.AuthEvent.DataChange
 import com.codepunk.hollarhype.ui.screen.auth.AuthEvent.OneTimeAcknowledgement
 import dagger.hilt.android.lifecycle.HiltViewModel

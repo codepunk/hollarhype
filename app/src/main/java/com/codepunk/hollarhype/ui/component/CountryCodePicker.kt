@@ -35,8 +35,8 @@ import com.codepunk.hollarhype.ui.preview.ComponentPreviews
 import com.codepunk.hollarhype.ui.theme.HollarhypeTheme
 import com.codepunk.hollarhype.ui.theme.SizeLarge
 import com.codepunk.hollarhype.ui.theme.SizeSmall
-import com.codepunk.hollarhype.util.Region
-import com.codepunk.hollarhype.util.getSupportedRegions
+import com.codepunk.hollarhype.util.intl.Region
+import com.codepunk.hollarhype.util.intl.getSupportedRegions
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

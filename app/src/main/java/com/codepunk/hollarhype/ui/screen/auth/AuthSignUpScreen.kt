@@ -45,7 +45,7 @@ import com.codepunk.hollarhype.R
 import com.codepunk.hollarhype.ui.component.CountryCodePicker
 import com.codepunk.hollarhype.ui.component.CountryCodePickerDialog
 import com.codepunk.hollarhype.ui.component.PhoneNumber
-import com.codepunk.hollarhype.util.Region
+import com.codepunk.hollarhype.util.intl.Region
 import com.codepunk.hollarhype.ui.preview.ScreenPreviews
 import com.codepunk.hollarhype.ui.screen.auth.AuthEvent.DataChange.OnFirstNameChange
 import com.codepunk.hollarhype.ui.screen.auth.AuthEvent.DataChange.OnLastNameChange

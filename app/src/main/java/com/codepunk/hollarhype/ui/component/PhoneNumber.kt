@@ -33,8 +33,8 @@ import com.codepunk.hollarhype.ui.theme.HollarhypeTheme
 import com.codepunk.hollarhype.ui.theme.SizeLarge
 import com.codepunk.hollarhype.ui.theme.SizeSmall
 import com.codepunk.hollarhype.ui.theme.SizeTiny
-import com.codepunk.hollarhype.util.PhoneNumberVisualTransformation
-import com.codepunk.hollarhype.util.Region
+import com.codepunk.hollarhype.util.intl.PhoneNumberVisualTransformation
+import com.codepunk.hollarhype.util.intl.Region
 import com.google.i18n.phonenumbers.PhoneNumberUtil
 
 @Composable

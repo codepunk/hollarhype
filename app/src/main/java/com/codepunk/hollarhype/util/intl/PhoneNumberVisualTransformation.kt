@@ -1,4 +1,4 @@
-package com.codepunk.hollarhype.util
+package com.codepunk.hollarhype.util.intl
 
 import android.telephony.PhoneNumberUtils
 import android.text.Selection
