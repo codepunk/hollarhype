@@ -373,6 +373,7 @@ fun SignUpForm(
         )
 
         PhoneNumber(
+            modifier = modifier.fillMaxWidth(),
             regionCode = region.regionCode,
             countryCode = region.countryCode,
             phoneNumber = phoneNumber,

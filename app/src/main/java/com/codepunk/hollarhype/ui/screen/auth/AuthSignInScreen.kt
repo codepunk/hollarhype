@@ -64,6 +64,9 @@ fun AuthSignInScreen(
     // Handle any unread results
     if (state.loginResultUnread) {
         onEvent(OnReadLoginResult)
+
+        // TODO Handle unread login result
+        /*
         val message = state.loginResult.fold(
             ifLeft = { it.message },
             ifRight = {
@@ -80,6 +83,7 @@ fun AuthSignInScreen(
                 snackBarHostState.showSnackbar(message = message)
             }
         }
+         */
     }
 
     Scaffold(
@@ -117,6 +121,7 @@ fun AuthSignInScreen(
                     regionCode = state.authenticatingUser.region.regionCode,
                     countryCode = state.authenticatingUser.region.countryCode,
                     phoneNumber = state.authenticatingUser.phoneNumber,
+                    phoneNumberError = state.phoneNumberError,
                     onCountryCodeClick = { regionPickerVisible = true },
                     onPhoneNumberChange = { onEvent(OnPhoneNumberChange(it)) }
                 )

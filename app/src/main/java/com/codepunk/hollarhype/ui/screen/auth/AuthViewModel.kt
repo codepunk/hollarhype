@@ -7,13 +7,12 @@ import androidx.credentials.GetPasswordOption
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import arrow.core.Either
-import arrow.core.left
-import arrow.eval.Eval
+import arrow.core.right
 import com.codepunk.hollarhype.domain.model.User
 import com.codepunk.hollarhype.domain.repository.HollarhypeRepository
-import com.codepunk.hollarhype.util.intl.Region
 import com.codepunk.hollarhype.ui.screen.auth.AuthEvent.DataChange
 import com.codepunk.hollarhype.ui.screen.auth.AuthEvent.ReadState
+import com.codepunk.hollarhype.util.intl.Region
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -46,8 +45,6 @@ class AuthViewModel @Inject constructor(
         val getCredentialRequest = GetCredentialRequest(
             credentialOptions = listOf(GetPasswordOption())
         )
-
-
 
         // TODO Authenticate w/credentials
 
@@ -88,7 +85,8 @@ class AuthViewModel @Inject constructor(
         state = state.copy(
             authenticatingUser = state.authenticatingUser.copy(
                 phoneNumber = phoneNumber
-            )
+            ),
+            phoneNumberError = ""
         )
     }
 
@@ -115,12 +113,7 @@ class AuthViewModel @Inject constructor(
     private fun authenticate() {
         viewModelScope.launch {
             // TODO Try to auto sign in here
-            val user = Eval.later {
-                val authenticatedUser = IllegalStateException("No user").left()
-                // If we got to this point, authenticated user was just "consumed"
-                consumeAuthenticatedUser(authenticatedUser)
-                authenticatedUser
-            }
+            val user: Either<Throwable, User?> = null.right()
             state = state.copy(
                 authenticatedUser = user
             )
@@ -156,52 +149,15 @@ class AuthViewModel @Inject constructor(
                 state = state.copy(
                     loading = false,
                     loginResultUnread = true,
-                    loginResult = result
+                    loginResult = result,
+                    phoneNumberError = result.leftOrNull()?.message.orEmpty()
                 )
-
-                /*
-                result.fold(
-                    ifLeft = { throwable ->
-
-                        // TODO NEXT
-                        //  How do I show these error states?
-                        //  I am looking at "authenticatedUser" here.
-                        //  But if we just had a successful phone #, we're still not
-                        //  authenticated.
-
-                        Log.e(
-                            this@AuthViewModel.javaClass.simpleName,
-                            "signIn: $throwable"
-                        )
-
-                        state = state.copy(
-                            isLoading = false
-
-                        )
-                    },
-                    ifRight = { isSuccess ->
-                        state = state.copy(
-                            isLoading = false
-                        )
-                    }
-                )
-                 */
             }
         }
     }
 
     private fun resendOtp() {
         Log.d("AuthViewModel", "resendOtp")
-    }
-
-    private fun consumeAuthenticatedUser(
-        authenticatedUser: Either<Throwable, User>
-    ) {
-        // Authenticated user was just consumed, setting it to an Eval.Now
-        // will mark it as consumed
-        _stateFlow.value = _stateFlow.value.copy(
-            authenticatedUser = Eval.now(authenticatedUser),
-        )
     }
 
     fun onEvent(event: AuthEvent) {

@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -25,6 +26,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import com.codepunk.hollarhype.R
@@ -43,6 +45,7 @@ fun PhoneNumber(
     regionCode: String,
     countryCode: Int,
     phoneNumber: String = "",
+    phoneNumberError: String = "",
     onCountryCodeClick: () -> Unit = {},
     onPhoneNumberChange: (String) -> Unit = {}
 ) {
@@ -52,13 +55,27 @@ fun PhoneNumber(
         )
     }
 
+    // We need to align the country code button with the phone number TextField.
+    // To do this we need to divide the bodySmall lineHeight (used for TextField labels)
+    // by 2.
+    val density = LocalDensity.current
+    val bodySmallLineHeight = MaterialTheme.typography.bodySmall.lineHeight
+    val buttonTopPadding by remember {
+        mutableStateOf(
+            with(density) {
+                bodySmallLineHeight.toDp().div(2)
+            }
+        )
+    }
+
     Row(
         modifier = modifier
             .width(IntrinsicSize.Min),
-        verticalAlignment = Alignment.Bottom,
+        verticalAlignment = Alignment.Top,
         horizontalArrangement = Arrangement.spacedBy(SizeSmall.value)
     ) {
         OutlinedButton(
+            modifier = Modifier.padding(top = buttonTopPadding),
             shape = RoundedCornerShape(size = SizeTiny.value),
             colors = ButtonDefaults.buttonColors(
                 containerColor = MaterialTheme.colorScheme.surfaceVariant
@@ -99,6 +116,15 @@ fun PhoneNumber(
                     text = stringResource(id = R.string.phone_number),
                 )
             },
+            supportingText = {
+                if (phoneNumberError.isNotBlank()) {
+                    Text(
+                        maxLines = 1,
+                        text = phoneNumberError,
+                        color = MaterialTheme.colorScheme.error
+                    )
+                }
+            },
             visualTransformation = visualTransformation,
             onValueChange = { onPhoneNumberChange(it) }
         )
@@ -118,7 +144,8 @@ fun PreviewUSPhoneNumber() {
                     getNationalSignificantNumber(
                         getExampleNumber(region.regionCode)
                     )
-                }
+                },
+                phoneNumberError = "Invalid phone number"
             )
         }
     }

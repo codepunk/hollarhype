@@ -107,7 +107,7 @@ fun AuthOptionsPreviews() {
             AuthStartScreen(
                 modifier = Modifier.padding(padding),
                 state = AuthState(
-                    authenticatedUser = Eval.now(User().right())
+                    authenticatedUser = User().right()
                 )
             )
         }
