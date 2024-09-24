@@ -4,6 +4,7 @@ import android.content.Context
 import arrow.retrofit.adapter.either.EitherCallAdapterFactory
 import com.codepunk.hollarhype.BuildConfig
 import com.codepunk.hollarhype.data.remote.interceptor.HollarhypeUserAgentInterceptor
+import com.codepunk.hollarhype.data.remote.interceptor.NetworkConnectionInterceptor
 import com.codepunk.hollarhype.data.remote.webservice.HollarhypeWebservice
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import dagger.Module
@@ -34,9 +35,11 @@ class RemoteModule {
     @Provides
     fun provideDiscogsOkHttpClient(
         cache: Cache,
+        networkConnectionInterceptor: NetworkConnectionInterceptor,
         userAgentInterceptor: HollarhypeUserAgentInterceptor
     ): OkHttpClient = OkHttpClient.Builder()
         .cache(cache)
+        .addInterceptor(networkConnectionInterceptor)
         .addInterceptor(userAgentInterceptor)
         .build()
 
