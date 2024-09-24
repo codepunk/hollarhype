@@ -1,6 +1,6 @@
 package com.codepunk.hollarhype.ui.screen.auth
 
-import com.codepunk.hollarhype.ui.component.Region
+import com.codepunk.hollarhype.util.Region
 
 sealed interface AuthEvent {
 

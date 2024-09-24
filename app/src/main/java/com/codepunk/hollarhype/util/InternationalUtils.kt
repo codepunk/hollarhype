@@ -1,4 +1,4 @@
-package com.codepunk.hollarhype.ui.component
+package com.codepunk.hollarhype.util
 
 
 import android.os.Parcelable
@@ -19,16 +19,13 @@ fun getSupportedRegions(): List<Region> =
 fun getCountryNameForRegion(regionCode: String): String =
     Locale("", regionCode).displayCountry
 
-fun getFlagEmojiForRegion(regionCode: String): String =
-    regionCode.takeIf {
-        it.length == 2 && it.all { char -> char.isLetter() }
-    }?.run {
-        map { char ->
-            char.code - UNICODE_CAPITAL_A + UNICODE_REGIONAL_INDICATOR_SYMBOL_LETTER_A
-        }.joinToString(separator = "") { codePoint ->
-            String(Character.toChars(codePoint))
-        }
-    } ?: ""
+fun getFlagEmojiForRegion(regionCode: String): String = regionCode.takeIf {
+    it.length == 2 && it.all { char -> char.isLetter() }
+}.orEmpty().map { char ->
+    (char.code - UNICODE_CAPITAL_A + UNICODE_REGIONAL_INDICATOR_SYMBOL_LETTER_A).toChar()
+}.toCharArray().let { chars ->
+    String(chars)
+}
 
 @Parcelize
 data class Region(

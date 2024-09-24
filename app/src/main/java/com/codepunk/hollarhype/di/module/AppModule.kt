@@ -1,6 +1,7 @@
 package com.codepunk.hollarhype.di.module
 
 import android.content.Context
+import android.net.ConnectivityManager
 import androidx.credentials.CredentialManager
 import dagger.Module
 import dagger.Provides
@@ -15,8 +16,12 @@ class AppModule {
 
     @Singleton
     @Provides
-    fun provideCredentialManager(@ApplicationContext context: Context): CredentialManager {
-        return CredentialManager.create(context)
-    }
+    fun provideCredentialManager(@ApplicationContext context: Context): CredentialManager =
+        CredentialManager.create(context)
+
+    @Singleton
+    @Provides
+    fun provideConnectivityManager(@ApplicationContext context: Context): ConnectivityManager =
+        context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
 
 }

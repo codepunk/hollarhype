@@ -1,6 +1,6 @@
 package com.codepunk.hollarhype.domain.model
 
-import com.codepunk.hollarhype.ui.component.Region
+import com.codepunk.hollarhype.util.Region
 
 data class User(
     val firstName: String = "",
