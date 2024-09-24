@@ -1,0 +1,6 @@
+package com.codepunk.hollarhype.util.http
+
+class NoConnectivityException @JvmOverloads constructor(
+    message: String? = null,
+    cause: Throwable? = null
+) : RuntimeException(message, cause)
