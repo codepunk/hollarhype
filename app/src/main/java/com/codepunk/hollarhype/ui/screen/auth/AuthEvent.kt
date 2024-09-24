@@ -19,6 +19,7 @@ sealed interface AuthEvent {
     sealed interface NavigationEvent: AuthEvent {
         data object OnNavigateToSignIn : NavigationEvent
         data object OnNavigateToSignUp : NavigationEvent
+        data object OnNavigateToOtp : NavigationEvent
     }
 
     // Read state

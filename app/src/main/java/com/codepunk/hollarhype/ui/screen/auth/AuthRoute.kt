@@ -9,9 +9,6 @@ import kotlinx.serialization.Serializable
 sealed class AuthRoute {
 
     @Serializable
-    data object AuthInit : AuthRoute()
-
-    @Serializable
     data object AuthOptions : AuthRoute()
 
     @Serializable
@@ -19,5 +16,8 @@ sealed class AuthRoute {
 
     @Serializable
     data object AuthSignIn : AuthRoute()
+
+    @Serializable
+    data object AuthOtp : AuthRoute()
 
 }

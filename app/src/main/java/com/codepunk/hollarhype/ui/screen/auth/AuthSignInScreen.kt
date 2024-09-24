@@ -22,7 +22,6 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -49,7 +48,7 @@ import com.codepunk.hollarhype.ui.theme.buttonCornerRadius
 import com.codepunk.hollarhype.ui.theme.layoutMargin
 import com.codepunk.hollarhype.ui.theme.standardButtonHeight
 import com.codepunk.hollarhype.ui.theme.standardButtonWidth
-import kotlinx.coroutines.launch
+import com.codepunk.hollarhype.ui.screen.auth.AuthEvent.NavigationEvent.OnNavigateToOtp
 
 @Composable
 fun AuthSignInScreen(
@@ -64,6 +63,12 @@ fun AuthSignInScreen(
     // Handle any unread results
     if (state.loginResultUnread) {
         onEvent(OnReadLoginResult)
+
+        state.loginResult.onRight { success ->
+            if (success) {
+                onEvent(OnNavigateToOtp)
+            }
+        }
 
         // TODO Handle unread login result
         /*

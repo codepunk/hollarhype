@@ -55,6 +55,20 @@ fun AuthNavigation(
             ) { event ->
                 // Pass navigation events up to navController, everything else
                 // will fall through to AuthViewModel
+                when (event) {
+                    is NavigationEvent.OnNavigateToOtp ->
+                        navController.navigate(AuthRoute.AuthOtp)
+                    else -> onEvent(event)
+                }
+            }
+        }
+
+        composable<AuthRoute.AuthOtp> {
+            AuthOtpScreen(
+                state = state
+            ) { event ->
+                // Pass navigation events up to navController, everything else
+                // will fall through to AuthViewModel
                 // Pass navigation events up to navController, everything else
                 // will fall through to AuthViewModel
                 onEvent(event)
