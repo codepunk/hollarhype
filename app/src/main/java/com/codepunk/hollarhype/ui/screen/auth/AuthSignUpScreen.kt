@@ -28,8 +28,8 @@ import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -47,6 +47,11 @@ import com.codepunk.hollarhype.ui.component.CountryCodePickerDialog
 import com.codepunk.hollarhype.ui.component.PhoneNumber
 import com.codepunk.hollarhype.ui.component.Region
 import com.codepunk.hollarhype.ui.preview.ScreenPreviews
+import com.codepunk.hollarhype.ui.screen.auth.AuthEvent.DataChange.OnFirstNameChange
+import com.codepunk.hollarhype.ui.screen.auth.AuthEvent.DataChange.OnLastNameChange
+import com.codepunk.hollarhype.ui.screen.auth.AuthEvent.DataChange.OnEmailAddressChange
+import com.codepunk.hollarhype.ui.screen.auth.AuthEvent.DataChange.OnPhoneNumberChange
+import com.codepunk.hollarhype.ui.screen.auth.AuthEvent.DataChange.OnRegionChange
 import com.codepunk.hollarhype.ui.theme.HollarhypeTheme
 import com.codepunk.hollarhype.ui.theme.Size2xLarge
 import com.codepunk.hollarhype.ui.theme.Size3xLarge
@@ -102,7 +107,7 @@ fun AuthSignUpScreen(
         ) {
             CountryCodePicker(
                 onItemSelected = {
-                    onEvent(AuthEvent.OnRegionChange(it))
+                    onEvent(OnRegionChange(it))
                     regionPickerVisible = false
                 }
             )
@@ -148,10 +153,10 @@ fun SignUpNonLandscape(
             emailAddress = state.authenticatingUser.emailAddress,
             phoneNumber = state.authenticatingUser.phoneNumber,
             region = state.authenticatingUser.region,
-            onFirstNameChange = { onEvent(AuthEvent.OnFirstNameChange(it)) },
-            onLastNameChange = { onEvent(AuthEvent.OnLastNameChange(it)) },
-            onEmailAddressChange = { onEvent(AuthEvent.OnEmailAddressChange(it)) },
-            onPhoneNumberChange = { onEvent(AuthEvent.OnPhoneNumberChange(it)) },
+            onFirstNameChange = { onEvent(OnFirstNameChange(it)) },
+            onLastNameChange = { onEvent(OnLastNameChange(it)) },
+            onEmailAddressChange = { onEvent(OnEmailAddressChange(it)) },
+            onPhoneNumberChange = { onEvent(AuthEvent.DataChange.OnPhoneNumberChange(it)) },
             onShowRegionPicker = onShowRegionPicker
         )
 
@@ -229,10 +234,10 @@ fun SignUpLandscape(
                 emailAddress = state.authenticatingUser.emailAddress,
                 phoneNumber = state.authenticatingUser.phoneNumber,
                 region = state.authenticatingUser.region,
-                onFirstNameChange = { onEvent(AuthEvent.OnFirstNameChange(it)) },
-                onLastNameChange = { onEvent(AuthEvent.OnLastNameChange(it)) },
-                onEmailAddressChange = { onEvent(AuthEvent.OnEmailAddressChange(it)) },
-                onPhoneNumberChange = { onEvent(AuthEvent.OnPhoneNumberChange(it)) },
+                onFirstNameChange = { onEvent(OnFirstNameChange(it)) },
+                onLastNameChange = { onEvent(OnLastNameChange(it)) },
+                onEmailAddressChange = { onEvent(OnEmailAddressChange(it)) },
+                onPhoneNumberChange = { onEvent(OnPhoneNumberChange(it)) },
                 onShowRegionPicker = onShowRegionPicker
             )
         }

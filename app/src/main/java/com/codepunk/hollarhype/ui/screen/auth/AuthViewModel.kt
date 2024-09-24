@@ -12,6 +12,8 @@ import arrow.eval.Eval
 import com.codepunk.hollarhype.domain.model.User
 import com.codepunk.hollarhype.domain.repository.HollarhypeRepository
 import com.codepunk.hollarhype.ui.component.Region
+import com.codepunk.hollarhype.ui.screen.auth.AuthEvent.DataChange
+import com.codepunk.hollarhype.ui.screen.auth.AuthEvent.OneTimeAcknowledgement
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -151,6 +153,13 @@ class AuthViewModel @Inject constructor(
                 phoneNumber = phoneNumber,
                 region = region
             ).collect { result ->
+                state = state.copy(
+                    isLoading = false,
+                    isLoginMessageFresh = true,
+                    loginResult = result
+                )
+
+                /*
                 result.fold(
                     ifLeft = { throwable ->
 
@@ -167,6 +176,7 @@ class AuthViewModel @Inject constructor(
 
                         state = state.copy(
                             isLoading = false
+
                         )
                     },
                     ifRight = { isSuccess ->
@@ -175,6 +185,7 @@ class AuthViewModel @Inject constructor(
                         )
                     }
                 )
+                 */
             }
         }
     }
@@ -198,20 +209,20 @@ class AuthViewModel @Inject constructor(
 
             // Data changes
 
-            is AuthEvent.OnEmailAddressChange -> updateEmailAddress(event.emailAddress)
-            is AuthEvent.OnFirstNameChange -> updateFirstName(event.firstName)
-            is AuthEvent.OnLastNameChange -> updateLastName(event.lastName)
-            is AuthEvent.OnPhoneNumberChange -> updatePhoneNumber(event.phoneNumber)
-            is AuthEvent.OnRegionChange -> updateRegion(event.region)
+            is DataChange.OnEmailAddressChange -> updateEmailAddress(event.value)
+            is DataChange.OnFirstNameChange -> updateFirstName(event.value)
+            is DataChange.OnLastNameChange -> updateLastName(event.value)
+            is DataChange.OnPhoneNumberChange -> updatePhoneNumber(event.value)
+            is DataChange.OnRegionChange -> updateRegion(event.value)
 
             // Navigation
 
             // AuthNavigationEvents are handled up in AuthNavigation
-            is AuthEvent.AuthNavigationEvent -> { /* No op */ }
+            is AuthEvent.NavigationEvent -> { /* No op */ }
 
             // One-time acknowledgements
 
-            is AuthEvent.OnAcknowledgeLoginResult -> acknowledgeLoginResult()
+            is OneTimeAcknowledgement.OnAcknowledgeLoginResult -> acknowledgeLoginResult()
 
             // User actions
 

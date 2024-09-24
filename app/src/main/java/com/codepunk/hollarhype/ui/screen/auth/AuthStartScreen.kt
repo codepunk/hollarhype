@@ -26,7 +26,7 @@ import arrow.eval.Eval
 import com.codepunk.hollarhype.R
 import com.codepunk.hollarhype.domain.model.User
 import com.codepunk.hollarhype.ui.preview.ScreenPreviews
-import com.codepunk.hollarhype.ui.screen.auth.AuthEvent.AuthNavigationEvent
+import com.codepunk.hollarhype.ui.screen.auth.AuthEvent.NavigationEvent
 import com.codepunk.hollarhype.ui.theme.HollarhypeTheme
 import com.codepunk.hollarhype.ui.theme.Size3xLarge
 import com.codepunk.hollarhype.ui.theme.SizeMedium
@@ -71,7 +71,7 @@ fun AuthStartScreen(
                     .width(standardButtonWidth)
                     .height(standardButtonHeight),
                 shape = RoundedCornerShape(size = buttonCornerRadius),
-                onClick = { onEvent(AuthNavigationEvent.OnNavigateToSignUp) }
+                onClick = { onEvent(NavigationEvent.OnNavigateToSignUp) }
             ) {
                 Text(
                     text = stringResource(id = R.string.sign_up).lowercase(),
@@ -88,7 +88,7 @@ fun AuthStartScreen(
                     containerColor = MaterialTheme.colorScheme.secondaryContainer,
                     contentColor = MaterialTheme.colorScheme.onSecondaryContainer
                 ),
-                onClick = { onEvent(AuthNavigationEvent.OnNavigateToSignIn) }
+                onClick = { onEvent(NavigationEvent.OnNavigateToSignIn) }
             ) {
                 Text(
                     text = stringResource(id = R.string.sign_in).lowercase(),
