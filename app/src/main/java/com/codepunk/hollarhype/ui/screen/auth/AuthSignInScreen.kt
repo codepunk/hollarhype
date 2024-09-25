@@ -65,7 +65,7 @@ fun AuthSignInScreen(
     val snackBarHostState = remember { SnackbarHostState() }
     var regionPickerVisible by rememberSaveable { mutableStateOf(false) }
 
-    // Consume any consumable values
+    // Process any consumable (i.e. "single event") values
     state.loginResult?.consume { result ->
         result
             .onLeft {
