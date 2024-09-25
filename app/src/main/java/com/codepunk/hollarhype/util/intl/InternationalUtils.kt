@@ -22,9 +22,9 @@ fun getCountryNameForRegion(regionCode: String): String =
 fun getFlagEmojiForRegion(regionCode: String): String = regionCode.takeIf {
     it.length == 2 && it.all { char -> char.isLetter() }
 }.orEmpty().map { char ->
-    (char.code - UNICODE_CAPITAL_A + UNICODE_REGIONAL_INDICATOR_SYMBOL_LETTER_A).toChar()
-}.toCharArray().let { chars ->
-    String(chars)
+    char.code - UNICODE_CAPITAL_A + UNICODE_REGIONAL_INDICATOR_SYMBOL_LETTER_A
+}.joinToString(separator = "") { codePoint ->
+    String(Character.toChars(codePoint))
 }
 
 @Parcelize
