@@ -11,6 +11,10 @@ import com.codepunk.hollarhype.util.http.HttpStatusException
 import kotlinx.serialization.SerializationException
 import kotlinx.serialization.json.Json
 
+/*
+ * TODO: It would be great if there was a way to incorporate this into my own
+ *  Retrofit / Arrow converter but initial deep dives proved to be far too complicated
+ */
 fun CallError.toErrorResult(): ErrorResult =
     when (this) {
         is HttpError -> HttpStatusException.of(code, message).let { cause ->

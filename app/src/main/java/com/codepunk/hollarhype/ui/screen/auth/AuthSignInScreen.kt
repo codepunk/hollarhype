@@ -52,7 +52,6 @@ import com.codepunk.hollarhype.ui.theme.standardButtonHeight
 import com.codepunk.hollarhype.ui.theme.standardButtonWidth
 import com.codepunk.hollarhype.ui.screen.auth.AuthEvent.NavigationEvent.OnNavigateToOtp
 import com.codepunk.hollarhype.util.getMessage
-import com.codepunk.hollarhype.util.http.NoConnectivityException
 import kotlinx.coroutines.launch
 
 @Composable
@@ -186,8 +185,6 @@ fun AuthSignInScreen(
             )
         }
     }
-
-
 }
 
 @ScreenPreviews
