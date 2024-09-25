@@ -2,7 +2,7 @@ package com.codepunk.hollarhype.data.remote.webservice
 
 import arrow.core.Either
 import arrow.retrofit.adapter.either.networkhandling.CallError
-import com.codepunk.hollarhype.data.remote.entity.RemoteAuthResult
+import com.codepunk.hollarhype.data.remote.entity.RemoteLoginResult
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
 import retrofit2.http.POST
@@ -14,6 +14,6 @@ interface HollarhypeWebservice {
     suspend fun login(
         @Field("mobile") phoneNumber: String,
         @Field("region_code") regionCode: String
-    ): Either<CallError, RemoteAuthResult>
+    ): Either<CallError, RemoteLoginResult>
 
 }

@@ -18,7 +18,7 @@ class NetworkConnectionInterceptor @Inject constructor(
     override fun intercept(chain: Interceptor.Chain): Response {
         if (!connectivityManager.isConnected()) {
             throw NoConnectivityException(
-                message = context.getString(R.string.no_internet_try_again)
+                message = context.getString(R.string.error_no_internet_try_again)
             )
         }
         return chain.proceed(chain.request().newBuilder().build())

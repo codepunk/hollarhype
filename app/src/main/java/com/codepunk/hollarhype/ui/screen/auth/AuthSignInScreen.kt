@@ -22,6 +22,7 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -30,6 +31,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import com.codepunk.hollarhype.R
@@ -49,6 +51,9 @@ import com.codepunk.hollarhype.ui.theme.layoutMargin
 import com.codepunk.hollarhype.ui.theme.standardButtonHeight
 import com.codepunk.hollarhype.ui.theme.standardButtonWidth
 import com.codepunk.hollarhype.ui.screen.auth.AuthEvent.NavigationEvent.OnNavigateToOtp
+import com.codepunk.hollarhype.util.getMessage
+import com.codepunk.hollarhype.util.http.NoConnectivityException
+import kotlinx.coroutines.launch
 
 @Composable
 fun AuthSignInScreen(
@@ -56,6 +61,7 @@ fun AuthSignInScreen(
     state: AuthState,
     onEvent: (AuthEvent) -> Unit = {}
 ) {
+    val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
     val snackBarHostState = remember { SnackbarHostState() }
     var regionPickerVisible by rememberSaveable { mutableStateOf(false) }
@@ -64,31 +70,26 @@ fun AuthSignInScreen(
     if (state.loginResultUnread) {
         onEvent(OnReadLoginResult)
 
-        state.loginResult.onRight { success ->
-            if (success) {
-                onEvent(OnNavigateToOtp)
-            }
-        }
-
-        // TODO Handle unread login result
-        /*
-        val message = state.loginResult.fold(
-            ifLeft = { it.message },
-            ifRight = {
-                if (it) {
-                    "Login was successful!"
-                } else {
-                    "Login was not successful"
+        state.loginResult
+            .onLeft {
+                // TODO Is this the best way to determine whether to
+                //  show a snackBar? That is, if we got errors that means
+                //  we had a valid error result from the backend so the
+                //  ViewModel should be able to handle it accordingly
+                if (it.errors.isEmpty()) {
+                    LaunchedEffect(snackBarHostState) {
+                        coroutineScope.launch {
+                            snackBarHostState.showSnackbar(
+                                message = it.getMessage(context)
+                            )
+                        }
+                    }
                 }
-            }
-        ) ?: "An unknown error occurred."
-
-        LaunchedEffect(key1 = Unit) {
-            coroutineScope.launch {
-                snackBarHostState.showSnackbar(message = message)
-            }
+            }.onRight { success ->
+                if (success) {
+                    onEvent(OnNavigateToOtp)
+                }
         }
-         */
     }
 
     Scaffold(

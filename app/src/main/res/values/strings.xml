@@ -30,7 +30,8 @@
     <!-- region Errors -->
 
     <string name="error">Error</string>
-    <string name="no_internet_try_again">No internet connection. Please try again later.</string>
+    <string name="error_no_internet_try_again">No internet connection. Please try again later.</string>
+    <string name="error_unknown">An unknown error occurred.</string>
 
     <!-- endregion Errors -->
 

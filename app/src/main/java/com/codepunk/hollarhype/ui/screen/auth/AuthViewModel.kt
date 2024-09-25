@@ -8,6 +8,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import arrow.core.Either
 import arrow.core.right
+import com.codepunk.hollarhype.domain.model.ErrorResult
 import com.codepunk.hollarhype.domain.model.User
 import com.codepunk.hollarhype.domain.repository.HollarhypeRepository
 import com.codepunk.hollarhype.ui.screen.auth.AuthEvent.DataChange
@@ -113,7 +114,7 @@ class AuthViewModel @Inject constructor(
     private fun authenticate() {
         viewModelScope.launch {
             // TODO Try to auto sign in here
-            val user: Either<Throwable, User?> = null.right()
+            val user: Either<ErrorResult, User?> = null.right()
             state = state.copy(
                 authenticatedUser = user
             )
@@ -150,7 +151,7 @@ class AuthViewModel @Inject constructor(
                     loading = false,
                     loginResultUnread = true,
                     loginResult = result,
-                    phoneNumberError = result.leftOrNull()?.message.orEmpty()
+                    phoneNumberError = result.leftOrNull()?.errors?.getOrNull(0) ?: ""
                 )
             }
         }

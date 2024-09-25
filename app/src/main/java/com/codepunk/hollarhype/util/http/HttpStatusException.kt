@@ -120,4 +120,22 @@ class HttpStatusException : RuntimeException {
 
     // endregion Overridden methods
 
+    // region Companion object
+
+    companion object {
+
+        @JvmStatic
+        fun of(code: Int, message: String): HttpStatusException =
+            HttpStatusException(
+                httpStatus = HttpStatus.lookup(
+                    code = code,
+                    reasonPhrase = message
+                ),
+                message = message
+            )
+
+    }
+
+    // endregion Companion object
+
 }

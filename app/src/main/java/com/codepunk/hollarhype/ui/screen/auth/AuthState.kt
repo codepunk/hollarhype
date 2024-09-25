@@ -2,6 +2,7 @@ package com.codepunk.hollarhype.ui.screen.auth
 
 import arrow.core.Either
 import arrow.core.right
+import com.codepunk.hollarhype.domain.model.ErrorResult
 import com.codepunk.hollarhype.domain.model.User
 
 data class AuthState(
@@ -14,11 +15,11 @@ data class AuthState(
 
     // Data
 
-    val loginResult: Either<Throwable, Boolean> = false.right(),
+    val loginResult: Either<ErrorResult, Boolean> = false.right(),
 
     val authenticatingUser: User = User(),
 
-    val authenticatedUser: Either<Throwable, User?> = null.right(),
+    val authenticatedUser: Either<ErrorResult, User?> = null.right(),
 
     // Error states
 

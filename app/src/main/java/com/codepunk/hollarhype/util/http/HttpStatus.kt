@@ -553,21 +553,15 @@ class HttpStatus private constructor(
          * otherwise it creates a new HttpStatus and attempts to match the category of the
          * given code.
          */
-
-        // If reasonPhrase is not empty OR lookup fails, then create a new one
-        // If reason is empty, attempt lookup
-        // If reason is NOT empty, null
-        // After the 2 above, if null then create one
-
         @JvmStatic
         fun lookup(
             code: Int,
-            reasonPhrase: String = ""
-        ): HttpStatus = reasonPhrase.takeIf { it.isEmpty() }?.run {
+            reasonPhrase: String? = null
+        ): HttpStatus = reasonPhrase.takeIf { it.isNullOrBlank() }.run {
             lookupArray[code]
         } ?: HttpStatus(
             code = code,
-            reasonPhrase = reasonPhrase
+            reasonPhrase = reasonPhrase.orEmpty()
         )
 
         // endregion Methods
