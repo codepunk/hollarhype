@@ -41,7 +41,6 @@ import com.codepunk.hollarhype.ui.component.PhoneNumber
 import com.codepunk.hollarhype.ui.preview.ScreenPreviews
 import com.codepunk.hollarhype.ui.screen.auth.AuthEvent.DataChange.OnPhoneNumberChange
 import com.codepunk.hollarhype.ui.screen.auth.AuthEvent.DataChange.OnRegionChange
-import com.codepunk.hollarhype.ui.screen.auth.AuthEvent.ReadState.OnReadLoginResult
 import com.codepunk.hollarhype.ui.theme.HollarhypeTheme
 import com.codepunk.hollarhype.ui.theme.Size3xLarge
 import com.codepunk.hollarhype.ui.theme.SizeLarge
@@ -51,6 +50,7 @@ import com.codepunk.hollarhype.ui.theme.layoutMargin
 import com.codepunk.hollarhype.ui.theme.standardButtonHeight
 import com.codepunk.hollarhype.ui.theme.standardButtonWidth
 import com.codepunk.hollarhype.ui.screen.auth.AuthEvent.NavigationEvent.OnNavigateToOtp
+import com.codepunk.hollarhype.util.consume
 import com.codepunk.hollarhype.util.getMessage
 import kotlinx.coroutines.launch
 
@@ -65,11 +65,9 @@ fun AuthSignInScreen(
     val snackBarHostState = remember { SnackbarHostState() }
     var regionPickerVisible by rememberSaveable { mutableStateOf(false) }
 
-    // Handle any unread results
-    if (state.loginResultUnread) {
-        onEvent(OnReadLoginResult)
-
-        state.loginResult
+    // Consume any available results
+    state.loginResult?.consume { result ->
+        result
             .onLeft {
                 // TODO Is this the best way to determine whether to
                 //  show a snackBar? That is, if we got errors that means
@@ -88,7 +86,7 @@ fun AuthSignInScreen(
                 if (success) {
                     onEvent(OnNavigateToOtp)
                 }
-        }
+            }
     }
 
     Scaffold(

@@ -6,13 +6,10 @@ import androidx.credentials.GetCredentialRequest
 import androidx.credentials.GetPasswordOption
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import arrow.core.Either
-import arrow.core.right
-import com.codepunk.hollarhype.domain.model.ErrorResult
+import arrow.eval.Eval
 import com.codepunk.hollarhype.domain.model.User
 import com.codepunk.hollarhype.domain.repository.HollarhypeRepository
 import com.codepunk.hollarhype.ui.screen.auth.AuthEvent.DataChange
-import com.codepunk.hollarhype.ui.screen.auth.AuthEvent.ReadState
 import com.codepunk.hollarhype.util.intl.Region
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -101,23 +98,11 @@ class AuthViewModel @Inject constructor(
 
     // Navigation
 
-    // Read state
-
-    private fun readLoginResult() {
-        state = state.copy(
-            loginResultUnread = false
-        )
-    }
-
     // User actions
 
     private fun authenticate() {
         viewModelScope.launch {
             // TODO Try to auto sign in here
-            val user: Either<ErrorResult, User?> = null.right()
-            state = state.copy(
-                authenticatedUser = user
-            )
         }
     }
 
@@ -149,13 +134,14 @@ class AuthViewModel @Inject constructor(
             ).collect { result ->
                 state = state.copy(
                     loading = false,
-                    loginResultUnread = true,
-                    loginResult = result,
+                    loginResult = Eval.later { result },
                     phoneNumberError = result.leftOrNull()?.errors?.getOrNull(0) ?: ""
                 )
             }
         }
     }
+
+    // Consuming values
 
     private fun resendOtp() {
         Log.d("AuthViewModel", "resendOtp")
@@ -178,8 +164,6 @@ class AuthViewModel @Inject constructor(
             is AuthEvent.NavigationEvent -> { /* No op */ }
 
             // Read state
-
-            is ReadState.OnReadLoginResult -> readLoginResult()
 
             // User actions
 

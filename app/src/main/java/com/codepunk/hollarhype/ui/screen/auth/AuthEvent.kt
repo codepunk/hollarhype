@@ -22,12 +22,6 @@ sealed interface AuthEvent {
         data object OnNavigateToOtp : NavigationEvent
     }
 
-    // Read state
-
-    sealed interface ReadState: AuthEvent {
-        data object OnReadLoginResult: ReadState
-    }
-
     // User actions
 
     data object OnEditAvatar: AuthEvent

@@ -106,9 +106,7 @@ fun AuthOptionsPreviews() {
         Scaffold { padding ->
             AuthStartScreen(
                 modifier = Modifier.padding(padding),
-                state = AuthState(
-                    authenticatedUser = User().right()
-                )
+                state = AuthState()
             )
         }
     }
