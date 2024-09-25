@@ -21,10 +21,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import arrow.core.right
-import arrow.eval.Eval
 import com.codepunk.hollarhype.R
-import com.codepunk.hollarhype.domain.model.User
 import com.codepunk.hollarhype.ui.preview.ScreenPreviews
 import com.codepunk.hollarhype.ui.screen.auth.AuthEvent.NavigationEvent
 import com.codepunk.hollarhype.ui.theme.HollarhypeTheme

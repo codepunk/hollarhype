@@ -58,7 +58,6 @@ kotlinx-serialization-converter = { group = "com.jakewharton.retrofit", name = "
 navigation-compose = { group = "androidx.navigation", name = "navigation-compose", version.ref = "navigation" }
 hilt-navigation-compose = { group = "androidx.hilt", name = "hilt-navigation-compose", version.ref = "hiltNavigationCompose" }
 arrow-core = { group = "io.arrow-kt", name = "arrow-core", version.ref = "arrow" }
-arrow-eval = { group = "io.arrow-kt", name = "arrow-eval", version.ref = "arrow" }
 arrow-fx-coroutines = { group = "io.arrow-kt", name = "arrow-fx-coroutines", version.ref = "arrow" }
 arrow-core-retrofit = { group = "io.arrow-kt", name = "arrow-core-retrofit", version.ref = "arrow" }
 okhttp = { group = "com.squareup.okhttp3", name = "okhttp", version.ref = "okhttp" }

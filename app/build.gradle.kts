@@ -138,7 +138,6 @@ dependencies {
 
     // Arrow
     implementation(libs.arrow.core)
-    implementation(libs.arrow.eval)
     implementation(libs.arrow.core.retrofit)
     implementation(libs.arrow.fx.coroutines)
 

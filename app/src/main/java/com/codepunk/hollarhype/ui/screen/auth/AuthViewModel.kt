@@ -6,7 +6,6 @@ import androidx.credentials.GetCredentialRequest
 import androidx.credentials.GetPasswordOption
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import arrow.eval.Eval
 import com.codepunk.hollarhype.domain.model.User
 import com.codepunk.hollarhype.domain.repository.HollarhypeRepository
 import com.codepunk.hollarhype.ui.screen.auth.AuthEvent.DataChange
@@ -134,7 +133,7 @@ class AuthViewModel @Inject constructor(
             ).collect { result ->
                 state = state.copy(
                     loading = false,
-                    loginResult = Eval.later { result },
+                    loginResult = lazy { result },
                     phoneNumberError = result.leftOrNull()?.errors?.getOrNull(0) ?: ""
                 )
             }
