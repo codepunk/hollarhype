@@ -6,21 +6,21 @@ sealed interface AuthEvent {
 
     // Data changes
 
-    sealed class DataChange<T>(open val value: T): AuthEvent {
-        data class OnEmailAddressChange(override val value: String): DataChange<String>(value)
-        data class OnFirstNameChange(override val value: String): DataChange<String>(value)
-        data class OnLastNameChange(override val value: String): DataChange<String>(value)
-        data class OnPhoneNumberChange(override val value: String): DataChange<String>(value)
-        data class OnRegionChange(override val value: Region): DataChange<Region>(value)
-    }
+    data class OnEmailAddressChange(val value: String): AuthEvent
+    data class OnFirstNameChange(val value: String): AuthEvent
+    data class OnLastNameChange(val value: String): AuthEvent
+    data class OnPhoneNumberChange(val value: String): AuthEvent
+    data class OnRegionChange(val value: Region): AuthEvent
+    data class OnOtpChange(
+        val value: String,
+        val complete: Boolean
+    ): AuthEvent
 
     // Navigation
 
-    sealed interface NavigationEvent: AuthEvent {
-        data object OnNavigateToSignIn : NavigationEvent
-        data object OnNavigateToSignUp : NavigationEvent
-        data object OnNavigateToOtp : NavigationEvent
-    }
+    data object OnNavigateToSignIn : AuthEvent
+    data object OnNavigateToSignUp : AuthEvent
+    data object OnNavigateToOtp : AuthEvent
 
     // User actions
 
@@ -29,5 +29,6 @@ sealed interface AuthEvent {
     data object OnSignUp: AuthEvent
     data object OnSignIn: AuthEvent
     data object OnResendOtp: AuthEvent
+    data class OnVerifyOtp(val otp: String): AuthEvent
 
 }

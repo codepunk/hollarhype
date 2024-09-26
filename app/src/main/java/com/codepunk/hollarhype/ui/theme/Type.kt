@@ -1,7 +1,6 @@
 package com.codepunk.hollarhype.ui.theme
 
 import androidx.compose.material3.Typography
-import androidx.compose.runtime.Composable
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontStyle
@@ -47,7 +46,8 @@ val AppTypography = Typography(
     headlineMedium = baseline.headlineMedium.copy(fontFamily = rigidSquareFontFamily),
     headlineSmall = baseline.headlineSmall.copy(
         fontFamily = rigidSquareFontFamily,
-        fontWeight = FontWeight.SemiBold
+        fontWeight = FontWeight.SemiBold,
+        fontSize = 18.sp
     ),
     //titleLarge = baseline.titleLarge.copy(fontFamily = displayFontFamily),
     //titleMedium = baseline.titleMedium.copy(fontFamily = displayFontFamily),

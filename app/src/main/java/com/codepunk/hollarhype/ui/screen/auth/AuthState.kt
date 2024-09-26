@@ -18,6 +18,8 @@ data class AuthState(
 
     val authenticatedUser: Lazy<Either<ErrorResult, User>>? = null,
 
+    val otp: String = "",
+
     // Error states
 
     val phoneNumberError: String = ""

@@ -39,8 +39,11 @@ import com.codepunk.hollarhype.ui.component.CountryCodePicker
 import com.codepunk.hollarhype.ui.component.CountryCodePickerDialog
 import com.codepunk.hollarhype.ui.component.PhoneNumber
 import com.codepunk.hollarhype.ui.preview.ScreenPreviews
-import com.codepunk.hollarhype.ui.screen.auth.AuthEvent.DataChange.OnPhoneNumberChange
-import com.codepunk.hollarhype.ui.screen.auth.AuthEvent.DataChange.OnRegionChange
+import com.codepunk.hollarhype.ui.screen.auth.AuthEvent.OnNavigateToOtp
+import com.codepunk.hollarhype.ui.screen.auth.AuthEvent.OnPhoneNumberChange
+import com.codepunk.hollarhype.ui.screen.auth.AuthEvent.OnRegionChange
+import com.codepunk.hollarhype.ui.screen.auth.AuthEvent.OnRegisterNewPhoneNumber
+import com.codepunk.hollarhype.ui.screen.auth.AuthEvent.OnSignIn
 import com.codepunk.hollarhype.ui.theme.HollarhypeTheme
 import com.codepunk.hollarhype.ui.theme.Size3xLarge
 import com.codepunk.hollarhype.ui.theme.SizeLarge
@@ -49,7 +52,6 @@ import com.codepunk.hollarhype.ui.theme.buttonCornerRadius
 import com.codepunk.hollarhype.ui.theme.layoutMargin
 import com.codepunk.hollarhype.ui.theme.standardButtonHeight
 import com.codepunk.hollarhype.ui.theme.standardButtonWidth
-import com.codepunk.hollarhype.ui.screen.auth.AuthEvent.NavigationEvent.OnNavigateToOtp
 import com.codepunk.hollarhype.util.consume
 import com.codepunk.hollarhype.util.getMessage
 import kotlinx.coroutines.launch
@@ -66,27 +68,26 @@ fun AuthSignInScreen(
     var regionPickerVisible by rememberSaveable { mutableStateOf(false) }
 
     // Process any consumable (i.e. "single event") values
-    state.loginResult?.consume { result ->
-        result
-            .onLeft {
-                // TODO Is this the best way to determine whether to
-                //  show a snackBar? That is, if we got errors that means
-                //  we had a valid error result from the backend so the
-                //  ViewModel should be able to handle it accordingly
-                if (it.errors.isEmpty()) {
-                    LaunchedEffect(snackBarHostState) {
-                        coroutineScope.launch {
-                            snackBarHostState.showSnackbar(
-                                message = it.getMessage(context)
-                            )
-                        }
+    state.loginResult?.consume { value ->
+        value.onLeft {
+            // TODO Is this the best way to determine whether to
+            //  show a snackBar? That is, if we got errors that means
+            //  we had a valid error result from the backend so the
+            //  ViewModel should be able to handle it accordingly
+            if (it.errors.isEmpty()) {
+                LaunchedEffect(snackBarHostState) {
+                    coroutineScope.launch {
+                        snackBarHostState.showSnackbar(
+                            message = it.getMessage(context)
+                        )
                     }
                 }
-            }.onRight { success ->
-                if (success) {
-                    onEvent(OnNavigateToOtp)
-                }
             }
+        }.onRight { success ->
+            if (success) {
+                onEvent(OnNavigateToOtp)
+            }
+        }
     }
 
     Scaffold(
@@ -126,12 +127,13 @@ fun AuthSignInScreen(
                     phoneNumber = state.authenticatingUser.phoneNumber,
                     phoneNumberError = state.phoneNumberError,
                     onCountryCodeClick = { regionPickerVisible = true },
-                    onPhoneNumberChange = { onEvent(OnPhoneNumberChange(it)) }
+                    onPhoneNumberChange = { onEvent(OnPhoneNumberChange(it)) },
+                    onSubmit = { onEvent(OnSignIn) }
                 )
 
                 TextButton(
                     modifier = Modifier.padding(top = SizeMedium.value),
-                    onClick = { onEvent(AuthEvent.OnRegisterNewPhoneNumber) }
+                    onClick = { onEvent(OnRegisterNewPhoneNumber) }
                 ) {
                     Text(
                         text = stringResource(id = R.string.phone_number_changed),

@@ -7,7 +7,9 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.codepunk.hollarhype.ui.screen.auth.AuthEvent.NavigationEvent
+import com.codepunk.hollarhype.ui.screen.auth.AuthEvent.OnNavigateToOtp
+import com.codepunk.hollarhype.ui.screen.auth.AuthEvent.OnNavigateToSignIn
+import com.codepunk.hollarhype.ui.screen.auth.AuthEvent.OnNavigateToSignUp
 
 @Composable
 fun AuthNavigation(
@@ -30,9 +32,9 @@ fun AuthNavigation(
                 // Pass navigation events up to navController, everything else
                 // will fall through to AuthViewModel
                 when (event) {
-                    is NavigationEvent.OnNavigateToSignUp ->
+                    is OnNavigateToSignUp ->
                         navController.navigate(AuthRoute.AuthSignUp)
-                    is NavigationEvent.OnNavigateToSignIn ->
+                    is OnNavigateToSignIn ->
                         navController.navigate(AuthRoute.AuthSignIn)
                     else -> onEvent(event)
                 }
@@ -56,8 +58,7 @@ fun AuthNavigation(
                 // Pass navigation events up to navController, everything else
                 // will fall through to AuthViewModel
                 when (event) {
-                    is NavigationEvent.OnNavigateToOtp ->
-                        navController.navigate(AuthRoute.AuthOtp)
+                    is OnNavigateToOtp -> navController.navigate(AuthRoute.AuthOtp)
                     else -> onEvent(event)
                 }
             }

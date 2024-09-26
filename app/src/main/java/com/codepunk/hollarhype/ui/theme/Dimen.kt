@@ -26,6 +26,7 @@ sealed class LayoutSize(val start: Dp, val endExclusive: Dp) {
  * Sizes are based on powers of 2. For useful "in-between" sizes like
  * 48.dp, 96.dp, 192.dp, etc., use LayoutSize.mid.
  */
+data object SizeLine : LayoutSize(1.dp, 2.dp)
 data object SizeMin : LayoutSize(2.dp, 4.dp)
 data object SizeTiny : LayoutSize(4.dp, 8.dp)
 data object SizeSmall : LayoutSize(8.dp, 16.dp)

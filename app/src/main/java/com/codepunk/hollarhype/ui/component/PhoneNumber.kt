@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
@@ -28,6 +29,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import com.codepunk.hollarhype.R
 import com.codepunk.hollarhype.ui.preview.ComponentPreviews
@@ -47,7 +49,8 @@ fun PhoneNumber(
     phoneNumber: String = "",
     phoneNumberError: String = "",
     onCountryCodeClick: () -> Unit = {},
-    onPhoneNumberChange: (String) -> Unit = {}
+    onPhoneNumberChange: (String) -> Unit = {},
+    onSubmit: () -> Unit = {}
 ) {
     val visualTransformation by remember(regionCode) {
         mutableStateOf(
@@ -110,7 +113,11 @@ fun PhoneNumber(
             textStyle = MaterialTheme.typography.labelMedium,
             maxLines = 1,
             singleLine = true,
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
+            keyboardOptions = KeyboardOptions(
+                keyboardType = KeyboardType.Phone,
+                imeAction = ImeAction.Go
+            ),
+            keyboardActions = KeyboardActions { onSubmit() },
             label = {
                 Text(
                     text = stringResource(id = R.string.phone_number),

@@ -23,7 +23,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import com.codepunk.hollarhype.R
 import com.codepunk.hollarhype.ui.preview.ScreenPreviews
-import com.codepunk.hollarhype.ui.screen.auth.AuthEvent.NavigationEvent
+import com.codepunk.hollarhype.ui.screen.auth.AuthEvent.OnNavigateToSignIn
+import com.codepunk.hollarhype.ui.screen.auth.AuthEvent.OnNavigateToSignUp
 import com.codepunk.hollarhype.ui.theme.HollarhypeTheme
 import com.codepunk.hollarhype.ui.theme.Size3xLarge
 import com.codepunk.hollarhype.ui.theme.SizeMedium
@@ -68,7 +69,7 @@ fun AuthStartScreen(
                     .width(standardButtonWidth)
                     .height(standardButtonHeight),
                 shape = RoundedCornerShape(size = buttonCornerRadius),
-                onClick = { onEvent(NavigationEvent.OnNavigateToSignUp) }
+                onClick = { onEvent(OnNavigateToSignUp) }
             ) {
                 Text(
                     text = stringResource(id = R.string.sign_up).lowercase(),
@@ -85,7 +86,7 @@ fun AuthStartScreen(
                     containerColor = MaterialTheme.colorScheme.secondaryContainer,
                     contentColor = MaterialTheme.colorScheme.onSecondaryContainer
                 ),
-                onClick = { onEvent(NavigationEvent.OnNavigateToSignIn) }
+                onClick = { onEvent(OnNavigateToSignIn) }
             ) {
                 Text(
                     text = stringResource(id = R.string.sign_in).lowercase(),

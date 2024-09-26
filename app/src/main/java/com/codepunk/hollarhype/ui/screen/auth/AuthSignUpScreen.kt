@@ -47,11 +47,11 @@ import com.codepunk.hollarhype.ui.component.CountryCodePickerDialog
 import com.codepunk.hollarhype.ui.component.PhoneNumber
 import com.codepunk.hollarhype.util.intl.Region
 import com.codepunk.hollarhype.ui.preview.ScreenPreviews
-import com.codepunk.hollarhype.ui.screen.auth.AuthEvent.DataChange.OnFirstNameChange
-import com.codepunk.hollarhype.ui.screen.auth.AuthEvent.DataChange.OnLastNameChange
-import com.codepunk.hollarhype.ui.screen.auth.AuthEvent.DataChange.OnEmailAddressChange
-import com.codepunk.hollarhype.ui.screen.auth.AuthEvent.DataChange.OnPhoneNumberChange
-import com.codepunk.hollarhype.ui.screen.auth.AuthEvent.DataChange.OnRegionChange
+import com.codepunk.hollarhype.ui.screen.auth.AuthEvent.OnFirstNameChange
+import com.codepunk.hollarhype.ui.screen.auth.AuthEvent.OnLastNameChange
+import com.codepunk.hollarhype.ui.screen.auth.AuthEvent.OnEmailAddressChange
+import com.codepunk.hollarhype.ui.screen.auth.AuthEvent.OnPhoneNumberChange
+import com.codepunk.hollarhype.ui.screen.auth.AuthEvent.OnRegionChange
 import com.codepunk.hollarhype.ui.theme.HollarhypeTheme
 import com.codepunk.hollarhype.ui.theme.Size2xLarge
 import com.codepunk.hollarhype.ui.theme.Size3xLarge
@@ -156,7 +156,7 @@ fun SignUpNonLandscape(
             onFirstNameChange = { onEvent(OnFirstNameChange(it)) },
             onLastNameChange = { onEvent(OnLastNameChange(it)) },
             onEmailAddressChange = { onEvent(OnEmailAddressChange(it)) },
-            onPhoneNumberChange = { onEvent(AuthEvent.DataChange.OnPhoneNumberChange(it)) },
+            onPhoneNumberChange = { onEvent(OnPhoneNumberChange(it)) },
             onShowRegionPicker = onShowRegionPicker
         )
 

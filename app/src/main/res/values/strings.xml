@@ -19,7 +19,8 @@
     <string name="phone_number">Phone Number</string>
     <string name="disclaimer">By providing your phone number you agree to receive texts from HollarHype containing a one-time password for authentication. We will not text you for any other reason.</string>
     <string name="phone_number_changed">Changed your phone number?</string>
-    <string name="resend_otp">Resend confirmation code</string>
+    <string name="enter_otp">Please enter verification code</string>
+    <string name="resend_otp">Resend verification code</string>
 
     <!-- region Country code picker -->
 
