@@ -29,6 +29,9 @@ credentials = "1.5.0-alpha02"
 accompanist = "0.36.0"
 phoneNumber = "8.13.45"
 googleFonts = "1.7.0"
+datastorePreferences = "1.1.1"
+desugar = "2.1.2"
+kotlinxDatetime = "0.6.0"
 
 [libraries]
 # Supplied by New Project template
@@ -71,6 +74,9 @@ credentials = { group = "androidx.credentials", name = "credentials", version.re
 accompanist = { group = "com.google.accompanist", name = "accompanist-permissions", version.ref = "accompanist" }
 phonenumber = { group = "com.googlecode.libphonenumber", name = "libphonenumber", version.ref = "phoneNumber" }
 google-fonts = { group = "androidx.compose.ui", name = "ui-text-google-fonts", version.ref = "googleFonts" }
+datastore-preferences = { group = "androidx.datastore", name = "datastore-preferences", version.ref = "datastorePreferences" }
+desugar = { group = "com.android.tools", name = "desugar_jdk_libs", version.ref = "desugar" }
+kotlinx-datetime = { group = "org.jetbrains.kotlinx", name = "kotlinx-datetime", version.ref = "kotlinxDatetime" }
 
 [plugins]
 # Supplied by New Project template

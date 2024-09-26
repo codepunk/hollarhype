@@ -41,6 +41,18 @@ android {
             name = "OK_HTTP_CLIENT_CACHE_SIZE",
             value = "10 * 1024 * 1024"
         )
+
+        buildConfigField(
+            type = "String",
+            name = "DATABASE_NAME",
+            value = "\"hollarhype_db\""
+        )
+
+        buildConfigField(
+            type = "String",
+            name = "PREFERENCES_DATASTORE_NAME",
+            value = "\"hollarhype_preferences\""
+        )
     }
 
     buildTypes {
@@ -56,6 +68,7 @@ android {
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
+        isCoreLibraryDesugaringEnabled = true
     }
 
     kotlinOptions {
@@ -165,4 +178,13 @@ dependencies {
 
     // Google Fonts
     implementation(libs.google.fonts)
+
+    // Datastore
+    implementation(libs.datastore.preferences)
+
+    // Desugar
+    coreLibraryDesugaring(libs.desugar)
+
+    // Kotlin Datetime
+    implementation(libs.kotlinx.datetime)
 }

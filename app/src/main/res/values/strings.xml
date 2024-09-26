@@ -22,10 +22,11 @@
     <string name="enter_otp">Please enter verification code</string>
     <string name="resend_otp">Resend verification code</string>
 
+    <string name="unknown">Unknown</string>
+
     <!-- region Country code picker -->
 
     <string name="select_country">Select a country</string>
-
     <!-- endregion Country code picker -->
 
     <!-- region Errors -->
