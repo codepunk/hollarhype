@@ -66,6 +66,7 @@ import com.codepunk.hollarhype.ui.theme.largeGutterSize
 import com.codepunk.hollarhype.ui.theme.layoutMargin
 import com.codepunk.hollarhype.ui.theme.standardButtonHeight
 import com.codepunk.hollarhype.ui.theme.standardButtonWidth
+import com.codepunk.hollarhype.ui.screen.auth.AuthEvent.OnSignUp
 import kotlin.math.sqrt
 
 @Composable
@@ -148,11 +149,11 @@ fun SignUpNonLandscape(
 
         SignUpForm(
             modifier = Modifier.fillMaxWidth(),
-            firstName = state.authenticatingUser.firstName,
-            lastName = state.authenticatingUser.lastName,
-            emailAddress = state.authenticatingUser.emailAddress,
-            phoneNumber = state.authenticatingUser.phoneNumber,
-            region = state.authenticatingUser.region,
+            firstName = state.firstName,
+            lastName = state.lastName,
+            emailAddress = state.emailAddress,
+            phoneNumber = state.phoneNumber,
+            region = state.region,
             onFirstNameChange = { onEvent(OnFirstNameChange(it)) },
             onLastNameChange = { onEvent(OnLastNameChange(it)) },
             onEmailAddressChange = { onEvent(OnEmailAddressChange(it)) },
@@ -162,7 +163,17 @@ fun SignUpNonLandscape(
 
         SignUpSubmit(
             modifier = Modifier.fillMaxWidth(),
-            onSubmit = { onEvent(AuthEvent.OnSignUp) }
+            onSubmit = {
+                onEvent(
+                    OnSignUp(
+                        firstName = state.firstName,
+                        lastName = state.lastName,
+                        emailAddress = state.emailAddress,
+                        region = state.region,
+                        phoneNumber = state.phoneNumber
+                    )
+                )
+            }
         )
     }
 }
@@ -208,7 +219,17 @@ fun SignUpLandscape(
 
                 SignUpSubmit(
                     modifier = Modifier.fillMaxWidth(),
-                    onSubmit = { onEvent(AuthEvent.OnSignUp) }
+                    onSubmit = {
+                        onEvent(
+                            OnSignUp(
+                                firstName = state.firstName,
+                                lastName = state.lastName,
+                                emailAddress = state.emailAddress,
+                                region = state.region,
+                                phoneNumber = state.phoneNumber
+                            )
+                        )
+                    }
                 )
             }
         }
@@ -229,11 +250,11 @@ fun SignUpLandscape(
                 modifier = Modifier
                     .widthIn(max = SizeHuge.value)
                     .fillMaxWidth(),
-                firstName = state.authenticatingUser.firstName,
-                lastName = state.authenticatingUser.lastName,
-                emailAddress = state.authenticatingUser.emailAddress,
-                phoneNumber = state.authenticatingUser.phoneNumber,
-                region = state.authenticatingUser.region,
+                firstName = state.firstName,
+                lastName = state.lastName,
+                emailAddress = state.emailAddress,
+                phoneNumber = state.phoneNumber,
+                region = state.region,
                 onFirstNameChange = { onEvent(OnFirstNameChange(it)) },
                 onLastNameChange = { onEvent(OnLastNameChange(it)) },
                 onEmailAddressChange = { onEvent(OnEmailAddressChange(it)) },

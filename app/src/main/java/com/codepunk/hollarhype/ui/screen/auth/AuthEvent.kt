@@ -26,8 +26,17 @@ sealed interface AuthEvent {
 
     data object OnEditAvatar: AuthEvent
     data object OnRegisterNewPhoneNumber: AuthEvent
-    data object OnSignUp: AuthEvent
-    data object OnSignIn: AuthEvent
+    data class OnSignUp(
+        val firstName: String,
+        val lastName: String,
+        val emailAddress: String,
+        val region: Region,
+        val phoneNumber: String
+    ): AuthEvent
+    data class OnSignIn(
+        val region: Region,
+        val phoneNumber: String
+    ): AuthEvent
     data object OnResendOtp: AuthEvent
     data class OnVerifyOtp(val otp: String): AuthEvent
 

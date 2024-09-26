@@ -55,42 +55,32 @@ class AuthViewModel @Inject constructor(
 
     private fun updateEmailAddress(emailAddress: String) {
         state = state.copy(
-            authenticatingUser = state.authenticatingUser.copy(
-                emailAddress = emailAddress
-            )
+            emailAddress = emailAddress
         )
     }
 
     private fun updateFirstName(firstName: String) {
         state = state.copy(
-            authenticatingUser = state.authenticatingUser.copy(
-                firstName = firstName
-            )
+            firstName = firstName
         )
     }
 
     private fun updateLastName(lastName: String) {
         state = state.copy(
-            authenticatingUser = state.authenticatingUser.copy(
-                lastName = lastName
-            )
+            lastName = lastName
         )
     }
 
     private fun updatePhoneNumber(phoneNumber: String) {
         state = state.copy(
-            authenticatingUser = state.authenticatingUser.copy(
-                phoneNumber = phoneNumber
-            ),
+            phoneNumber = phoneNumber,
             phoneNumberError = ""
         )
     }
 
     private fun updateRegion(region: Region) {
         state = state.copy(
-            authenticatingUser = state.authenticatingUser.copy(
-                region = region
-            )
+            region = region
         )
     }
 
@@ -121,11 +111,21 @@ class AuthViewModel @Inject constructor(
         Log.d("AuthViewModel", "phoneNumberChanged")
     }
 
-    private fun signUp(user: User) {
+    private fun signUp(
+        firstName: String,
+        lastName: String,
+        emailAddress: String,
+        region: Region,
+        phoneNumber: String
+    ) {
         Log.d(
             "AuthViewModel",
             "signUn: " + listOf(
-                "user=$user"
+                "firstName=$firstName",
+                "lastName=$lastName",
+                "emailAddress=$emailAddress",
+                "region=$region",
+                "phoneNumber=$phoneNumber"
             ).joinToString { it }
         )
     }
@@ -185,11 +185,15 @@ class AuthViewModel @Inject constructor(
             AuthEvent.OnRegisterNewPhoneNumber -> phoneNumberChanged()
             AuthEvent.OnResendOtp -> resendOtp()
             is AuthEvent.OnSignIn -> signIn(
-                region = _stateFlow.value.authenticatingUser.region,
-                phoneNumber = _stateFlow.value.authenticatingUser.phoneNumber
+                region = event.region,
+                phoneNumber = event.phoneNumber
             )
             is AuthEvent.OnSignUp -> signUp(
-                user = _stateFlow.value.authenticatingUser
+                firstName = event.firstName,
+                lastName = event.lastName,
+                emailAddress = event.emailAddress,
+                region = event.region,
+                phoneNumber = event.phoneNumber
             )
             is AuthEvent.OnVerifyOtp -> verifyOtp(
                 otp = event.otp

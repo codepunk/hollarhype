@@ -122,13 +122,20 @@ fun AuthSignInScreen(
                 )
 
                 PhoneNumber(
-                    regionCode = state.authenticatingUser.region.regionCode,
-                    countryCode = state.authenticatingUser.region.countryCode,
-                    phoneNumber = state.authenticatingUser.phoneNumber,
+                    regionCode = state.region.regionCode,
+                    countryCode = state.region.countryCode,
+                    phoneNumber = state.phoneNumber,
                     phoneNumberError = state.phoneNumberError,
                     onCountryCodeClick = { regionPickerVisible = true },
                     onPhoneNumberChange = { onEvent(OnPhoneNumberChange(it)) },
-                    onSubmit = { onEvent(OnSignIn) }
+                    onSubmit = {
+                        onEvent(
+                            OnSignIn(
+                                region = state.region,
+                                phoneNumber = state.phoneNumber
+                            )
+                        )
+                    }
                 )
 
                 TextButton(
@@ -155,7 +162,14 @@ fun AuthSignInScreen(
                         .height(standardButtonHeight),
                     shape = RoundedCornerShape(size = buttonCornerRadius),
                     enabled = (!state.loading),
-                    onClick = { onEvent(AuthEvent.OnSignIn) }
+                    onClick = {
+                        onEvent(
+                            OnSignIn(
+                                region = state.region,
+                                phoneNumber = state.phoneNumber
+                            )
+                        )
+                    }
                 ) {
                     if (state.loading) {
                         CircularProgressIndicator(
