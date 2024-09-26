@@ -100,7 +100,9 @@ fun AuthOtpScreen(
                 )
 
                 Text(
-                    modifier = Modifier.padding(SizeLarge.value),
+                    modifier = Modifier
+                        .padding(SizeLarge.value)
+                        .widthIn(max = Size3xLarge.value),
                     text = stringResource(id = R.string.enter_otp).uppercase(),
                     color = MaterialTheme.colorScheme.onBackground,
                     style = MaterialTheme.typography.headlineSmall,
