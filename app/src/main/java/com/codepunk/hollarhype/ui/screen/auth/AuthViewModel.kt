@@ -84,13 +84,10 @@ class AuthViewModel @Inject constructor(
         )
     }
 
-    private fun updateOtp(otp: String, complete: Boolean) {
+    private fun updateOtp(otp: String) {
         state = state.copy(
             otp = otp
         )
-        if (complete) {
-            verifyOtp(otp)
-        }
     }
 
     // Navigation
@@ -146,9 +143,24 @@ class AuthViewModel @Inject constructor(
         }
     }
 
-    private fun verifyOtp(otp: String) {
+    private fun verifyOtp(
+        region: Region,
+        phoneNumber: String,
+        otp: String
+    ) {
         state = state.copy(loading = true)
-        // TODO
+        state = state.copy(loading = true)
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.verify(
+                phoneNumber = phoneNumber,
+                otp = otp,
+                region = region
+            ).collect { result ->
+                state = state.copy(
+                    loading = false,
+                )
+            }
+        }
         state = state.copy(loading = false)
     }
 
@@ -168,7 +180,7 @@ class AuthViewModel @Inject constructor(
             is AuthEvent.OnLastNameChange -> updateLastName(event.value)
             is AuthEvent.OnPhoneNumberChange -> updatePhoneNumber(event.value)
             is AuthEvent.OnRegionChange -> updateRegion(event.value)
-            is AuthEvent.OnOtpChange -> updateOtp(event.value, event.complete)
+            is AuthEvent.OnOtpChange -> updateOtp(event.value)
 
             // Navigation
 
@@ -196,6 +208,8 @@ class AuthViewModel @Inject constructor(
                 phoneNumber = event.phoneNumber
             )
             is AuthEvent.OnVerifyOtp -> verifyOtp(
+                region = event.region,
+                phoneNumber = event.phoneNumber,
                 otp = event.otp
             )
         }

@@ -114,7 +114,7 @@ fun AuthOtpScreen(
                     text = state.otp,
                     otpLength = 5,
                     onTextChange = { text, complete ->
-                        onEvent(OnOtpChange(text, complete))
+                        onEvent(OnOtpChange(text))
                     }
                 )
 
@@ -144,7 +144,11 @@ fun AuthOtpScreen(
                     enabled = (!state.loading),
                     onClick = { 
                         onEvent(
-                            OnVerifyOtp(otp = state.otp)
+                            OnVerifyOtp(
+                                region = state.region,
+                                phoneNumber = state.phoneNumber,
+                                otp = state.otp
+                            )
                         )
                     }
                 ) {

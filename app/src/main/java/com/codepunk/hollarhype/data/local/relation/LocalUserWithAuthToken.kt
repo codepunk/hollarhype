@@ -5,11 +5,11 @@ import androidx.room.Relation
 import com.codepunk.hollarhype.data.local.entity.LocalAuthToken
 import com.codepunk.hollarhype.data.local.entity.LocalUser
 
-data class LocalUserAndAuthToken(
-    @Embedded val user: LocalUser,
+data class LocalUserWithAuthToken(
+    @Embedded val user: LocalUser = LocalUser(),
     @Relation(
         parentColumn = "id",
         entityColumn = "user_id",
     )
-    val authToken: LocalAuthToken
+    val authTokens: Set<LocalAuthToken> = emptySet()
 )

@@ -10,7 +10,7 @@ import java.util.Locale
 )
 data class LocalUser(
     @PrimaryKey(autoGenerate = false)
-    val id: Long,
+    val id: Long = 0L,
     @ColumnInfo(name = "first_name")
     val firstName: String = "",
     @ColumnInfo(name = "last_name")

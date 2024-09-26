@@ -3,7 +3,7 @@ package com.codepunk.hollarhype.domain.model
 import com.codepunk.hollarhype.util.intl.Region
 
 data class User(
-    val id: Long,
+    val id: Long = 0L,
     val firstName: String = "",
     val lastName: String = "",
     val phoneNumber: String = "",
