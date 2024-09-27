@@ -17,7 +17,9 @@ ksp = "2.0.0-RC3-1.0.20"
 material3Adaptive = "1.1.0-alpha03"
 hilt = "2.51.1"
 kotlinJvm = "2.0.20"
-kotlinSerialization = "1.7.2"
+kotlinxSerialization = "1.7.2"
+kotlinxCollections = "0.3.8"
+kotlinxDatetime = "0.6.0"
 serializationConverter = "1.0.0"
 navigation = "2.8.1"
 hiltNavigationCompose = "1.2.0"
@@ -29,9 +31,8 @@ credentials = "1.5.0-alpha05"
 accompanist = "0.36.0"
 phoneNumber = "8.13.45"
 googleFonts = "1.7.2"
-datastorePreferences = "1.1.1"
+datastore = "1.1.1"
 desugar = "2.1.2"
-kotlinxDatetime = "0.6.0"
 
 [libraries]
 # Supplied by New Project template
@@ -56,8 +57,10 @@ material3-adaptive-layout = { group = "androidx.compose.material3.adaptive", nam
 material3-adaptive-navigation = { group = "androidx.compose.material3.adaptive", name = "adaptive-navigation", version.ref = "material3Adaptive" }
 hilt = { group = "com.google.dagger", name = "hilt-android", version.ref = "hilt" }
 hilt-compiler = { group = "com.google.dagger", name = "hilt-compiler", version.ref = "hilt" }
-kotlinx-serialization = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "kotlinSerialization" }
+kotlinx-serialization = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "kotlinxSerialization" }
+kotlinx-collections-immutable = { group = "org.jetbrains.kotlinx", name = "kotlinx-collections-immutable", version.ref = "kotlinxCollections" }
 kotlinx-serialization-converter = { group = "com.jakewharton.retrofit", name = "retrofit2-kotlinx-serialization-converter", version.ref = "serializationConverter" }
+kotlinx-datetime = { group = "org.jetbrains.kotlinx", name = "kotlinx-datetime", version.ref = "kotlinxDatetime" }
 navigation-compose = { group = "androidx.navigation", name = "navigation-compose", version.ref = "navigation" }
 hilt-navigation-compose = { group = "androidx.hilt", name = "hilt-navigation-compose", version.ref = "hiltNavigationCompose" }
 arrow-core = { group = "io.arrow-kt", name = "arrow-core", version.ref = "arrow" }
@@ -74,9 +77,9 @@ credentials = { group = "androidx.credentials", name = "credentials", version.re
 accompanist = { group = "com.google.accompanist", name = "accompanist-permissions", version.ref = "accompanist" }
 phonenumber = { group = "com.googlecode.libphonenumber", name = "libphonenumber", version.ref = "phoneNumber" }
 google-fonts = { group = "androidx.compose.ui", name = "ui-text-google-fonts", version.ref = "googleFonts" }
-datastore-preferences = { group = "androidx.datastore", name = "datastore-preferences", version.ref = "datastorePreferences" }
+datastore-preferences = { group = "androidx.datastore", name = "datastore-preferences", version.ref = "datastore" }
+datastore = { group = "androidx.datastore", name = "datastore", version.ref = "datastore" }
 desugar = { group = "com.android.tools", name = "desugar_jdk_libs", version.ref = "desugar" }
-kotlinx-datetime = { group = "org.jetbrains.kotlinx", name = "kotlinx-datetime", version.ref = "kotlinxDatetime" }
 
 [plugins]
 # Supplied by New Project template

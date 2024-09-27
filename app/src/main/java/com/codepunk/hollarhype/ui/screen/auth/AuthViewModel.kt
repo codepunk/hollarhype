@@ -148,7 +148,6 @@ class AuthViewModel @Inject constructor(
         otp: String
     ) {
         state = state.copy(loading = true)
-        state = state.copy(loading = true)
         viewModelScope.launch(Dispatchers.IO) {
             repository.verify(
                 phoneNumber = phoneNumber,

@@ -1,7 +1,8 @@
 package com.codepunk.hollarhype.di.module
 
 import androidx.datastore.core.DataStore
-import androidx.datastore.preferences.core.Preferences
+import com.codepunk.hollarhype.data.datastore.entity.UserSettings
+import com.codepunk.hollarhype.data.local.HollarhypeDatabase
 import com.codepunk.hollarhype.data.remote.webservice.HollarhypeWebservice
 import com.codepunk.hollarhype.data.repository.HollarhypeRepositoryImpl
 import com.codepunk.hollarhype.domain.repository.HollarhypeRepository
@@ -20,10 +21,12 @@ class DataModule {
     @Singleton
     @Provides
     fun provideHollarhypeRepository(
-        preferencesDataStore: DataStore<Preferences>,
+        dataStore: DataStore<UserSettings>,
+        database: HollarhypeDatabase,
         webservice: HollarhypeWebservice
     ): HollarhypeRepository = HollarhypeRepositoryImpl(
-        preferencesDataStore = preferencesDataStore,
+        dataStore = dataStore,
+        database = database,
         webservice = webservice
     )
 

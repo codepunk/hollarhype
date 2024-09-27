@@ -4,13 +4,17 @@ import android.content.Context
 import android.net.ConnectivityManager
 import androidx.credentials.CredentialManager
 import androidx.datastore.core.DataStore
+import androidx.datastore.core.DataStoreFactory
 import androidx.datastore.core.handlers.ReplaceFileCorruptionHandler
+import androidx.datastore.dataStoreFile
 import androidx.datastore.preferences.SharedPreferencesMigration
 import androidx.datastore.preferences.core.PreferenceDataStoreFactory
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.emptyPreferences
 import androidx.datastore.preferences.preferencesDataStoreFile
 import com.codepunk.hollarhype.BuildConfig
+import com.codepunk.hollarhype.data.datastore.entity.UserSettings
+import com.codepunk.hollarhype.data.datastore.serializer.UserSettingsSerializer
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -51,4 +55,14 @@ class AppModule {
             }
         )
 
+    @Singleton
+    @Provides
+    fun provideUserSettingsDataStore(
+        @ApplicationContext context: Context
+    ): DataStore<UserSettings> =
+        DataStoreFactory.create(
+            serializer = UserSettingsSerializer,
+            scope = CoroutineScope(Dispatchers.IO + SupervisorJob()),
+            produceFile = { context.dataStoreFile(BuildConfig.USER_SETTINGS_DATASTORE_FILENAME) }
+        )
 }

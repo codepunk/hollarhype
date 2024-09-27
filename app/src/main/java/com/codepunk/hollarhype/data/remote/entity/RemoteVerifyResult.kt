@@ -1,8 +1,10 @@
 package com.codepunk.hollarhype.data.remote.entity
 
 import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
-data class RemoteAuthentication(
+@Serializable
+data class RemoteVerifyResult(
     @SerialName("athlete")
     val user: RemoteUser,
     @SerialName("auth_token")

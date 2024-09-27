@@ -53,6 +53,12 @@ android {
             name = "PREFERENCES_DATASTORE_NAME",
             value = "\"hollarhype_preferences\""
         )
+
+        buildConfigField(
+            type = "String",
+            name = "USER_SETTINGS_DATASTORE_FILENAME",
+            value = "\"hollarhype_user_settings.json\""
+        )
     }
 
     buildTypes {
@@ -145,6 +151,12 @@ dependencies {
     implementation(libs.kotlinx.serialization)
     implementation(libs.kotlinx.serialization.converter)
 
+    // Kotlin collections
+    implementation(libs.kotlinx.collections.immutable)
+
+    // Kotlin Datetime
+    implementation(libs.kotlinx.datetime)
+
     // Compose navigation
     implementation(libs.navigation.compose)
     implementation(libs.hilt.navigation.compose)
@@ -181,10 +193,8 @@ dependencies {
 
     // Datastore
     implementation(libs.datastore.preferences)
+    implementation(libs.datastore)
 
     // Desugar
     coreLibraryDesugaring(libs.desugar)
-
-    // Kotlin Datetime
-    implementation(libs.kotlinx.datetime)
 }

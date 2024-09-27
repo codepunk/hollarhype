@@ -1,8 +1,10 @@
 package com.codepunk.hollarhype.data.remote.entity
 
 import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 import java.util.Locale
 
+@Serializable
 data class RemoteUser(
     val id: Long,
     @SerialName("first_name")

@@ -19,7 +19,7 @@ abstract class UserDao {
     abstract suspend fun insertUsers(users: List<LocalUser>)
 
     @Query("SELECT * FROM user WHERE id = :userId")
-    abstract fun getUser(userId: Int): Flow<LocalUser?>
+    abstract fun getUser(userId: Long): Flow<LocalUser?>
 
     // endregion Methods
 

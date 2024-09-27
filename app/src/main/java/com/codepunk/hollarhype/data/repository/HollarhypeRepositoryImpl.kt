@@ -1,24 +1,34 @@
 package com.codepunk.hollarhype.data.repository
 
 import androidx.datastore.core.DataStore
-import androidx.datastore.preferences.core.Preferences
 import arrow.core.Either
-import arrow.core.Ior
 import arrow.core.left
+import arrow.core.right
+import com.codepunk.hollarhype.data.datastore.entity.UserSettings
+import com.codepunk.hollarhype.data.local.HollarhypeDatabase
 import com.codepunk.hollarhype.data.mapper.toDomain
+import com.codepunk.hollarhype.data.mapper.toLocal
+import com.codepunk.hollarhype.data.mapper.toRepositoryError
 import com.codepunk.hollarhype.data.remote.webservice.HollarhypeWebservice
-import com.codepunk.hollarhype.domain.model.Authentication
 import com.codepunk.hollarhype.domain.model.LoginResult
+import com.codepunk.hollarhype.domain.model.User
+import com.codepunk.hollarhype.domain.model.VerifyResult
 import com.codepunk.hollarhype.domain.repository.RepositoryError
 import com.codepunk.hollarhype.domain.repository.HollarhypeRepository
 import com.codepunk.hollarhype.util.intl.Region
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.map
 
 class HollarhypeRepositoryImpl(
-    private val preferencesDataStore: DataStore<Preferences>,
+    private val dataStore: DataStore<UserSettings>,
+    private val database: HollarhypeDatabase,
     private val webservice: HollarhypeWebservice
 ) : HollarhypeRepository {
+
+    private val userDao by lazy { database.userDao() }
 
     override fun login(
         phoneNumber: String,
@@ -29,8 +39,10 @@ class HollarhypeRepositoryImpl(
                 webservice.login(
                     phoneNumber = phoneNumber,
                     regionCode = region.regionCode
-                ).body
-                    .mapLeft { it.toDomain() }
+                ).apply {
+                    // Handle HTTP result, headers, etc. here if needed
+                }.body
+                    .mapLeft { it.toRepositoryError() }
                     .map { it.toDomain() }
             } catch (cause: Throwable) {
                 RepositoryError(cause = cause).left()
@@ -42,39 +54,43 @@ class HollarhypeRepositoryImpl(
         phoneNumber: String,
         otp: String,
         region: Region
-    ): Flow<Ior<Throwable, Authentication?>> = flow {
-        TODO("Not yet implemented")
-    }
+    ): Flow<Either<RepositoryError, VerifyResult>> = flow {
+        emit(
+            try {
+                val response = webservice.verify(
+                    phoneNumber = phoneNumber,
+                    otp = otp,
+                    regionCode = region.regionCode
+                ).apply {
+                    // Handle HTTP result, headers, etc. here if needed
+                }.body.mapLeft { it.toRepositoryError() }
 
-    /*
-    override fun verify2(
-        phoneNumber: String,
-        otp: String,
-        region: Region
-    ): Flow<Ior<Throwable, Authentication?>> = networkBoundResource(
-        query = {
-            userWithAuthTokenDao.getUserWithAuthTokenByPhoneNumber(phoneNumber).map {
-                Log.d("HollarhypeRepositoryImpl", "verify: it=$it")
-                it.toDomain().apply {
-                    Log.d("HollarhypeRepositoryImpl", "verify: query=$this")
+                // We now have response = Either<RepositoryError, RemoteVerifyResult>
+
+                // We need to save locally to database (user) and dataStore (authToken)
+                response.map { result ->
+                    userDao.insertUser(result.user.toLocal())
+                    dataStore.updateData {
+                        it.copy(authentication = result.toLocal())
+                    }
+
+                    val userSettingsFlow = dataStore.data
+                    val userFlow = userDao.getUser(result.user.id)
+                    val combined = userSettingsFlow.combine(userFlow) { userSettings, user ->
+                        VerifyResult(
+                            user = user?.toDomain() ?: User(),
+                            authToken = userSettings.authentication.authToken
+                        )
+                    }
+
+                    // combined = Flow<VerifyResult>
+                    // Need to return Flow<Either<RepositoryError, VerifyResult>>
+                    val firstOrNull = combined.firstOrNull() ?: VerifyResult()
+                    firstOrNull
                 }
+            } catch (cause: Throwable) {
+                RepositoryError(cause = cause).left()
             }
-        },
-        fetch = {
-            webservice.verify(
-                phoneNumber = phoneNumber,
-                otp = otp,
-                regionCode = region.regionCode
-            ).fold(
-                ifLeft = { _ -> throw RuntimeException() }, // TODO Change this
-                ifRight = { auth -> auth }
-            ).apply {
-                Log.d("HollarhypeRepositoryImpl", "verify: fetch=$this")
-            }
-        },
-        saveFetchResult = {
-            userWithAuthTokenDao.insertUserWithAuthToken(it.toLocal())
-        }
-    )
-     */
+        )
+    }
 }
