@@ -6,7 +6,6 @@ import androidx.credentials.GetCredentialRequest
 import androidx.credentials.GetPasswordOption
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.codepunk.hollarhype.domain.model.User
 import com.codepunk.hollarhype.domain.repository.HollarhypeRepository
 import com.codepunk.hollarhype.util.intl.Region
 import dagger.hilt.android.lifecycle.HiltViewModel

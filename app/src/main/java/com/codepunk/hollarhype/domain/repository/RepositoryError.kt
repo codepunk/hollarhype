@@ -1,6 +1,6 @@
-package com.codepunk.hollarhype.domain.model
+package com.codepunk.hollarhype.domain.repository
 
-data class ErrorResult(
+data class RepositoryError(
     val errors: List<String> = emptyList(),
     val cause: Throwable? = null
 )

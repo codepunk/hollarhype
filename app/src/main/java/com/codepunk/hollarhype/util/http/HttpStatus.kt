@@ -144,6 +144,15 @@ class HttpStatus private constructor(
     @Suppress("unused")
     companion object {
 
+        // region Constants
+
+        /**
+         * Reason phrase for an unrecognized HTTP code.
+         */
+        private const val UNRECOGNIZED = "Unrecognized status"
+
+        // endregion Constants
+
         // region Properties
 
         /**
@@ -555,14 +564,10 @@ class HttpStatus private constructor(
          */
         @JvmStatic
         fun lookup(
-            code: Int,
-            reasonPhrase: String? = null
-        ): HttpStatus = reasonPhrase.takeIf { it.isNullOrBlank() }.run {
-            lookupArray[code]
-        } ?: HttpStatus(
-            code = code,
-            reasonPhrase = reasonPhrase.orEmpty()
-        )
+            code: Int
+        ): HttpStatus = lookupArray.getOrElse(code) {
+            HttpStatus(code = code, reasonPhrase = UNRECOGNIZED)
+        }
 
         // endregion Methods
 
