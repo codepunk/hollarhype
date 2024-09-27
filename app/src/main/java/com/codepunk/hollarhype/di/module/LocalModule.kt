@@ -4,9 +4,7 @@ import android.content.Context
 import androidx.room.Room
 import com.codepunk.hollarhype.BuildConfig
 import com.codepunk.hollarhype.data.local.HollarhypeDatabase
-import com.codepunk.hollarhype.data.local.dao.AuthTokenDao
 import com.codepunk.hollarhype.data.local.dao.UserDao
-import com.codepunk.hollarhype.data.local.dao.UserWithAuthTokenDao
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -31,17 +29,7 @@ object LocalModule {
 
     @Provides
     @Singleton
-    fun provideAuthTokenDao(database: HollarhypeDatabase): AuthTokenDao = database.authTokenDao()
-
-    @Provides
-    @Singleton
     fun provideUserDao(database: HollarhypeDatabase): UserDao = database.userDao()
-
-    @Provides
-    @Singleton
-    fun provideUserWithAuthTokenDao(
-        database: HollarhypeDatabase
-    ): UserWithAuthTokenDao = database.userWithAuthTokenDao()
 
     // endregion Methods
 

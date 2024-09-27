@@ -18,11 +18,7 @@ abstract class UserDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     abstract suspend fun insertUsers(users: List<LocalUser>)
 
-    @Query("""
-        SELECT *
-          FROM user
-         WHERE id = :userId
-    """)
+    @Query("SELECT * FROM user WHERE id = :userId")
     abstract fun getUser(userId: Int): Flow<LocalUser?>
 
     // endregion Methods

@@ -1,28 +1,22 @@
 package com.codepunk.hollarhype.data.repository
 
-import android.util.Log
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import arrow.core.Either
 import arrow.core.Ior
 import arrow.core.left
-import com.codepunk.hollarhype.data.local.dao.UserWithAuthTokenDao
 import com.codepunk.hollarhype.data.mapper.toDomain
-import com.codepunk.hollarhype.data.mapper.toLocal
 import com.codepunk.hollarhype.data.remote.webservice.HollarhypeWebservice
 import com.codepunk.hollarhype.domain.model.Authentication
 import com.codepunk.hollarhype.domain.model.LoginResult
 import com.codepunk.hollarhype.domain.repository.RepositoryError
 import com.codepunk.hollarhype.domain.repository.HollarhypeRepository
 import com.codepunk.hollarhype.util.intl.Region
-import com.codepunk.hollarhype.util.networkBoundResource
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.emitAll
 import kotlinx.coroutines.flow.flow
 
 class HollarhypeRepositoryImpl(
     private val preferencesDataStore: DataStore<Preferences>,
-    private val userWithAuthTokenDao: UserWithAuthTokenDao,
     private val webservice: HollarhypeWebservice
 ) : HollarhypeRepository {
 
