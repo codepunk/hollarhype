@@ -1,7 +1,7 @@
 package com.codepunk.hollarhype.data.remote.webservice
 
 import com.codepunk.hollarhype.data.remote.entity.RemoteLoginResult
-import com.codepunk.hollarhype.data.remote.entity.RemoteVerifyResult
+import com.codepunk.hollarhype.data.remote.entity.RemoteAuthentication
 import com.hadiyarajesh.flower_core.ApiResponse
 import retrofit2.Call
 import retrofit2.http.Field
@@ -30,6 +30,6 @@ interface HollarhypeWebservice {
         @Field("mobile") phoneNumber: String,
         @Field("otp") otp: String,
         @Field("region_code") regionCode: String
-    ): ApiResponse<RemoteVerifyResult>
+    ): ApiResponse<RemoteAuthentication>
 
 }

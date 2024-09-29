@@ -14,7 +14,9 @@ import com.codepunk.hollarhype.ui.theme.HollarhypeTheme
 
 @Composable
 fun LandingScreen(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    state: LandingState,
+    onEvent: (LandingEvent) -> Unit = {}
 ) {
     Scaffold(
         modifier = modifier,
@@ -45,7 +47,9 @@ fun Greeting(name: String, modifier: Modifier = Modifier) {
 @Composable
 fun LandingScreenPreviewDark() {
     HollarhypeTheme(darkTheme = true) {
-        LandingScreen()
+        LandingScreen(
+            state = LandingState()
+        )
     }
 }
 
@@ -53,6 +57,8 @@ fun LandingScreenPreviewDark() {
 @Composable
 fun LandingScreenPreviewLight() {
     HollarhypeTheme(darkTheme = false) {
-        LandingScreen()
+        LandingScreen(
+            state = LandingState()
+        )
     }
 }

@@ -39,11 +39,11 @@ import com.codepunk.hollarhype.ui.component.CountryCodePicker
 import com.codepunk.hollarhype.ui.component.CountryCodePickerDialog
 import com.codepunk.hollarhype.ui.component.PhoneNumber
 import com.codepunk.hollarhype.ui.preview.ScreenPreviews
-import com.codepunk.hollarhype.ui.screen.auth.AuthEvent.OnNavigateToOtp
-import com.codepunk.hollarhype.ui.screen.auth.AuthEvent.OnPhoneNumberChange
-import com.codepunk.hollarhype.ui.screen.auth.AuthEvent.OnRegionChange
-import com.codepunk.hollarhype.ui.screen.auth.AuthEvent.OnRegisterNewPhoneNumber
-import com.codepunk.hollarhype.ui.screen.auth.AuthEvent.OnSignIn
+import com.codepunk.hollarhype.ui.screen.auth.AuthEvent.NavigateToOtp
+import com.codepunk.hollarhype.ui.screen.auth.AuthEvent.UpdatePhoneNumber
+import com.codepunk.hollarhype.ui.screen.auth.AuthEvent.UpdateRegion
+import com.codepunk.hollarhype.ui.screen.auth.AuthEvent.RegisterNewPhoneNumber
+import com.codepunk.hollarhype.ui.screen.auth.AuthEvent.SignIn
 import com.codepunk.hollarhype.ui.theme.HollarhypeTheme
 import com.codepunk.hollarhype.ui.theme.Size3xLarge
 import com.codepunk.hollarhype.ui.theme.SizeLarge
@@ -53,6 +53,8 @@ import com.codepunk.hollarhype.ui.theme.layoutMargin
 import com.codepunk.hollarhype.ui.theme.standardButtonHeight
 import com.codepunk.hollarhype.ui.theme.standardButtonWidth
 import com.codepunk.hollarhype.util.consume
+import com.codepunk.hollarhype.util.http.NoConnectivityException
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 @Composable
@@ -69,13 +71,9 @@ fun AuthSignInScreen(
     // Process any consumable (i.e. "single event") values
     state.loginResult?.consume { value ->
         value.onLeft { error ->
-            // TODO Is this the best way to determine whether to
-            //  show a snackBar? That is, if we got errors that means
-            //  we had a valid error result from the backend so the
-            //  ViewModel should be able to handle it accordingly
-            if (error.errors.isEmpty()) {
+            if (error.cause is NoConnectivityException) {
                 LaunchedEffect(snackBarHostState) {
-                    coroutineScope.launch {
+                    coroutineScope.launch(Dispatchers.Main) {
                         snackBarHostState.showSnackbar(
                             message = error.cause?.message
                                 ?: context.getString(R.string.error_unknown)
@@ -85,7 +83,7 @@ fun AuthSignInScreen(
             }
         }.onRight { result ->
             if (result.success) {
-                onEvent(OnNavigateToOtp)
+                onEvent(NavigateToOtp)
             }
         }
     }
@@ -127,10 +125,10 @@ fun AuthSignInScreen(
                     phoneNumber = state.phoneNumber,
                     phoneNumberError = state.phoneNumberError,
                     onCountryCodeClick = { regionPickerVisible = true },
-                    onPhoneNumberChange = { onEvent(OnPhoneNumberChange(it)) },
+                    onPhoneNumberChange = { onEvent(UpdatePhoneNumber(it)) },
                     onSubmit = {
                         onEvent(
-                            OnSignIn(
+                            SignIn(
                                 region = state.region,
                                 phoneNumber = state.phoneNumber
                             )
@@ -140,7 +138,7 @@ fun AuthSignInScreen(
 
                 TextButton(
                     modifier = Modifier.padding(top = SizeMedium.value),
-                    onClick = { onEvent(OnRegisterNewPhoneNumber) }
+                    onClick = { onEvent(RegisterNewPhoneNumber) }
                 ) {
                     Text(
                         text = stringResource(id = R.string.phone_number_changed),
@@ -164,7 +162,7 @@ fun AuthSignInScreen(
                     enabled = (!state.loading),
                     onClick = {
                         onEvent(
-                            OnSignIn(
+                            SignIn(
                                 region = state.region,
                                 phoneNumber = state.phoneNumber
                             )
@@ -193,7 +191,7 @@ fun AuthSignInScreen(
         ) {
             CountryCodePicker(
                 onItemSelected = {
-                    onEvent(OnRegionChange(it))
+                    onEvent(UpdateRegion(it))
                     regionPickerVisible = false
                 }
             )

@@ -7,9 +7,6 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.codepunk.hollarhype.ui.screen.auth.AuthEvent.OnNavigateToOtp
-import com.codepunk.hollarhype.ui.screen.auth.AuthEvent.OnNavigateToSignIn
-import com.codepunk.hollarhype.ui.screen.auth.AuthEvent.OnNavigateToSignUp
 
 @Composable
 fun AuthNavigation(
@@ -29,12 +26,12 @@ fun AuthNavigation(
             AuthStartScreen(
                 state = state
             ) { event ->
-                // Pass navigation events up to navController, everything else
-                // will fall through to AuthViewModel
+                // Consume navigation events here as appropriate,
+                // everything else gets passed up the chain
                 when (event) {
-                    is OnNavigateToSignUp ->
+                    is AuthEvent.NavigateToSignUp ->
                         navController.navigate(AuthRoute.AuthSignUp)
-                    is OnNavigateToSignIn ->
+                    is AuthEvent.NavigateToSignIn ->
                         navController.navigate(AuthRoute.AuthSignIn)
                     else -> onEvent(event)
                 }
@@ -45,8 +42,8 @@ fun AuthNavigation(
             AuthSignUpScreen(
                 state = state
             ) { event ->
-                // Pass navigation events up to navController, everything else
-                // will fall through to AuthViewModel
+                // Consume navigation events here as appropriate,
+                // everything else gets passed up the chain
                 onEvent(event)
             }
         }
@@ -55,10 +52,10 @@ fun AuthNavigation(
             AuthSignInScreen(
                 state = state
             ) { event ->
-                // Pass navigation events up to navController, everything else
-                // will fall through to AuthViewModel
+                // Consume navigation events here as appropriate,
+                // everything else gets passed up the chain
                 when (event) {
-                    is OnNavigateToOtp -> navController.navigate(AuthRoute.AuthOtp)
+                    is AuthEvent.NavigateToOtp -> navController.navigate(AuthRoute.AuthOtp)
                     else -> onEvent(event)
                 }
             }
@@ -68,10 +65,8 @@ fun AuthNavigation(
             AuthOtpScreen(
                 state = state
             ) { event ->
-                // Pass navigation events up to navController, everything else
-                // will fall through to AuthViewModel
-                // Pass navigation events up to navController, everything else
-                // will fall through to AuthViewModel
+                // Consume navigation events here as appropriate,
+                // everything else gets passed up the chain
                 onEvent(event)
             }
         }

@@ -35,8 +35,7 @@ import androidx.compose.ui.text.style.TextAlign
 import com.codepunk.hollarhype.R
 import com.codepunk.hollarhype.ui.component.OtpTextField
 import com.codepunk.hollarhype.ui.preview.ScreenPreviews
-import com.codepunk.hollarhype.ui.screen.auth.AuthEvent.OnOtpChange
-import com.codepunk.hollarhype.ui.screen.auth.AuthEvent.OnVerifyOtp
+import com.codepunk.hollarhype.ui.screen.auth.AuthEvent
 import com.codepunk.hollarhype.ui.theme.HollarhypeTheme
 import com.codepunk.hollarhype.ui.theme.Size3xLarge
 import com.codepunk.hollarhype.ui.theme.SizeLarge
@@ -45,6 +44,10 @@ import com.codepunk.hollarhype.ui.theme.buttonCornerRadius
 import com.codepunk.hollarhype.ui.theme.layoutMargin
 import com.codepunk.hollarhype.ui.theme.standardButtonHeight
 import com.codepunk.hollarhype.ui.theme.standardButtonWidth
+import com.codepunk.hollarhype.util.consume
+import com.codepunk.hollarhype.util.http.NoConnectivityException
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 @Composable
 fun AuthOtpScreen(
@@ -58,11 +61,23 @@ fun AuthOtpScreen(
     val focusRequester = remember { FocusRequester() }
 
     // Process any consumable (i.e. "single event") values
-    //
-    /*
-    state.[loginResult]?.consume { value ->
+    state.verifyResult?.consume { value ->
+        value.onLeft { error ->
+            if (error.cause is NoConnectivityException) {
+                LaunchedEffect(snackBarHostState) {
+                    coroutineScope.launch(Dispatchers.Main) {
+                        snackBarHostState.showSnackbar(
+                            message = error.cause.message
+                                ?: context.getString(R.string.error_unknown)
+                        )
+                    }
+                }
+            }
+        }.onRight {
+            // If we get here, we successfully verified. Maybe.
+            onEvent(AuthEvent.NavigateToLanding)
+        }
     }
-     */
 
     LaunchedEffect(Unit) {
         focusRequester.requestFocus()
@@ -114,13 +129,13 @@ fun AuthOtpScreen(
                     text = state.otp,
                     otpLength = 5,
                     onTextChange = { text, complete ->
-                        onEvent(OnOtpChange(text))
+                        onEvent(AuthEvent.UpdateOtp(text))
                     }
                 )
 
                 TextButton(
                     modifier = Modifier.padding(top = SizeMedium.value),
-                    onClick = { onEvent(AuthEvent.OnResendOtp) }
+                    onClick = { onEvent(AuthEvent.ResendOtp) }
                 ) {
                     Text(
                         text = stringResource(id = R.string.resend_otp),
@@ -144,7 +159,7 @@ fun AuthOtpScreen(
                     enabled = (!state.loading),
                     onClick = { 
                         onEvent(
-                            OnVerifyOtp(
+                            AuthEvent.VerifyOtp(
                                 region = state.region,
                                 phoneNumber = state.phoneNumber,
                                 otp = state.otp

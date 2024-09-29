@@ -12,7 +12,7 @@ sealed class Route {
     data object Auth: Route()
 
     @Serializable
-    data object Home: Route()
+    data object Landing: Route()
 
     @Serializable
     data object Activity: Route()

@@ -6,10 +6,13 @@ import androidx.credentials.GetCredentialRequest
 import androidx.credentials.GetPasswordOption
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.codepunk.hollarhype.di.qualifier.DefaultDispatcher
+import com.codepunk.hollarhype.di.qualifier.IoDispatcher
 import com.codepunk.hollarhype.domain.repository.HollarhypeRepository
+import com.codepunk.hollarhype.manager.UserSessionManager
 import com.codepunk.hollarhype.util.intl.Region
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
@@ -17,8 +20,11 @@ import javax.inject.Inject
 
 @HiltViewModel
 class AuthViewModel @Inject constructor(
+    private val repository: HollarhypeRepository,
     private val credentialManager: CredentialManager,
-    private val repository: HollarhypeRepository
+    private val userSessionManager: UserSessionManager,
+    @DefaultDispatcher private val defaultDispatcher: CoroutineDispatcher,
+    @IoDispatcher private val ioDispatcher: CoroutineDispatcher
 ) : ViewModel() {
 
     // region Variables
@@ -42,6 +48,16 @@ class AuthViewModel @Inject constructor(
         )
 
         // TODO Authenticate w/credentials
+
+        // TODO TEMP
+        viewModelScope.launch(defaultDispatcher) {
+            userSessionManager.authentication.collect { authentication ->
+                Log.d(
+                    this@AuthViewModel.javaClass.simpleName,
+                    "authentication=$authentication"
+                )
+            }
+        }
 
         authenticate()
     }
@@ -94,7 +110,7 @@ class AuthViewModel @Inject constructor(
     // User actions
 
     private fun authenticate() {
-        viewModelScope.launch {
+        viewModelScope.launch(ioDispatcher) {
             // TODO Try to auto sign in here
         }
     }
@@ -128,14 +144,14 @@ class AuthViewModel @Inject constructor(
 
     private fun signIn(region: Region, phoneNumber: String) {
         state = state.copy(loading = true)
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(ioDispatcher) {
             repository.login(
                 phoneNumber = phoneNumber,
                 region = region
             ).collect { result ->
                 state = state.copy(
                     loading = false,
-                    loginResult = lazy { result.toEither() },
+                    loginResult = lazy { result },
                     phoneNumberError = result.leftOrNull()?.errors?.getOrNull(0) ?: ""
                 )
             }
@@ -148,15 +164,15 @@ class AuthViewModel @Inject constructor(
         otp: String
     ) {
         state = state.copy(loading = true)
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(ioDispatcher) {
             repository.verify(
                 phoneNumber = phoneNumber,
                 otp = otp,
                 region = region
             ).collect { result ->
-                // TODO React to success/error
                 state = state.copy(
                     loading = false,
+                    verifyResult = lazy { result }
                 )
             }
         }
@@ -173,40 +189,41 @@ class AuthViewModel @Inject constructor(
 
             // Data changes
 
-            is AuthEvent.OnEmailAddressChange -> updateEmailAddress(event.value)
-            is AuthEvent.OnFirstNameChange -> updateFirstName(event.value)
-            is AuthEvent.OnLastNameChange -> updateLastName(event.value)
-            is AuthEvent.OnPhoneNumberChange -> updatePhoneNumber(event.value)
-            is AuthEvent.OnRegionChange -> updateRegion(event.value)
-            is AuthEvent.OnOtpChange -> updateOtp(event.value)
+            is AuthEvent.UpdateEmailAddress -> updateEmailAddress(event.value)
+            is AuthEvent.UpdateFirstName -> updateFirstName(event.value)
+            is AuthEvent.UpdateLastName -> updateLastName(event.value)
+            is AuthEvent.UpdatePhoneNumber -> updatePhoneNumber(event.value)
+            is AuthEvent.UpdateRegion -> updateRegion(event.value)
+            is AuthEvent.UpdateOtp -> updateOtp(event.value)
 
             // Navigation
 
             // AuthNavigationEvents are propagated up to AuthNavigation
             // rather than being handled here
-            AuthEvent.OnNavigateToOtp -> { /* No op */ }
-            AuthEvent.OnNavigateToSignIn -> { /* No op */ }
-            AuthEvent.OnNavigateToSignUp -> { /* No op */ }
+            AuthEvent.NavigateToOtp -> { /* No op */ }
+            AuthEvent.NavigateToSignIn -> { /* No op */ }
+            AuthEvent.NavigateToSignUp -> { /* No op */ }
+            AuthEvent.NavigateToLanding -> { /* No op */ }
 
             // Read state
 
             // User actions
 
-            AuthEvent.OnEditAvatar -> editAvatar()
-            AuthEvent.OnRegisterNewPhoneNumber -> phoneNumberChanged()
-            AuthEvent.OnResendOtp -> resendOtp()
-            is AuthEvent.OnSignIn -> signIn(
+            AuthEvent.EditAvatar -> editAvatar()
+            AuthEvent.RegisterNewPhoneNumber -> phoneNumberChanged()
+            AuthEvent.ResendOtp -> resendOtp()
+            is AuthEvent.SignIn -> signIn(
                 region = event.region,
                 phoneNumber = event.phoneNumber
             )
-            is AuthEvent.OnSignUp -> signUp(
+            is AuthEvent.SignUp -> signUp(
                 firstName = event.firstName,
                 lastName = event.lastName,
                 emailAddress = event.emailAddress,
                 region = event.region,
                 phoneNumber = event.phoneNumber
             )
-            is AuthEvent.OnVerifyOtp -> verifyOtp(
+            is AuthEvent.VerifyOtp -> verifyOtp(
                 region = event.region,
                 phoneNumber = event.phoneNumber,
                 otp = event.otp

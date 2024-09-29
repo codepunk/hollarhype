@@ -2,7 +2,7 @@ package com.codepunk.hollarhype.domain.repository
 
 import arrow.core.Either
 import com.codepunk.hollarhype.domain.model.LoginResult
-import com.codepunk.hollarhype.domain.model.VerifyResult
+import com.codepunk.hollarhype.domain.model.Authentication
 import com.codepunk.hollarhype.util.intl.Region
 import kotlinx.coroutines.flow.Flow
 
@@ -17,6 +17,6 @@ interface HollarhypeRepository {
         phoneNumber: String,
         otp: String,
         region: Region
-    ): Flow<Either<RepositoryError, VerifyResult>>
+    ): Flow<Either<RepositoryError, Authentication.Authenticated>>
 
 }

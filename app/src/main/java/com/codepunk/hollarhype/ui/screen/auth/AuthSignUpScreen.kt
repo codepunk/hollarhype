@@ -47,11 +47,11 @@ import com.codepunk.hollarhype.ui.component.CountryCodePickerDialog
 import com.codepunk.hollarhype.ui.component.PhoneNumber
 import com.codepunk.hollarhype.util.intl.Region
 import com.codepunk.hollarhype.ui.preview.ScreenPreviews
-import com.codepunk.hollarhype.ui.screen.auth.AuthEvent.OnFirstNameChange
-import com.codepunk.hollarhype.ui.screen.auth.AuthEvent.OnLastNameChange
-import com.codepunk.hollarhype.ui.screen.auth.AuthEvent.OnEmailAddressChange
-import com.codepunk.hollarhype.ui.screen.auth.AuthEvent.OnPhoneNumberChange
-import com.codepunk.hollarhype.ui.screen.auth.AuthEvent.OnRegionChange
+import com.codepunk.hollarhype.ui.screen.auth.AuthEvent.UpdateFirstName
+import com.codepunk.hollarhype.ui.screen.auth.AuthEvent.UpdateLastName
+import com.codepunk.hollarhype.ui.screen.auth.AuthEvent.UpdateEmailAddress
+import com.codepunk.hollarhype.ui.screen.auth.AuthEvent.UpdatePhoneNumber
+import com.codepunk.hollarhype.ui.screen.auth.AuthEvent.UpdateRegion
 import com.codepunk.hollarhype.ui.theme.HollarhypeTheme
 import com.codepunk.hollarhype.ui.theme.Size2xLarge
 import com.codepunk.hollarhype.ui.theme.Size3xLarge
@@ -66,7 +66,7 @@ import com.codepunk.hollarhype.ui.theme.largeGutterSize
 import com.codepunk.hollarhype.ui.theme.layoutMargin
 import com.codepunk.hollarhype.ui.theme.standardButtonHeight
 import com.codepunk.hollarhype.ui.theme.standardButtonWidth
-import com.codepunk.hollarhype.ui.screen.auth.AuthEvent.OnSignUp
+import com.codepunk.hollarhype.ui.screen.auth.AuthEvent.SignUp
 import kotlin.math.sqrt
 
 @Composable
@@ -108,7 +108,7 @@ fun AuthSignUpScreen(
         ) {
             CountryCodePicker(
                 onItemSelected = {
-                    onEvent(OnRegionChange(it))
+                    onEvent(UpdateRegion(it))
                     regionPickerVisible = false
                 }
             )
@@ -144,7 +144,7 @@ fun SignUpNonLandscape(
     ) {
         UserAvatar(
             modifier = Modifier.width(avatarSize),
-            onClick = { onEvent(AuthEvent.OnEditAvatar) }
+            onClick = { onEvent(AuthEvent.EditAvatar) }
         )
 
         SignUpForm(
@@ -154,10 +154,10 @@ fun SignUpNonLandscape(
             emailAddress = state.emailAddress,
             phoneNumber = state.phoneNumber,
             region = state.region,
-            onFirstNameChange = { onEvent(OnFirstNameChange(it)) },
-            onLastNameChange = { onEvent(OnLastNameChange(it)) },
-            onEmailAddressChange = { onEvent(OnEmailAddressChange(it)) },
-            onPhoneNumberChange = { onEvent(OnPhoneNumberChange(it)) },
+            onFirstNameChange = { onEvent(UpdateFirstName(it)) },
+            onLastNameChange = { onEvent(UpdateLastName(it)) },
+            onEmailAddressChange = { onEvent(UpdateEmailAddress(it)) },
+            onPhoneNumberChange = { onEvent(UpdatePhoneNumber(it)) },
             onShowRegionPicker = onShowRegionPicker
         )
 
@@ -165,7 +165,7 @@ fun SignUpNonLandscape(
             modifier = Modifier.fillMaxWidth(),
             onSubmit = {
                 onEvent(
-                    OnSignUp(
+                    SignUp(
                         firstName = state.firstName,
                         lastName = state.lastName,
                         emailAddress = state.emailAddress,
@@ -214,14 +214,14 @@ fun SignUpLandscape(
             ) {
                 UserAvatar(
                     modifier = Modifier.width(avatarSize),
-                    onClick = { onEvent(AuthEvent.OnEditAvatar) }
+                    onClick = { onEvent(AuthEvent.EditAvatar) }
                 )
 
                 SignUpSubmit(
                     modifier = Modifier.fillMaxWidth(),
                     onSubmit = {
                         onEvent(
-                            OnSignUp(
+                            SignUp(
                                 firstName = state.firstName,
                                 lastName = state.lastName,
                                 emailAddress = state.emailAddress,
@@ -255,10 +255,10 @@ fun SignUpLandscape(
                 emailAddress = state.emailAddress,
                 phoneNumber = state.phoneNumber,
                 region = state.region,
-                onFirstNameChange = { onEvent(OnFirstNameChange(it)) },
-                onLastNameChange = { onEvent(OnLastNameChange(it)) },
-                onEmailAddressChange = { onEvent(OnEmailAddressChange(it)) },
-                onPhoneNumberChange = { onEvent(OnPhoneNumberChange(it)) },
+                onFirstNameChange = { onEvent(UpdateFirstName(it)) },
+                onLastNameChange = { onEvent(UpdateLastName(it)) },
+                onEmailAddressChange = { onEvent(UpdateEmailAddress(it)) },
+                onPhoneNumberChange = { onEvent(UpdatePhoneNumber(it)) },
                 onShowRegionPicker = onShowRegionPicker
             )
         }
