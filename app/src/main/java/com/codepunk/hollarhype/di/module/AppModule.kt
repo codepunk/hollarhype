@@ -15,11 +15,14 @@ import androidx.datastore.preferences.preferencesDataStoreFile
 import com.codepunk.hollarhype.BuildConfig
 import com.codepunk.hollarhype.data.datastore.entity.UserSettings
 import com.codepunk.hollarhype.data.datastore.serializer.UserSettingsSerializer
+import com.codepunk.hollarhype.di.qualifier.ApplicationScope
+import com.codepunk.hollarhype.di.qualifier.DefaultDispatcher
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -65,4 +68,12 @@ class AppModule {
             scope = CoroutineScope(Dispatchers.IO + SupervisorJob()),
             produceFile = { context.dataStoreFile(BuildConfig.USER_SETTINGS_DATASTORE_FILENAME) }
         )
+
+    @Singleton
+    @ApplicationScope
+    @Provides
+    fun provideApplicationCoroutineScope(
+        @DefaultDispatcher defaultDispatcher: CoroutineDispatcher
+    ) : CoroutineScope = CoroutineScope(SupervisorJob() + defaultDispatcher)
+
 }

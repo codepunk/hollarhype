@@ -1,12 +1,13 @@
 package com.codepunk.hollarhype.di.manager
 
-import com.codepunk.hollarhype.AppCoroutineScope
 import com.codepunk.hollarhype.di.component.UserComponent
+import com.codepunk.hollarhype.di.qualifier.ApplicationScope
 import com.codepunk.hollarhype.di.qualifier.DefaultDispatcher
 import com.codepunk.hollarhype.domain.model.Authentication
 import com.codepunk.hollarhype.manager.UserSessionManager
 import dagger.hilt.internal.GeneratedComponentManager
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -18,7 +19,7 @@ import javax.inject.Singleton
 
 @Singleton
 class UserComponentManager @Inject constructor(
-    appCoroutineScope: AppCoroutineScope,
+    @ApplicationScope appCoroutineScope: CoroutineScope,
     private val userSessionManager: UserSessionManager,
     private val userComponentProvider: Provider<UserComponent.Builder>,
     @DefaultDispatcher private val defaultDispatcher: CoroutineDispatcher

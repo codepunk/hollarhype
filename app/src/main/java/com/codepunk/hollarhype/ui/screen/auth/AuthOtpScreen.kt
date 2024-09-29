@@ -30,12 +30,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import com.codepunk.hollarhype.R
 import com.codepunk.hollarhype.ui.component.OtpTextField
 import com.codepunk.hollarhype.ui.preview.ScreenPreviews
-import com.codepunk.hollarhype.ui.screen.auth.AuthEvent
 import com.codepunk.hollarhype.ui.theme.HollarhypeTheme
 import com.codepunk.hollarhype.ui.theme.Size3xLarge
 import com.codepunk.hollarhype.ui.theme.SizeLarge
@@ -59,6 +59,7 @@ fun AuthOtpScreen(
     val coroutineScope = rememberCoroutineScope()
     val snackBarHostState = remember { SnackbarHostState() }
     val focusRequester = remember { FocusRequester() }
+    val keyboardController = LocalSoftwareKeyboardController.current
 
     // Process any consumable (i.e. "single event") values
     state.verifyResult?.consume { value ->
@@ -67,8 +68,7 @@ fun AuthOtpScreen(
                 LaunchedEffect(snackBarHostState) {
                     coroutineScope.launch(Dispatchers.Main) {
                         snackBarHostState.showSnackbar(
-                            message = error.cause.message
-                                ?: context.getString(R.string.error_unknown)
+                            message = context.getString(R.string.error_no_internet_try_again)
                         )
                     }
                 }
@@ -77,6 +77,17 @@ fun AuthOtpScreen(
             // If we get here, we successfully verified. Maybe.
             onEvent(AuthEvent.NavigateToLanding)
         }
+    }
+
+    val submitOtp: () -> Unit = {
+        keyboardController?.hide()
+        onEvent(
+            AuthEvent.VerifyOtp(
+                region = state.region,
+                phoneNumber = state.phoneNumber,
+                otp = state.otp
+            )
+        )
     }
 
     LaunchedEffect(Unit) {
@@ -130,6 +141,13 @@ fun AuthOtpScreen(
                     otpLength = 5,
                     onTextChange = { text, complete ->
                         onEvent(AuthEvent.UpdateOtp(text))
+
+                        // TODO Not sure about this yet
+                        /*
+                        if (complete) {
+                            submitOtp()
+                        }
+                         */
                     }
                 )
 
@@ -157,15 +175,7 @@ fun AuthOtpScreen(
                         .height(standardButtonHeight),
                     shape = RoundedCornerShape(size = buttonCornerRadius),
                     enabled = (!state.loading),
-                    onClick = { 
-                        onEvent(
-                            AuthEvent.VerifyOtp(
-                                region = state.region,
-                                phoneNumber = state.phoneNumber,
-                                otp = state.otp
-                            )
-                        )
-                    }
+                    onClick = submitOtp
                 ) {
                     if (state.loading) {
                         CircularProgressIndicator(

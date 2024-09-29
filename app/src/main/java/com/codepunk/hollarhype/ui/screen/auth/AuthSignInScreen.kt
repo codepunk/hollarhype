@@ -32,6 +32,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import com.codepunk.hollarhype.R
@@ -66,6 +67,7 @@ fun AuthSignInScreen(
     val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
     val snackBarHostState = remember { SnackbarHostState() }
+    val keyboardController = LocalSoftwareKeyboardController.current
     var regionPickerVisible by rememberSaveable { mutableStateOf(false) }
 
     // Process any consumable (i.e. "single event") values
@@ -75,8 +77,7 @@ fun AuthSignInScreen(
                 LaunchedEffect(snackBarHostState) {
                     coroutineScope.launch(Dispatchers.Main) {
                         snackBarHostState.showSnackbar(
-                            message = error.cause?.message
-                                ?: context.getString(R.string.error_unknown)
+                            message = context.getString(R.string.error_no_internet_try_again)
                         )
                     }
                 }
@@ -127,6 +128,7 @@ fun AuthSignInScreen(
                     onCountryCodeClick = { regionPickerVisible = true },
                     onPhoneNumberChange = { onEvent(UpdatePhoneNumber(it)) },
                     onSubmit = {
+                        keyboardController?.hide()
                         onEvent(
                             SignIn(
                                 region = state.region,

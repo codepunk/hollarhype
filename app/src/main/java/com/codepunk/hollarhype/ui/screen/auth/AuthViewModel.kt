@@ -151,7 +151,10 @@ class AuthViewModel @Inject constructor(
             ).collect { result ->
                 state = state.copy(
                     loading = false,
-                    loginResult = lazy { result },
+                    loginResult = lazy {
+                        consumeLoginResult()
+                        result
+                    },
                     phoneNumberError = result.leftOrNull()?.errors?.getOrNull(0) ?: ""
                 )
             }
@@ -172,16 +175,31 @@ class AuthViewModel @Inject constructor(
             ).collect { result ->
                 state = state.copy(
                     loading = false,
-                    verifyResult = lazy { result }
+                    verifyResult = lazy {
+                        consumeVerifyResult()
+                        result
+                    }
                 )
             }
         }
     }
 
-    // Consuming values
-
     private fun resendOtp() {
         Log.d("AuthViewModel", "resendOtp")
+    }
+
+    // Consuming values
+
+    private fun consumeLoginResult() {
+        state = state.copy(
+            loginResult = null
+        )
+    }
+
+    private fun consumeVerifyResult() {
+        state = state.copy(
+            verifyResult = null
+        )
     }
 
     fun onEvent(event: AuthEvent) {

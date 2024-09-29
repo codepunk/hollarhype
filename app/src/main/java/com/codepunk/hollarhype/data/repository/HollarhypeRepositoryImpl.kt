@@ -3,13 +3,13 @@ package com.codepunk.hollarhype.data.repository
 import android.net.ConnectivityManager
 import androidx.datastore.core.DataStore
 import arrow.core.Either
-import com.codepunk.hollarhype.AppCoroutineScope
 import com.codepunk.hollarhype.data.datastore.entity.LocalAuthentication
 import com.codepunk.hollarhype.data.datastore.entity.UserSettings
 import com.codepunk.hollarhype.data.local.HollarhypeDatabase
 import com.codepunk.hollarhype.data.mapper.toDomain
 import com.codepunk.hollarhype.data.mapper.toLocal
 import com.codepunk.hollarhype.data.remote.webservice.HollarhypeWebservice
+import com.codepunk.hollarhype.di.qualifier.ApplicationScope
 import com.codepunk.hollarhype.di.qualifier.IoDispatcher
 import com.codepunk.hollarhype.domain.model.LoginResult
 import com.codepunk.hollarhype.domain.model.Authentication
@@ -20,6 +20,7 @@ import com.codepunk.hollarhype.util.checkConnectivity
 import com.codepunk.hollarhype.util.intl.Region
 import com.codepunk.hollarhype.util.networkResource
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 
@@ -29,7 +30,7 @@ class HollarhypeRepositoryImpl(
     private val dataStore: DataStore<UserSettings>,
     private val webservice: HollarhypeWebservice,
     private val userSessionManager: UserSessionManager,
-    private val appCoroutineScope: AppCoroutineScope,
+    @ApplicationScope private val appCoroutineScope: CoroutineScope,
     @IoDispatcher private val ioDispatcher: CoroutineDispatcher
 ) : HollarhypeRepository {
 
