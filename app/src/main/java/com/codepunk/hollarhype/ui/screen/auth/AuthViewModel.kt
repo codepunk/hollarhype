@@ -154,12 +154,12 @@ class AuthViewModel @Inject constructor(
                 otp = otp,
                 region = region
             ).collect { result ->
+                // TODO React to success/error
                 state = state.copy(
                     loading = false,
                 )
             }
         }
-        state = state.copy(loading = false)
     }
 
     // Consuming values
@@ -182,7 +182,8 @@ class AuthViewModel @Inject constructor(
 
             // Navigation
 
-            // AuthNavigationEvents are handled up in AuthNavigation
+            // AuthNavigationEvents are propagated up to AuthNavigation
+            // rather than being handled here
             AuthEvent.OnNavigateToOtp -> { /* No op */ }
             AuthEvent.OnNavigateToSignIn -> { /* No op */ }
             AuthEvent.OnNavigateToSignUp -> { /* No op */ }
