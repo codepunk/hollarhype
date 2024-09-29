@@ -6,6 +6,7 @@ import com.codepunk.hollarhype.BuildConfig
 import com.codepunk.hollarhype.data.remote.interceptor.HollarhypeUserAgentInterceptor
 import com.codepunk.hollarhype.data.remote.interceptor.NetworkConnectionInterceptor
 import com.codepunk.hollarhype.data.remote.webservice.HollarhypeWebservice
+import com.hadiyarajesh.flower_retrofit.FlowerCallAdapterFactory
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import dagger.Module
 import dagger.Provides
@@ -60,6 +61,11 @@ class RemoteModule {
 
     @Singleton
     @Provides
+    fun provideFlowerCallAdapterFactory(): FlowerCallAdapterFactory =
+        FlowerCallAdapterFactory.create()
+
+    @Singleton
+    @Provides
     fun provideConverterFactory(networkJson: Json): Converter.Factory =
         networkJson.asConverterFactory("application/json".toMediaType())
 
@@ -67,12 +73,13 @@ class RemoteModule {
     @Provides
     fun provideRetrofit(
         client: OkHttpClient,
-        eitherCallAdapterFactory: EitherCallAdapterFactory,
+        // eitherCallAdapterFactory: EitherCallAdapterFactory,
+        flowerCallAdapterFactory: FlowerCallAdapterFactory,
         converterFactory: Converter.Factory
     ): Retrofit = Retrofit.Builder()
         .client(client)
         .baseUrl(BuildConfig.BASE_URL)
-        .addCallAdapterFactory(eitherCallAdapterFactory)
+        .addCallAdapterFactory(flowerCallAdapterFactory)
         .addConverterFactory(converterFactory)
         .build()
 

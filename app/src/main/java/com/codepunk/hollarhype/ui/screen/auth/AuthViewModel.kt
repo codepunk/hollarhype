@@ -135,7 +135,7 @@ class AuthViewModel @Inject constructor(
             ).collect { result ->
                 state = state.copy(
                     loading = false,
-                    loginResult = lazy { result },
+                    loginResult = lazy { result.toEither() },
                     phoneNumberError = result.leftOrNull()?.errors?.getOrNull(0) ?: ""
                 )
             }

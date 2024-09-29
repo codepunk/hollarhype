@@ -4,6 +4,6 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class LocalVerifyResult(
-    val userId: Long = 0L,
+    val userId: Long = -1L,
     val authToken: String = ""
 )

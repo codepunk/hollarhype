@@ -6,7 +6,7 @@ import java.util.Locale
 
 @Serializable
 data class RemoteUser(
-    val id: Long,
+    val id: Long = -1,
     @SerialName("first_name")
     val firstName: String = "",
     @SerialName("last_name")

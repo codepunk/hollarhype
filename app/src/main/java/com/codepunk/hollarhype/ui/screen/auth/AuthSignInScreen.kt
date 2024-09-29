@@ -53,7 +53,6 @@ import com.codepunk.hollarhype.ui.theme.layoutMargin
 import com.codepunk.hollarhype.ui.theme.standardButtonHeight
 import com.codepunk.hollarhype.ui.theme.standardButtonWidth
 import com.codepunk.hollarhype.util.consume
-import com.codepunk.hollarhype.util.getMessage
 import kotlinx.coroutines.launch
 
 @Composable
@@ -69,16 +68,17 @@ fun AuthSignInScreen(
 
     // Process any consumable (i.e. "single event") values
     state.loginResult?.consume { value ->
-        value.onLeft {
+        value.onLeft { error ->
             // TODO Is this the best way to determine whether to
             //  show a snackBar? That is, if we got errors that means
             //  we had a valid error result from the backend so the
             //  ViewModel should be able to handle it accordingly
-            if (it.errors.isEmpty()) {
+            if (error.errors.isEmpty()) {
                 LaunchedEffect(snackBarHostState) {
                     coroutineScope.launch {
                         snackBarHostState.showSnackbar(
-                            message = it.getMessage(context)
+                            message = error.cause?.message
+                                ?: context.getString(R.string.error_unknown)
                         )
                     }
                 }

@@ -33,6 +33,7 @@ phoneNumber = "8.13.45"
 googleFonts = "1.7.2"
 datastore = "1.1.1"
 desugar = "2.1.2"
+flower = "3.1.0"
 
 [libraries]
 # Supplied by New Project template
@@ -79,6 +80,7 @@ phonenumber = { group = "com.googlecode.libphonenumber", name = "libphonenumber"
 google-fonts = { group = "androidx.compose.ui", name = "ui-text-google-fonts", version.ref = "googleFonts" }
 datastore-preferences = { group = "androidx.datastore", name = "datastore-preferences", version.ref = "datastore" }
 datastore = { group = "androidx.datastore", name = "datastore", version.ref = "datastore" }
+flower = { group = "io.github.hadiyarajesh.flower-retrofit", name = "flower-retrofit", version.ref = "flower" }
 desugar = { group = "com.android.tools", name = "desugar_jdk_libs", version.ref = "desugar" }
 
 [plugins]

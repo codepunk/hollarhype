@@ -125,11 +125,13 @@ class HttpStatusException : RuntimeException {
     companion object {
 
         @JvmStatic
-        fun of(code: Int, message: String): HttpStatusException =
-            HttpStatusException(
-                httpStatus = HttpStatus.lookup(code),
-                message = message
-            )
+        fun of(
+            code: Int,
+            message: String = ""
+        ): HttpStatusException = HttpStatusException(
+            httpStatus = HttpStatus.lookup(code),
+            message = message
+        )
 
     }
 

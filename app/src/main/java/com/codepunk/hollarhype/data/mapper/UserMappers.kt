@@ -18,6 +18,19 @@ fun RemoteUser.toLocal(): LocalUser = LocalUser(
     canCreateCampaigns = canCreateCampaigns
 )
 
+fun RemoteUser.toDomain(): User = User(
+    id = id,
+    firstName = firstName,
+    lastName = lastName,
+    phoneNumber = phoneNumber,
+    emailAddress = emailAddress,
+    profilePic = profilePic,
+    transcribeEnabled = transcribeEnabled,
+    region = Region.of(regionCode),
+    roles = roles,
+    canCreateCampaigns = canCreateCampaigns
+)
+
 fun LocalUser.toDomain(): User = User(
     id = id,
     firstName = firstName,
