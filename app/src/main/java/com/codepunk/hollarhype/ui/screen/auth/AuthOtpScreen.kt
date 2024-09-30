@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
@@ -40,11 +41,13 @@ import com.codepunk.hollarhype.ui.theme.HollarhypeTheme
 import com.codepunk.hollarhype.ui.theme.Size3xLarge
 import com.codepunk.hollarhype.ui.theme.SizeLarge
 import com.codepunk.hollarhype.ui.theme.SizeMedium
+import com.codepunk.hollarhype.ui.theme.baseline
 import com.codepunk.hollarhype.ui.theme.buttonCornerRadius
 import com.codepunk.hollarhype.ui.theme.layoutMargin
 import com.codepunk.hollarhype.ui.theme.standardButtonHeight
 import com.codepunk.hollarhype.ui.theme.standardButtonWidth
 import com.codepunk.hollarhype.util.consume
+import com.codepunk.hollarhype.util.http.HttpStatusException
 import com.codepunk.hollarhype.util.http.NoConnectivityException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -63,20 +66,29 @@ fun AuthOtpScreen(
 
     // Process any consumable (i.e. "single event") values
     state.verifyResult?.consume { value ->
-        value.onLeft { error ->
-            if (error.cause is NoConnectivityException) {
-                LaunchedEffect(snackBarHostState) {
-                    coroutineScope.launch(Dispatchers.Main) {
-                        snackBarHostState.showSnackbar(
-                            message = context.getString(R.string.error_no_internet_try_again)
-                        )
+        value.onRight {
+            // If we get here, we successfully verified the OTP
+            onEvent(AuthEvent.NavigateToLanding)
+        }.onLeft { error ->
+            when (error.cause) {
+                is NoConnectivityException -> {
+                    onEvent(AuthEvent.ConsumeVerifyResult)
+                    LaunchedEffect(snackBarHostState) {
+                        coroutineScope.launch(Dispatchers.Main) {
+                            snackBarHostState.showSnackbar(
+                                message = context.getString(R.string.error_no_internet_try_again)
+                            )
+                        }
                     }
                 }
+                !is HttpStatusException -> onEvent(AuthEvent.ConsumeVerifyResult)
             }
-        }.onRight {
-            // If we get here, we successfully verified. Maybe.
-            onEvent(AuthEvent.NavigateToLanding)
         }
+
+        // At this point, verifyResult will be "consumed" if it was successful,
+        // or if it was a NoConnectivityException,
+        // or if it was NOT an HttpStatusException (that type will be consumed in
+        // the alertDialog below).
     }
 
     val submitOtp: () -> Unit = {
@@ -139,7 +151,7 @@ fun AuthOtpScreen(
                     modifier = Modifier.focusRequester(focusRequester),
                     text = state.otp,
                     otpLength = 5,
-                    onTextChange = { text, complete ->
+                    onTextChange = { text, _ ->
                         onEvent(AuthEvent.UpdateOtp(text))
 
                         // TODO Not sure about this yet
@@ -190,6 +202,42 @@ fun AuthOtpScreen(
                     }
                 }
             }
+        }
+    }
+
+    // We want to display an alertDialog if state.verifyResult exists,
+    // it is an error, and its cause in an HttpStatusException
+    state.verifyResult?.value?.onLeft { repositoryError ->
+        if (repositoryError.cause is HttpStatusException) {
+            AlertDialog(
+                onDismissRequest = { onEvent(AuthEvent.ConsumeVerifyResult) },
+                confirmButton = {
+                    TextButton(
+                        onClick = { onEvent(AuthEvent.ConsumeVerifyResult) }
+                    ) {
+                        Text(
+                            style = baseline.labelLarge,
+                            color = MaterialTheme.colorScheme.onBackground,
+                            text = stringResource(id = android.R.string.ok)
+                        )
+                    }
+                },
+                title = {
+                    Text(
+                        style = baseline.titleMedium,
+                        text = stringResource(id = R.string.error)
+                    )
+                },
+                text = {
+                    Text(
+                        text = repositoryError.errors.getOrElse(0) {
+                            stringResource(id = R.string.error_unknown)
+                        }
+                    )
+                }
+            )
+        } else {
+            onEvent(AuthEvent.ConsumeVerifyResult)
         }
     }
 }

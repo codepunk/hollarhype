@@ -27,6 +27,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextRange
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
@@ -62,7 +63,10 @@ fun OtpTextField(
                 onTextChange(it.text, it.text.length == otpLength)
             }
         },
-        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.NumberPassword),
+        keyboardOptions = KeyboardOptions(
+            keyboardType = KeyboardType.NumberPassword,
+            imeAction = ImeAction.Go
+        ),
         decorationBox = {
             Row(
                 horizontalArrangement = Arrangement.spacedBy(SizeSmall.value)
@@ -118,6 +122,8 @@ fun CharField(
                 //focused = focusState.isFocused
             },
         text = char,
+        minLines = 1,
+        maxLines = 1,
         style = MaterialTheme.typography.headlineLarge,
         color = when {
             !focused -> OutlinedTextFieldDefaults.colors().unfocusedTextColor

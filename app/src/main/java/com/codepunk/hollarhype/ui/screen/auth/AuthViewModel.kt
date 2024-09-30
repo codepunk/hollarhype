@@ -151,10 +151,7 @@ class AuthViewModel @Inject constructor(
             ).collect { result ->
                 state = state.copy(
                     loading = false,
-                    loginResult = lazy {
-                        consumeLoginResult()
-                        result
-                    },
+                    loginResult = lazy { result },
                     phoneNumberError = result.leftOrNull()?.errors?.getOrNull(0) ?: ""
                 )
             }
@@ -175,10 +172,7 @@ class AuthViewModel @Inject constructor(
             ).collect { result ->
                 state = state.copy(
                     loading = false,
-                    verifyResult = lazy {
-                        consumeVerifyResult()
-                        result
-                    }
+                    verifyResult = lazy { result }
                 )
             }
         }
@@ -223,7 +217,10 @@ class AuthViewModel @Inject constructor(
             AuthEvent.NavigateToSignUp -> { /* No op */ }
             AuthEvent.NavigateToLanding -> { /* No op */ }
 
-            // Read state
+            // Consume one-time events
+
+            AuthEvent.ConsumeLoginResult -> consumeLoginResult()
+            AuthEvent.ConsumeVerifyResult -> consumeVerifyResult()
 
             // User actions
 
@@ -246,6 +243,7 @@ class AuthViewModel @Inject constructor(
                 phoneNumber = event.phoneNumber,
                 otp = event.otp
             )
+
         }
     }
 

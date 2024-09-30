@@ -68,12 +68,13 @@ fun AuthSignInScreen(
     val coroutineScope = rememberCoroutineScope()
     val snackBarHostState = remember { SnackbarHostState() }
     val keyboardController = LocalSoftwareKeyboardController.current
-    var regionPickerVisible by rememberSaveable { mutableStateOf(false) }
+    var showRegionPicker by rememberSaveable { mutableStateOf(false) }
 
     // Process any consumable (i.e. "single event") values
     state.loginResult?.consume { value ->
         value.onLeft { error ->
             if (error.cause is NoConnectivityException) {
+                onEvent(AuthEvent.ConsumeVerifyResult)
                 LaunchedEffect(snackBarHostState) {
                     coroutineScope.launch(Dispatchers.Main) {
                         snackBarHostState.showSnackbar(
@@ -87,6 +88,7 @@ fun AuthSignInScreen(
                 onEvent(NavigateToOtp)
             }
         }
+        onEvent(AuthEvent.ConsumeLoginResult)
     }
 
     Scaffold(
@@ -125,7 +127,7 @@ fun AuthSignInScreen(
                     countryCode = state.region.countryCode,
                     phoneNumber = state.phoneNumber,
                     phoneNumberError = state.phoneNumberError,
-                    onCountryCodeClick = { regionPickerVisible = true },
+                    onCountryCodeClick = { showRegionPicker = true },
                     onPhoneNumberChange = { onEvent(UpdatePhoneNumber(it)) },
                     onSubmit = {
                         keyboardController?.hide()
@@ -187,14 +189,14 @@ fun AuthSignInScreen(
         }
     }
 
-    if (regionPickerVisible) {
+    if (showRegionPicker) {
         CountryCodePickerDialog(
-            onDismiss = { regionPickerVisible = false }
+            onDismiss = { showRegionPicker = false }
         ) {
             CountryCodePicker(
                 onItemSelected = {
                     onEvent(UpdateRegion(it))
-                    regionPickerVisible = false
+                    showRegionPicker = false
                 }
             )
         }

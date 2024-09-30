@@ -17,6 +17,10 @@ import javax.inject.Inject
 import javax.inject.Provider
 import javax.inject.Singleton
 
+/**
+ * See https://myungpyo.medium.com/using-hilt-custom-component-c8227d89aed6
+ */
+
 @Singleton
 class UserComponentManager @Inject constructor(
     @ApplicationScope appCoroutineScope: CoroutineScope,
