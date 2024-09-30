@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextFieldDefaults
@@ -47,7 +48,8 @@ fun OtpTextField(
     modifier: Modifier = Modifier,
     text: String = "",
     otpLength: Int = 6,
-    onTextChange: (String, Boolean) -> Unit = { _, _ -> }
+    onTextChange: (String, Boolean) -> Unit = { _, _ -> },
+    keyboardActions: KeyboardActions = KeyboardActions.Default
 ) {
     LaunchedEffect(Unit) {
         if (text.length > otpLength) {
@@ -67,6 +69,7 @@ fun OtpTextField(
             keyboardType = KeyboardType.NumberPassword,
             imeAction = ImeAction.Go
         ),
+        keyboardActions = keyboardActions,
         decorationBox = {
             Row(
                 horizontalArrangement = Arrangement.spacedBy(SizeSmall.value)

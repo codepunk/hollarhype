@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -51,6 +52,8 @@ import com.codepunk.hollarhype.util.http.HttpStatusException
 import com.codepunk.hollarhype.util.http.NoConnectivityException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+
+const val OTP_LENGTH = 5
 
 @Composable
 fun AuthOtpScreen(
@@ -150,7 +153,7 @@ fun AuthOtpScreen(
                 OtpTextField(
                     modifier = Modifier.focusRequester(focusRequester),
                     text = state.otp,
-                    otpLength = 5,
+                    otpLength = OTP_LENGTH,
                     onTextChange = { text, _ ->
                         onEvent(AuthEvent.UpdateOtp(text))
 
@@ -160,6 +163,11 @@ fun AuthOtpScreen(
                             submitOtp()
                         }
                          */
+                    },
+                    keyboardActions = KeyboardActions {
+                        if (state.otp.length == OTP_LENGTH) {
+                            submitOtp()
+                        }
                     }
                 )
 
@@ -186,7 +194,7 @@ fun AuthOtpScreen(
                         .width(standardButtonWidth)
                         .height(standardButtonHeight),
                     shape = RoundedCornerShape(size = buttonCornerRadius),
-                    enabled = (!state.loading),
+                    enabled = (!state.loading && state.otp.length == OTP_LENGTH),
                     onClick = submitOtp
                 ) {
                     if (state.loading) {
