@@ -34,7 +34,11 @@ fun Navigation(
                 // Consume navigation events here as appropriate,
                 // everything else falls through to AuthViewModel
                 when (event) {
-                    is AuthEvent.NavigateToLanding -> navController.navigate(Route.Landing)
+                    is AuthEvent.NavigateToLanding -> navController.navigate(Route.Landing) {
+                        popUpTo(Route.Auth) {
+                            inclusive = true
+                        }
+                    }
                     else -> viewModel.onEvent(event)
                 }
             }

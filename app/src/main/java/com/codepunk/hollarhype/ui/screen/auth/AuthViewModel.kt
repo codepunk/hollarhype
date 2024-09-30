@@ -49,16 +49,6 @@ class AuthViewModel @Inject constructor(
 
         // TODO Authenticate w/credentials
 
-        // TODO TEMP
-        viewModelScope.launch(defaultDispatcher) {
-            userSessionManager.authentication.collect { authentication ->
-                Log.d(
-                    this@AuthViewModel.javaClass.simpleName,
-                    "authentication=$authentication"
-                )
-            }
-        }
-
         authenticate()
     }
 
