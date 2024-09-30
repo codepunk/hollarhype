@@ -38,6 +38,7 @@ import androidx.compose.ui.text.style.TextAlign
 import com.codepunk.hollarhype.R
 import com.codepunk.hollarhype.ui.component.CountryCodePicker
 import com.codepunk.hollarhype.ui.component.CountryCodePickerDialog
+import com.codepunk.hollarhype.ui.component.HollarHypeTopAppBar
 import com.codepunk.hollarhype.ui.component.PhoneNumber
 import com.codepunk.hollarhype.ui.preview.ScreenPreviews
 import com.codepunk.hollarhype.ui.screen.auth.AuthEvent.NavigateToOtp
@@ -93,6 +94,11 @@ fun AuthSignInScreen(
 
     Scaffold(
         modifier = modifier,
+        topBar = {
+            HollarHypeTopAppBar(
+                onNavigateUp = { onEvent(AuthEvent.NavigateUp) }
+            )
+        },
         snackbarHost = { SnackbarHost(snackBarHostState) }
     ) { innerPadding ->
         val layoutMargin = layoutMargin().times(2)

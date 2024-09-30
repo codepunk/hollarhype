@@ -6,10 +6,9 @@
     <string name="hype">Hype</string>
     <string name="groups">Groups</string>
 
-    <string name="content_description_logo">Hollarhype logo</string>
-
-    <string name="sign_up">Sign Up</string>
-    <string name="sign_in">Sign In</string>
+    <string name="create_account">Create account</string>
+    <string name="sign_up">Sign up</string>
+    <string name="sign_in">Sign in</string>
     <string name="verify">Verify</string>
 
     <string name="first_name">First Name</string>
@@ -27,14 +26,7 @@
     <!-- region Country code picker -->
 
     <string name="select_country">Select a country</string>
+
     <!-- endregion Country code picker -->
-
-    <!-- region Errors -->
-
-    <string name="error">Error</string>
-    <string name="error_no_internet_try_again">No internet connection. Please try again later.</string>
-    <string name="error_unknown">An unknown error occurred.</string>
-
-    <!-- endregion Errors -->
 
 </resources>

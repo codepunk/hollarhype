@@ -36,6 +36,7 @@ import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import com.codepunk.hollarhype.R
+import com.codepunk.hollarhype.ui.component.HollarHypeTopAppBar
 import com.codepunk.hollarhype.ui.component.OtpTextField
 import com.codepunk.hollarhype.ui.preview.ScreenPreviews
 import com.codepunk.hollarhype.ui.theme.HollarhypeTheme
@@ -111,6 +112,11 @@ fun AuthOtpScreen(
 
     Scaffold(
         modifier = modifier,
+        topBar = {
+            HollarHypeTopAppBar(
+                onNavigateUp = { onEvent(AuthEvent.NavigateUp) }
+            )
+        },
         snackbarHost = { SnackbarHost(snackBarHostState) }
     ) { innerPadding ->
         val layoutMargin = layoutMargin().times(2)

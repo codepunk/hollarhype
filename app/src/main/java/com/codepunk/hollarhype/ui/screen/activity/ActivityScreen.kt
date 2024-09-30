@@ -9,7 +9,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import com.codepunk.hollarhype.ui.component.HHTopAppBar
+import com.codepunk.hollarhype.ui.component.HollarHypeTopAppBar
 import com.codepunk.hollarhype.ui.theme.HollarhypeTheme
 
 @Composable
@@ -19,7 +19,7 @@ fun ActivityScreen(
     Scaffold(
         modifier = modifier,
         topBar = {
-            HHTopAppBar()
+            HollarHypeTopAppBar()
         }
     ) { innerPadding ->
         Box(

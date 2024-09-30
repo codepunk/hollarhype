@@ -26,16 +26,22 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -44,6 +50,7 @@ import androidx.window.core.layout.WindowWidthSizeClass
 import com.codepunk.hollarhype.R
 import com.codepunk.hollarhype.ui.component.CountryCodePicker
 import com.codepunk.hollarhype.ui.component.CountryCodePickerDialog
+import com.codepunk.hollarhype.ui.component.HollarHypeTopAppBar
 import com.codepunk.hollarhype.ui.component.PhoneNumber
 import com.codepunk.hollarhype.util.intl.Region
 import com.codepunk.hollarhype.ui.preview.ScreenPreviews
@@ -75,47 +82,60 @@ fun AuthSignUpScreen(
     state: AuthState,
     onEvent: (AuthEvent) -> Unit = {}
 ) {
-    var regionPickerVisible by rememberSaveable { mutableStateOf(false) }
+    val context = LocalContext.current
+    val coroutineScope = rememberCoroutineScope()
+    val snackBarHostState = remember { SnackbarHostState() }
+    val keyboardController = LocalSoftwareKeyboardController.current
+    var showRegionPicker by rememberSaveable { mutableStateOf(false) }
 
-    val layoutMargin = layoutMargin().times(2)
-    Box(
-        modifier = modifier
-            .fillMaxSize()
-            .padding(
-                start = layoutMargin,
-                end = layoutMargin
-            ),
+    Scaffold(
+        modifier = modifier,
+        topBar = {
+            HollarHypeTopAppBar(
+                onNavigateUp = { onEvent(AuthEvent.NavigateUp) }
+            )
+        },
+        snackbarHost = { SnackbarHost(snackBarHostState) }
+    ) { innerPadding ->
+        val layoutMargin = layoutMargin().times(2)
+        Box(
+            modifier = modifier
+                .fillMaxSize()
+                .padding(innerPadding)
+                .padding(
+                    start = layoutMargin,
+                    end = layoutMargin
+                ),
             contentAlignment = Alignment.Center
-    ) {
-        if (LocalConfiguration.current.orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            SignUpLandscape(
-                state = state,
-                onEvent = onEvent,
-                onShowRegionPicker = { regionPickerVisible = true }
-            )
-        } else {
-            SignUpNonLandscape(
-                state = state,
-                onEvent = onEvent,
-                onShowRegionPicker = { regionPickerVisible = true }
-            )
+        ) {
+            if (LocalConfiguration.current.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+                SignUpLandscape(
+                    state = state,
+                    onEvent = onEvent,
+                    onShowRegionPicker = { showRegionPicker = true }
+                )
+            } else {
+                SignUpNonLandscape(
+                    state = state,
+                    onEvent = onEvent,
+                    onShowRegionPicker = { showRegionPicker = true }
+                )
+            }
         }
     }
 
-    if (regionPickerVisible) {
+    if (showRegionPicker) {
         CountryCodePickerDialog(
-            onDismiss = { regionPickerVisible = false }
+            onDismiss = { showRegionPicker = false }
         ) {
             CountryCodePicker(
                 onItemSelected = {
                     onEvent(UpdateRegion(it))
-                    regionPickerVisible = false
+                    showRegionPicker = false
                 }
             )
         }
     }
-
-    // endregion Country code picker
 }
 
 @Composable

@@ -44,7 +44,10 @@ fun AuthNavigation(
             ) { event ->
                 // Consume navigation events here as appropriate,
                 // everything else gets passed up the chain
-                onEvent(event)
+                when (event) {
+                    is AuthEvent.NavigateUp -> navController.navigateUp()
+                    else -> onEvent(event)
+                }
             }
         }
 
@@ -55,6 +58,7 @@ fun AuthNavigation(
                 // Consume navigation events here as appropriate,
                 // everything else gets passed up the chain
                 when (event) {
+                    is AuthEvent.NavigateUp -> navController.navigateUp()
                     is AuthEvent.NavigateToOtp -> navController.navigate(AuthRoute.AuthOtp)
                     else -> onEvent(event)
                 }
@@ -67,7 +71,10 @@ fun AuthNavigation(
             ) { event ->
                 // Consume navigation events here as appropriate,
                 // everything else gets passed up the chain
-                onEvent(event)
+                when (event) {
+                    is AuthEvent.NavigateUp -> navController.navigateUp()
+                    else -> onEvent(event)
+                }
             }
         }
     }

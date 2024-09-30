@@ -69,6 +69,10 @@ fun AuthStartScreen(
                     .width(standardButtonWidth)
                     .height(standardButtonHeight),
                 shape = RoundedCornerShape(size = buttonCornerRadius),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = MaterialTheme.colorScheme.secondaryContainer,
+                    contentColor = MaterialTheme.colorScheme.onSecondaryContainer
+                ),
                 onClick = { onEvent(NavigateToSignUp) }
             ) {
                 Text(
@@ -82,10 +86,6 @@ fun AuthStartScreen(
                     .width(standardButtonWidth)
                     .height(standardButtonHeight),
                 shape = RoundedCornerShape(size = buttonCornerRadius),
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = MaterialTheme.colorScheme.secondaryContainer,
-                    contentColor = MaterialTheme.colorScheme.onSecondaryContainer
-                ),
                 onClick = { onEvent(NavigateToSignIn) }
             ) {
                 Text(
