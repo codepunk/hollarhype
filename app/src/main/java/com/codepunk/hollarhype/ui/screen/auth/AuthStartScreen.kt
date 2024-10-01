@@ -33,7 +33,6 @@ import com.codepunk.hollarhype.ui.theme.buttonCornerRadius
 import com.codepunk.hollarhype.ui.theme.layoutMargin
 import com.codepunk.hollarhype.ui.theme.standardButtonHeight
 import com.codepunk.hollarhype.ui.theme.standardButtonWidth
-import com.codepunk.hollarhype.util.consume
 
 @Composable
 fun AuthStartScreen(
@@ -43,14 +42,15 @@ fun AuthStartScreen(
 ) {
     // TODO If auto-authenticating, show spinner ...
 
-    // Process any consumable (i.e. "single event") values
-    state.authenticateResult?.consume { result ->
-        result.toEither().onRight {
-            // If we get here, we successfully auto-authenticated
-            //navigating = true
-            onEvent(AuthEvent.NavigateToLanding)
+    // Do the following when verify result is "fresh"
+    if (state.authResultFresh) {
+        onEvent(AuthEvent.ConsumeAuthResult)
+        state.authResult?.run {
+            if (isRight()) {
+                onEvent(AuthEvent.ClearAuthResult)
+                onEvent(AuthEvent.NavigateToLanding)
+            }
         }
-        onEvent(AuthEvent.ConsumeAuthenticationResult)
     }
 
     val layoutMargin = layoutMargin()

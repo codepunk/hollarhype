@@ -21,11 +21,14 @@ sealed interface AuthEvent {
     data object NavigateToOtp : AuthEvent
     data object NavigateToLanding : AuthEvent
 
-    // Consume one-time events
+    // Events/results
 
-    data object ConsumeAuthenticationResult: AuthEvent
+    data object ConsumeAuthResult: AuthEvent
+    data object ClearAuthResult: AuthEvent
     data object ConsumeLoginResult: AuthEvent
+    data object ClearLoginResult: AuthEvent
     data object ConsumeVerifyResult: AuthEvent
+    data object ClearVerifyResult: AuthEvent
 
     // User actions
 

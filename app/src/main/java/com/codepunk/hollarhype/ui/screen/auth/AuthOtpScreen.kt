@@ -36,6 +36,7 @@ import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import com.codepunk.hollarhype.R
+import com.codepunk.hollarhype.ui.common.showErrorSnackBar
 import com.codepunk.hollarhype.ui.component.HollarHypeTopAppBar
 import com.codepunk.hollarhype.ui.component.OtpTextField
 import com.codepunk.hollarhype.ui.preview.ScreenPreviews
@@ -48,11 +49,7 @@ import com.codepunk.hollarhype.ui.theme.buttonCornerRadius
 import com.codepunk.hollarhype.ui.theme.layoutMargin
 import com.codepunk.hollarhype.ui.theme.standardButtonHeight
 import com.codepunk.hollarhype.ui.theme.standardButtonWidth
-import com.codepunk.hollarhype.util.consume
 import com.codepunk.hollarhype.util.http.HttpStatusException
-import com.codepunk.hollarhype.util.http.NoConnectivityException
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 
 const val OTP_LENGTH = 5
 
@@ -62,49 +59,28 @@ fun AuthOtpScreen(
     state: AuthState,
     onEvent: (AuthEvent) -> Unit = {}
 ) {
-    val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
     val snackBarHostState = remember { SnackbarHostState() }
     val focusRequester = remember { FocusRequester() }
     val keyboardController = LocalSoftwareKeyboardController.current
 
-    // Process any consumable (i.e. "single event") values
-    state.verifyResult?.consume { result ->
-        result.onRight {
-            // If we get here, we successfully verified the OTP
-            onEvent(AuthEvent.ConsumeVerifyResult)
-            onEvent(AuthEvent.NavigateToLanding)
-        }.onLeft { error ->
-            when (error.cause) {
-                is NoConnectivityException -> {
-                    onEvent(AuthEvent.ConsumeVerifyResult)
-                    LaunchedEffect(snackBarHostState) {
-                        coroutineScope.launch(Dispatchers.Main) {
-                            snackBarHostState.showSnackbar(
-                                message = context.getString(R.string.error_no_internet_try_again)
-                            )
-                        }
-                    }
+    // Do the following when verify result is "fresh"
+    if (state.verifyResultFresh) {
+        onEvent(AuthEvent.ConsumeVerifyResult)
+        state.verifyResult?.run {
+            onLeft { error ->
+                if (error.cause !is HttpStatusException) {
+                    // HttpStatusExceptions will be handled differently
+                    showErrorSnackBar(
+                        cause = error.cause,
+                        context = LocalContext.current,
+                        snackBarHostState = snackBarHostState,
+                        coroutineScope = coroutineScope
+                    )
+                    onEvent(AuthEvent.ClearLoginResult)
                 }
-                !is HttpStatusException -> onEvent(AuthEvent.ConsumeVerifyResult)
             }
         }
-
-        // At this point, verifyResult will be "consumed" if it was successful,
-        // or if it was a NoConnectivityException,
-        // or if it was NOT an HttpStatusException (that type will be consumed in
-        // the alertDialog below).
-    }
-
-    val submitOtp: () -> Unit = {
-        keyboardController?.hide()
-        onEvent(
-            AuthEvent.VerifyOtp(
-                region = state.region,
-                phoneNumber = state.phoneNumber,
-                otp = state.otp
-            )
-        )
     }
 
     LaunchedEffect(Unit) {
@@ -167,13 +143,25 @@ fun AuthOtpScreen(
                         // TODO Not sure about this yet
                         /*
                         if (complete) {
-                            submitOtp()
+                            onEvent(
+                                AuthEvent.VerifyOtp(
+                                    region = state.region,
+                                    phoneNumber = state.phoneNumber,
+                                    otp = state.otp
+                                )
+                            )
                         }
                          */
                     },
                     keyboardActions = KeyboardActions {
                         if (state.otp.length == OTP_LENGTH) {
-                            submitOtp()
+                            onEvent(
+                                AuthEvent.VerifyOtp(
+                                    region = state.region,
+                                    phoneNumber = state.phoneNumber,
+                                    otp = state.otp
+                                )
+                            )
                         }
                     }
                 )
@@ -202,7 +190,15 @@ fun AuthOtpScreen(
                         .height(standardButtonHeight),
                     shape = RoundedCornerShape(size = buttonCornerRadius),
                     enabled = (!state.loading && state.otp.length == OTP_LENGTH),
-                    onClick = submitOtp
+                    onClick = {
+                        onEvent(
+                            AuthEvent.VerifyOtp(
+                                region = state.region,
+                                phoneNumber = state.phoneNumber,
+                                otp = state.otp
+                            )
+                        )
+                    }
                 ) {
                     if (state.loading) {
                         CircularProgressIndicator(
@@ -222,13 +218,13 @@ fun AuthOtpScreen(
 
     // We want to display an alertDialog if state.verifyResult exists,
     // it is an error, and its cause in an HttpStatusException
-    state.verifyResult?.value?.onLeft { repositoryError ->
+    state.verifyResult?.onLeft { repositoryError ->
         if (repositoryError.cause is HttpStatusException) {
             AlertDialog(
-                onDismissRequest = { onEvent(AuthEvent.ConsumeVerifyResult) },
+                onDismissRequest = { onEvent(AuthEvent.ClearVerifyResult) },
                 confirmButton = {
                     TextButton(
-                        onClick = { onEvent(AuthEvent.ConsumeVerifyResult) }
+                        onClick = { onEvent(AuthEvent.ClearVerifyResult) }
                     ) {
                         Text(
                             style = baseline.labelLarge,
@@ -251,8 +247,6 @@ fun AuthOtpScreen(
                     )
                 }
             )
-        } else {
-            onEvent(AuthEvent.ConsumeVerifyResult)
         }
     }
 }

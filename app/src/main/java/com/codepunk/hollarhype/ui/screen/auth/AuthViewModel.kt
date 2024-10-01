@@ -75,8 +75,7 @@ class AuthViewModel @Inject constructor(
 
     private fun updatePhoneNumber(phoneNumber: String) {
         state = state.copy(
-            phoneNumber = phoneNumber,
-            phoneNumberError = ""
+            phoneNumber = phoneNumber
         )
     }
 
@@ -102,7 +101,8 @@ class AuthViewModel @Inject constructor(
             repository.authenticate().collect { result ->
                 state = state.copy(
                     loading = false,
-                    authenticateResult = lazy { result }
+                    authResultFresh = true,
+                    authResult = result
                 )
             }
         }
@@ -142,10 +142,13 @@ class AuthViewModel @Inject constructor(
                 phoneNumber = phoneNumber,
                 region = region
             ).collect { result ->
+
+                // TODO Log in here
+
                 state = state.copy(
                     loading = false,
-                    loginResult = lazy { result },
-                    phoneNumberError = result.leftOrNull()?.errors?.getOrNull(0) ?: ""
+                    loginResultFresh = true,
+                    loginResult = result
                 )
             }
         }
@@ -165,7 +168,8 @@ class AuthViewModel @Inject constructor(
             ).collect { result ->
                 state = state.copy(
                     loading = false,
-                    verifyResult = lazy { result }
+                    verifyResultFresh = true,
+                    verifyResult = result
                 )
             }
         }
@@ -175,25 +179,48 @@ class AuthViewModel @Inject constructor(
         Log.d("AuthViewModel", "resendOtp")
     }
 
-    // Consuming values
+    // Events/results
 
-    private fun consumeAuthenticationResult() {
+    private fun consumeAuthResult() {
         state = state.copy(
-            authenticateResult = null
+            authResultFresh = false
+        )
+    }
+
+    private fun clearAuthResult() {
+        state = state.copy(
+            authResultFresh = true,
+            authResult = null
         )
     }
 
     private fun consumeLoginResult() {
         state = state.copy(
+            loginResultFresh = false,
+        )
+    }
+
+    private fun clearLoginResult() {
+        state = state.copy(
+            loginResultFresh = true,
             loginResult = null
         )
     }
 
     private fun consumeVerifyResult() {
         state = state.copy(
+            verifyResultFresh = false,
+        )
+    }
+
+    private fun clearVerifyResult() {
+        state = state.copy(
+            verifyResultFresh = true,
             verifyResult = null
         )
     }
+
+    // Event delegate
 
     fun onEvent(event: AuthEvent) {
         when (event) {
@@ -217,11 +244,14 @@ class AuthViewModel @Inject constructor(
             AuthEvent.NavigateToSignUp -> { /* No op */ }
             AuthEvent.NavigateToLanding -> { /* No op */ }
 
-            // Consume one-time events
+            // Events/results
 
-            AuthEvent.ConsumeAuthenticationResult -> consumeAuthenticationResult()
+            AuthEvent.ConsumeAuthResult -> consumeAuthResult()
+            AuthEvent.ClearAuthResult -> clearAuthResult()
             AuthEvent.ConsumeLoginResult -> consumeLoginResult()
+            AuthEvent.ClearLoginResult -> clearLoginResult()
             AuthEvent.ConsumeVerifyResult -> consumeVerifyResult()
+            AuthEvent.ClearVerifyResult -> clearVerifyResult()
 
             // User actions
 

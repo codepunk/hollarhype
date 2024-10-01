@@ -24,12 +24,13 @@ data class AuthState(
 
     // Events/results
 
-    val authenticateResult: Lazy<Ior<DataError, User>>? = null,
-    val loginResult: Lazy<Either<DataError, Boolean>>? = null,
-    val verifyResult: Lazy<Either<DataError, Authentication.Authenticated>>? = null,
+    val authResultFresh: Boolean = false,
+    val authResult: Ior<DataError, User>? = null,
 
-    // Error states
+    val loginResultFresh: Boolean = false,
+    val loginResult: Either<DataError, Boolean>? = null,
 
-    val phoneNumberError: String = ""
+    val verifyResultFresh: Boolean = false,
+    val verifyResult: Either<DataError, Authentication.Authenticated>? = null,
 
 )

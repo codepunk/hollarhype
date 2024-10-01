@@ -54,11 +54,6 @@ import com.codepunk.hollarhype.ui.component.HollarHypeTopAppBar
 import com.codepunk.hollarhype.ui.component.PhoneNumber
 import com.codepunk.hollarhype.util.intl.Region
 import com.codepunk.hollarhype.ui.preview.ScreenPreviews
-import com.codepunk.hollarhype.ui.screen.auth.AuthEvent.UpdateFirstName
-import com.codepunk.hollarhype.ui.screen.auth.AuthEvent.UpdateLastName
-import com.codepunk.hollarhype.ui.screen.auth.AuthEvent.UpdateEmailAddress
-import com.codepunk.hollarhype.ui.screen.auth.AuthEvent.UpdatePhoneNumber
-import com.codepunk.hollarhype.ui.screen.auth.AuthEvent.UpdateRegion
 import com.codepunk.hollarhype.ui.theme.HollarhypeTheme
 import com.codepunk.hollarhype.ui.theme.Size2xLarge
 import com.codepunk.hollarhype.ui.theme.Size3xLarge
@@ -82,11 +77,13 @@ fun AuthSignUpScreen(
     state: AuthState,
     onEvent: (AuthEvent) -> Unit = {}
 ) {
-    val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
     val snackBarHostState = remember { SnackbarHostState() }
     val keyboardController = LocalSoftwareKeyboardController.current
     var showRegionPicker by rememberSaveable { mutableStateOf(false) }
+
+    // Do the following when signup result is "fresh"
+    // ...
 
     Scaffold(
         modifier = modifier,
@@ -130,7 +127,7 @@ fun AuthSignUpScreen(
         ) {
             CountryCodePicker(
                 onItemSelected = {
-                    onEvent(UpdateRegion(it))
+                    onEvent(AuthEvent.UpdateRegion(it))
                     showRegionPicker = false
                 }
             )
@@ -174,10 +171,10 @@ fun SignUpNonLandscape(
             emailAddress = state.emailAddress,
             phoneNumber = state.phoneNumber,
             region = state.region,
-            onFirstNameChange = { onEvent(UpdateFirstName(it)) },
-            onLastNameChange = { onEvent(UpdateLastName(it)) },
-            onEmailAddressChange = { onEvent(UpdateEmailAddress(it)) },
-            onPhoneNumberChange = { onEvent(UpdatePhoneNumber(it)) },
+            onFirstNameChange = { onEvent(AuthEvent.UpdateFirstName(it)) },
+            onLastNameChange = { onEvent(AuthEvent.UpdateLastName(it)) },
+            onEmailAddressChange = { onEvent(AuthEvent.UpdateEmailAddress(it)) },
+            onPhoneNumberChange = { onEvent(AuthEvent.UpdatePhoneNumber(it)) },
             onShowRegionPicker = onShowRegionPicker
         )
 
@@ -275,10 +272,10 @@ fun SignUpLandscape(
                 emailAddress = state.emailAddress,
                 phoneNumber = state.phoneNumber,
                 region = state.region,
-                onFirstNameChange = { onEvent(UpdateFirstName(it)) },
-                onLastNameChange = { onEvent(UpdateLastName(it)) },
-                onEmailAddressChange = { onEvent(UpdateEmailAddress(it)) },
-                onPhoneNumberChange = { onEvent(UpdatePhoneNumber(it)) },
+                onFirstNameChange = { onEvent(AuthEvent.UpdateFirstName(it)) },
+                onLastNameChange = { onEvent(AuthEvent.UpdateLastName(it)) },
+                onEmailAddressChange = { onEvent(AuthEvent.UpdateEmailAddress(it)) },
+                onPhoneNumberChange = { onEvent(AuthEvent.UpdatePhoneNumber(it)) },
                 onShowRegionPicker = onShowRegionPicker
             )
         }
