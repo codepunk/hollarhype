@@ -6,15 +6,16 @@ import arrow.core.Either
 import arrow.core.Ior
 import arrow.core.left
 import arrow.core.rightIor
-import com.codepunk.hollarhype.data.cachedDataResource
+import com.codepunk.hollarhype.data.util.cachedDataResource
 import com.codepunk.hollarhype.data.datastore.entity.UserSettings
 import com.codepunk.hollarhype.data.local.HollarhypeDatabase
 import com.codepunk.hollarhype.data.mapper.toDataError
 import com.codepunk.hollarhype.data.mapper.toDomain
 import com.codepunk.hollarhype.data.mapper.toLocal
-import com.codepunk.hollarhype.data.networkDataResource
+import com.codepunk.hollarhype.data.util.networkDataResource
 import com.codepunk.hollarhype.data.remote.webservice.HollarhypeWebservice
 import com.codepunk.hollarhype.domain.model.Authenticated
+import com.codepunk.hollarhype.domain.model.Unauthenticated
 import com.codepunk.hollarhype.domain.model.UserSession
 import com.codepunk.hollarhype.domain.repository.DataError
 import com.codepunk.hollarhype.domain.repository.HollarhypeRepository
@@ -35,8 +36,8 @@ class HollarhypeRepositoryImpl(
     private val userDao by lazy { database.userDao() }
 
     override fun authenticate(): Flow<Ior<DataError, UserSession>> = flow {
-        val userSettings = dataStore.data.firstOrNull() ?: UserSettings()
-        val userSession = userSettings.userSession.toDomain()
+        val userSettings = dataStore.data.firstOrNull()
+        val userSession = userSettings?.userSession?.toDomain() ?: Unauthenticated
         if (userSession is Authenticated) {
             this@flow.emitAll(
                 cachedDataResource(

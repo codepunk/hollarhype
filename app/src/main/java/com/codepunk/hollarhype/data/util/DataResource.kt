@@ -1,4 +1,4 @@
-package com.codepunk.hollarhype.data
+package com.codepunk.hollarhype.data.util
 
 import arrow.core.Either
 import arrow.core.Ior
