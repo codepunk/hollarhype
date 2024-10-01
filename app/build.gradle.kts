@@ -138,6 +138,9 @@ dependencies {
     debugImplementation(libs.androidx.ui.test.manifest)
 
     // Added by Hollarhype
+    // Desugar
+    coreLibraryDesugaring(libs.desugar)
+
     // Material 3 Adaptive
     implementation(libs.material3.adaptive)
     implementation(libs.material3.adaptive.layout)
@@ -195,6 +198,6 @@ dependencies {
     implementation(libs.datastore.preferences)
     implementation(libs.datastore)
 
-    // Desugar
-    coreLibraryDesugaring(libs.desugar)
+    // Splashscreen
+    implementation(libs.splashscreen)
 }
