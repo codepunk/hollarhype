@@ -18,6 +18,10 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -26,7 +30,6 @@ import arrow.core.getOrElse
 import com.codepunk.hollarhype.R
 import com.codepunk.hollarhype.domain.model.Authenticated
 import com.codepunk.hollarhype.domain.model.Unauthenticated
-import com.codepunk.hollarhype.domain.model.UserSession
 import com.codepunk.hollarhype.ui.preview.ScreenPreviews
 import com.codepunk.hollarhype.ui.screen.auth.AuthEvent.NavigateToSignIn
 import com.codepunk.hollarhype.ui.screen.auth.AuthEvent.NavigateToSignUp
@@ -46,15 +49,18 @@ fun AuthStartScreen(
 ) {
     // TODO If auto-authenticating, show spinner ...
 
+    var navigating by rememberSaveable { mutableStateOf(false) }
+
     // Do the following when verify result is "fresh"
     if (state.isAuthResultFresh) {
         onEvent(AuthEvent.ConsumeAuthResult)
         state.authResult?.run {
-            onEvent(AuthEvent.ClearAuthResult)
             val userSession = getOrElse { Unauthenticated }
             if (userSession is Authenticated) {
+                navigating = true
                 onEvent(AuthEvent.NavigateToLanding)
             }
+            onEvent(AuthEvent.ClearAuthResult)
         }
     }
 
@@ -64,12 +70,13 @@ fun AuthStartScreen(
             .fillMaxSize()
             .padding(all = layoutMargin)
     ) {
-        if (state.isLoading) {
+        if (state.isLoading || navigating) {
             CircularProgressIndicator(
                 modifier = Modifier.align(Alignment.Center),
                 color = MaterialTheme.colorScheme.secondaryContainer
             )
         } else {
+            onEvent(AuthEvent.ClearAuthResult)
             Column(
                 modifier = Modifier
                     .widthIn(max = Size3xLarge.mid)
