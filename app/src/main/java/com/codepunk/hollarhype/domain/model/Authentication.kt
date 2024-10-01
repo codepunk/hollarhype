@@ -8,7 +8,7 @@ sealed interface Authentication {
     }
 
     data class Authenticated(
-        val user: User = User(),
+        val userId: Long = 0,
         val authToken: String = ""
     ) : Authentication {
         override val authenticated: Boolean = true

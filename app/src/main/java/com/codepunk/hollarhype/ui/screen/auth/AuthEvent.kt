@@ -23,6 +23,7 @@ sealed interface AuthEvent {
 
     // Consume one-time events
 
+    data object ConsumeAuthenticationResult: AuthEvent
     data object ConsumeLoginResult: AuthEvent
     data object ConsumeVerifyResult: AuthEvent
 

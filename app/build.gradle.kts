@@ -195,9 +195,6 @@ dependencies {
     implementation(libs.datastore.preferences)
     implementation(libs.datastore)
 
-    // Flower
-    implementation(libs.flower)
-
     // Desugar
     coreLibraryDesugaring(libs.desugar)
 }

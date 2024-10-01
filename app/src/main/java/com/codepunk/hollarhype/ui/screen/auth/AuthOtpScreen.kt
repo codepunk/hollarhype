@@ -69,9 +69,10 @@ fun AuthOtpScreen(
     val keyboardController = LocalSoftwareKeyboardController.current
 
     // Process any consumable (i.e. "single event") values
-    state.verifyResult?.consume { value ->
-        value.onRight {
+    state.verifyResult?.consume { result ->
+        result.onRight {
             // If we get here, we successfully verified the OTP
+            onEvent(AuthEvent.ConsumeVerifyResult)
             onEvent(AuthEvent.NavigateToLanding)
         }.onLeft { error ->
             when (error.cause) {

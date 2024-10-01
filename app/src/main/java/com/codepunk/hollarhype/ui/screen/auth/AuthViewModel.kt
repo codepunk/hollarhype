@@ -46,10 +46,7 @@ class AuthViewModel @Inject constructor(
         val getCredentialRequest = GetCredentialRequest(
             credentialOptions = listOf(GetPasswordOption())
         )
-
-        // TODO Authenticate w/credentials
-
-        authenticate()
+        autoAuthenticate()
     }
 
     // endregion Constructors
@@ -99,9 +96,15 @@ class AuthViewModel @Inject constructor(
 
     // User actions
 
-    private fun authenticate() {
+    private fun autoAuthenticate() {
+        state = state.copy(loading = true)
         viewModelScope.launch(ioDispatcher) {
-            // TODO Try to auto sign in here
+            repository.authenticate().collect { result ->
+                state = state.copy(
+                    loading = false,
+                    authenticateResult = lazy { result }
+                )
+            }
         }
     }
 
@@ -174,6 +177,12 @@ class AuthViewModel @Inject constructor(
 
     // Consuming values
 
+    private fun consumeAuthenticationResult() {
+        state = state.copy(
+            authenticateResult = null
+        )
+    }
+
     private fun consumeLoginResult() {
         state = state.copy(
             loginResult = null
@@ -210,6 +219,7 @@ class AuthViewModel @Inject constructor(
 
             // Consume one-time events
 
+            AuthEvent.ConsumeAuthenticationResult -> consumeAuthenticationResult()
             AuthEvent.ConsumeLoginResult -> consumeLoginResult()
             AuthEvent.ConsumeVerifyResult -> consumeVerifyResult()
 

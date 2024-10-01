@@ -84,8 +84,8 @@ fun AuthSignInScreen(
                     }
                 }
             }
-        }.onRight { result ->
-            if (result.success) {
+        }.onRight { success ->
+            if (success) {
                 onEvent(NavigateToOtp)
             }
         }

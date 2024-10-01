@@ -1,11 +1,16 @@
 package com.codepunk.hollarhype.data.mapper
 
-import com.codepunk.hollarhype.data.remote.entity.RemoteErrorResult
-import com.codepunk.hollarhype.domain.repository.RepositoryError
+import com.codepunk.hollarhype.data.remote.entity.RemoteError
+import com.codepunk.hollarhype.domain.repository.DataError
+import com.codepunk.hollarhype.util.http.HttpStatusException
 
-fun RemoteErrorResult.toRepositoryError(
-    cause: Throwable? = null
-): RepositoryError = RepositoryError(
+fun RemoteError.toDataError(
+    code: Int,
+    message: String?
+): DataError = DataError(
     errors = errors,
-    cause = cause
+    cause = HttpStatusException.of(
+        code = code,
+        message = message
+    )
 )

@@ -3,9 +3,10 @@ package com.codepunk.hollarhype.di.module
 import android.content.Context
 import arrow.retrofit.adapter.either.EitherCallAdapterFactory
 import com.codepunk.hollarhype.BuildConfig
+import com.codepunk.hollarhype.data.remote.interceptor.HollarhypeAuthInterceptor
 import com.codepunk.hollarhype.data.remote.interceptor.HollarhypeUserAgentInterceptor
+import com.codepunk.hollarhype.data.remote.interceptor.NetworkConnectionInterceptor
 import com.codepunk.hollarhype.data.remote.webservice.HollarhypeWebservice
-import com.hadiyarajesh.flower_retrofit.FlowerCallAdapterFactory
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import dagger.Module
 import dagger.Provides
@@ -35,10 +36,14 @@ class RemoteModule {
     @Provides
     fun provideDiscogsOkHttpClient(
         cache: Cache,
-        userAgentInterceptor: HollarhypeUserAgentInterceptor
+        networkConnectionInterceptor: NetworkConnectionInterceptor,
+        userAgentInterceptor: HollarhypeUserAgentInterceptor,
+        authInterceptor: HollarhypeAuthInterceptor
     ): OkHttpClient = OkHttpClient.Builder()
         .cache(cache)
+        .addInterceptor(networkConnectionInterceptor)
         .addInterceptor(userAgentInterceptor)
+        .addInterceptor(authInterceptor)
         .build()
 
     @Singleton
@@ -58,11 +63,6 @@ class RemoteModule {
 
     @Singleton
     @Provides
-    fun provideFlowerCallAdapterFactory(): FlowerCallAdapterFactory =
-        FlowerCallAdapterFactory.create()
-
-    @Singleton
-    @Provides
     fun provideConverterFactory(networkJson: Json): Converter.Factory =
         networkJson.asConverterFactory("application/json".toMediaType())
 
@@ -70,13 +70,12 @@ class RemoteModule {
     @Provides
     fun provideRetrofit(
         client: OkHttpClient,
-        // eitherCallAdapterFactory: EitherCallAdapterFactory,
-        flowerCallAdapterFactory: FlowerCallAdapterFactory,
+        eitherCallAdapterFactory: EitherCallAdapterFactory,
         converterFactory: Converter.Factory
     ): Retrofit = Retrofit.Builder()
         .client(client)
         .baseUrl(BuildConfig.BASE_URL)
-        .addCallAdapterFactory(flowerCallAdapterFactory)
+        .addCallAdapterFactory(eitherCallAdapterFactory)
         .addConverterFactory(converterFactory)
         .build()
 

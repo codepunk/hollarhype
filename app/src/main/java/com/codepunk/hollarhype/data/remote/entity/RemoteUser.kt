@@ -1,5 +1,7 @@
 package com.codepunk.hollarhype.data.remote.entity
 
+import kotlinx.datetime.Instant
+import kotlinx.datetime.serializers.InstantIso8601Serializer
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import java.util.Locale
@@ -23,5 +25,11 @@ data class RemoteUser(
     val regionCode: String = Locale.getDefault().country,
     val roles: String = "",
     @SerialName("can_create_campaigns")
-    val canCreateCampaigns: Boolean = false
+    val canCreateCampaigns: Boolean = false,
+    @SerialName("created_at")
+    @Serializable(with = InstantIso8601Serializer::class)
+    val createdAt: Instant? = null,
+    @SerialName("updated_at")
+    @Serializable(with = InstantIso8601Serializer::class)
+    val updatedAt: Instant? = null
 )
