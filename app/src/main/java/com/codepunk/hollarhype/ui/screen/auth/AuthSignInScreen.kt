@@ -63,14 +63,10 @@ fun AuthSignInScreen(
     var showRegionPicker by rememberSaveable { mutableStateOf(false) }
 
     // Do the following when login result is "fresh"
-    if (state.loginResultFresh) {
+    if (state.isLoginResultFresh) {
         onEvent(AuthEvent.ConsumeLoginResult)
         state.loginResult?.run {
-            onRight { success ->
-                if (success) {
-                    onEvent(AuthEvent.NavigateToOtp)
-                }
-            }.onLeft { error ->
+            onLeft { error ->
                 if (error.cause !is HttpStatusException) {
                     // HttpStatusExceptions will be handled differently
                     showErrorSnackBar(
@@ -80,6 +76,10 @@ fun AuthSignInScreen(
                         coroutineScope = coroutineScope
                     )
                     onEvent(AuthEvent.ClearLoginResult)
+                }
+            }.onRight { success ->
+                if (success) {
+                    onEvent(AuthEvent.NavigateToOtp)
                 }
             }
         }
@@ -169,7 +169,7 @@ fun AuthSignInScreen(
                         .width(standardButtonWidth)
                         .height(standardButtonHeight),
                     shape = RoundedCornerShape(size = buttonCornerRadius),
-                    enabled = (!state.loading),
+                    enabled = (!state.isLoading),
                     onClick = {
                         onEvent(AuthEvent.ClearLoginResult)
                         onEvent(
@@ -180,7 +180,7 @@ fun AuthSignInScreen(
                         )
                     }
                 ) {
-                    if (state.loading) {
+                    if (state.isLoading) {
                         CircularProgressIndicator(
                             modifier = Modifier.size(ButtonDefaults.IconSize),
                             color = MaterialTheme.colorScheme.primary

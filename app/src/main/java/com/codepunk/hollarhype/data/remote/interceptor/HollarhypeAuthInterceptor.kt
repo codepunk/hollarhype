@@ -1,6 +1,6 @@
 package com.codepunk.hollarhype.data.remote.interceptor
 
-import com.codepunk.hollarhype.domain.model.Authentication
+import com.codepunk.hollarhype.domain.model.Authenticated
 import com.codepunk.hollarhype.manager.UserSessionManager
 import okhttp3.Interceptor
 import okhttp3.Response
@@ -14,8 +14,8 @@ class HollarhypeAuthInterceptor @Inject constructor(
         val newRequest = chain.request()
             .newBuilder()
             .apply {
-                val authentication = userSessionManager.authentication.value
-                if (authentication is Authentication.Authenticated) {
+                val authentication = userSessionManager.userSession.value
+                if (authentication is Authenticated) {
                     addHeader(AUTHORIZATION, authentication.authToken)
                 }
             }

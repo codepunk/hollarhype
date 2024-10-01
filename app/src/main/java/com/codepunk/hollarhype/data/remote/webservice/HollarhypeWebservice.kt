@@ -1,9 +1,9 @@
 package com.codepunk.hollarhype.data.remote.webservice
 
 import arrow.retrofit.adapter.either.ResponseE
-import com.codepunk.hollarhype.data.remote.entity.RemoteAuthenticatedUserResult
+import com.codepunk.hollarhype.data.remote.entity.RemoteAuthenticateResult
 import com.codepunk.hollarhype.data.remote.entity.RemoteLoginResult
-import com.codepunk.hollarhype.data.remote.entity.RemoteAuthentication
+import com.codepunk.hollarhype.data.remote.entity.RemoteVerifyResult
 import com.codepunk.hollarhype.data.remote.entity.RemoteError
 import com.codepunk.hollarhype.data.remote.entity.RemoteSocialProfile
 import retrofit2.http.Field
@@ -26,12 +26,12 @@ interface HollarhypeWebservice {
         @Field("mobile") phoneNumber: String,
         @Field("otp") otp: String,
         @Field("region_code") regionCode: String
-    ): ResponseE<RemoteError, RemoteAuthentication>
+    ): ResponseE<RemoteError, RemoteVerifyResult>
 
     @GET("/athlete/athlete_social_profile")
     suspend fun getUserProfile(): ResponseE<RemoteError, RemoteSocialProfile>
 
     @GET("/athlete/athlete_social_profile")
-    suspend fun getAuthenticatedUser(): ResponseE<RemoteError, RemoteAuthenticatedUserResult>
+    suspend fun authenticate(): ResponseE<RemoteError, RemoteAuthenticateResult>
 
 }

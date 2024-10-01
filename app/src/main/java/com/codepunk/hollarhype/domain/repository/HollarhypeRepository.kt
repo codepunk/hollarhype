@@ -2,14 +2,13 @@ package com.codepunk.hollarhype.domain.repository
 
 import arrow.core.Either
 import arrow.core.Ior
-import com.codepunk.hollarhype.domain.model.Authentication
-import com.codepunk.hollarhype.domain.model.User
+import com.codepunk.hollarhype.domain.model.UserSession
 import com.codepunk.hollarhype.util.intl.Region
 import kotlinx.coroutines.flow.Flow
 
 interface HollarhypeRepository {
 
-    fun authenticate(): Flow<Ior<DataError, User>>
+    fun authenticate(): Flow<Ior<DataError, UserSession>>
 
     fun login(
         phoneNumber: String,
@@ -20,6 +19,6 @@ interface HollarhypeRepository {
         phoneNumber: String,
         otp: String,
         region: Region
-    ): Flow<Either<DataError, Authentication.Authenticated>>
+    ): Flow<Either<DataError, UserSession>>
 
 }

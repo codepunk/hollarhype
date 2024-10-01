@@ -3,7 +3,7 @@ package com.codepunk.hollarhype.di.manager
 import com.codepunk.hollarhype.di.component.UserComponent
 import com.codepunk.hollarhype.di.qualifier.ApplicationScope
 import com.codepunk.hollarhype.di.qualifier.DefaultDispatcher
-import com.codepunk.hollarhype.domain.model.Authentication
+import com.codepunk.hollarhype.domain.model.UserSession
 import com.codepunk.hollarhype.manager.UserSessionManager
 import dagger.hilt.internal.GeneratedComponentManager
 import kotlinx.coroutines.CoroutineDispatcher
@@ -34,11 +34,11 @@ class UserComponentManager @Inject constructor(
 
     private var userComponent: UserComponent = userComponentProvider.get().build()
 
-    private var lastAuthentication: Authentication = userSessionManager.authentication.value
+    private var lastAuthentication: UserSession = userSessionManager.userSession.value
 
     init {
         appCoroutineScope.launch(defaultDispatcher) {
-            userSessionManager.authentication.collect { authentication ->
+            userSessionManager.userSession.collect { authentication ->
                 if (lastAuthentication == authentication) {
                     return@collect
                 }

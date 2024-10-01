@@ -6,16 +6,11 @@ import com.codepunk.hollarhype.data.datastore.entity.UserSettings
 import com.codepunk.hollarhype.data.local.HollarhypeDatabase
 import com.codepunk.hollarhype.data.remote.webservice.HollarhypeWebservice
 import com.codepunk.hollarhype.data.repository.HollarhypeRepositoryImpl
-import com.codepunk.hollarhype.di.qualifier.ApplicationScope
-import com.codepunk.hollarhype.di.qualifier.IoDispatcher
 import com.codepunk.hollarhype.domain.repository.HollarhypeRepository
-import com.codepunk.hollarhype.manager.UserSessionManager
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.CoroutineScope
 import javax.inject.Singleton
 
 @Module
@@ -30,18 +25,12 @@ class DataModule {
         connectivityManager: ConnectivityManager,
         database: HollarhypeDatabase,
         dataStore: DataStore<UserSettings>,
-        webservice: HollarhypeWebservice,
-        userSessionManager: UserSessionManager,
-        @ApplicationScope appCoroutineScope: CoroutineScope,
-        @IoDispatcher ioDispatcher: CoroutineDispatcher
+        webservice: HollarhypeWebservice
     ): HollarhypeRepository = HollarhypeRepositoryImpl(
         connectivityManager = connectivityManager,
         dataStore = dataStore,
         database = database,
-        webservice = webservice,
-        userSessionManager = userSessionManager,
-        appCoroutineScope = appCoroutineScope,
-        ioDispatcher = ioDispatcher
+        webservice = webservice
     )
 
     // endregion Methods

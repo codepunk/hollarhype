@@ -65,7 +65,7 @@ fun AuthOtpScreen(
     val keyboardController = LocalSoftwareKeyboardController.current
 
     // Do the following when verify result is "fresh"
-    if (state.verifyResultFresh) {
+    if (state.isVerifyResultFresh) {
         onEvent(AuthEvent.ConsumeVerifyResult)
         state.verifyResult?.run {
             onLeft { error ->
@@ -77,8 +77,12 @@ fun AuthOtpScreen(
                         snackBarHostState = snackBarHostState,
                         coroutineScope = coroutineScope
                     )
-                    onEvent(AuthEvent.ClearLoginResult)
+                    onEvent(AuthEvent.ClearVerifyResult)
                 }
+            }.onRight {
+                // If we get here, we successfully verified the OTP
+                onEvent(AuthEvent.ConsumeVerifyResult)
+                onEvent(AuthEvent.NavigateToLanding)
             }
         }
     }
@@ -155,6 +159,7 @@ fun AuthOtpScreen(
                     },
                     keyboardActions = KeyboardActions {
                         if (state.otp.length == OTP_LENGTH) {
+                            keyboardController?.hide()
                             onEvent(
                                 AuthEvent.VerifyOtp(
                                     region = state.region,
@@ -189,7 +194,7 @@ fun AuthOtpScreen(
                         .width(standardButtonWidth)
                         .height(standardButtonHeight),
                     shape = RoundedCornerShape(size = buttonCornerRadius),
-                    enabled = (!state.loading && state.otp.length == OTP_LENGTH),
+                    enabled = (!state.isLoading && state.otp.length == OTP_LENGTH),
                     onClick = {
                         onEvent(
                             AuthEvent.VerifyOtp(
@@ -200,7 +205,7 @@ fun AuthOtpScreen(
                         )
                     }
                 ) {
-                    if (state.loading) {
+                    if (state.isLoading) {
                         CircularProgressIndicator(
                             modifier = Modifier.size(ButtonDefaults.IconSize),
                             color = MaterialTheme.colorScheme.primary

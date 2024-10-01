@@ -2,7 +2,7 @@ package com.codepunk.hollarhype.ui.screen.auth
 
 import arrow.core.Either
 import arrow.core.Ior
-import com.codepunk.hollarhype.domain.model.Authentication
+import com.codepunk.hollarhype.domain.model.UserSession
 import com.codepunk.hollarhype.domain.model.User
 import com.codepunk.hollarhype.domain.repository.DataError
 import com.codepunk.hollarhype.util.intl.Region
@@ -11,7 +11,7 @@ data class AuthState(
 
     // Flags
 
-    val loading: Boolean = false,
+    val isLoading: Boolean = false,
 
     // Data
 
@@ -24,13 +24,13 @@ data class AuthState(
 
     // Events/results
 
-    val authResultFresh: Boolean = false,
-    val authResult: Ior<DataError, User>? = null,
+    val isAuthResultFresh: Boolean = false,
+    val authResult: Ior<DataError, UserSession>? = null,
 
-    val loginResultFresh: Boolean = false,
+    val isLoginResultFresh: Boolean = false,
     val loginResult: Either<DataError, Boolean>? = null,
 
-    val verifyResultFresh: Boolean = false,
-    val verifyResult: Either<DataError, Authentication.Authenticated>? = null,
+    val isVerifyResultFresh: Boolean = false,
+    val verifyResult: Either<DataError, UserSession>? = null
 
 )

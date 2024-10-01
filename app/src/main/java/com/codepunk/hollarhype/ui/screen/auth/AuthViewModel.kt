@@ -4,10 +4,18 @@ import android.util.Log
 import androidx.credentials.CredentialManager
 import androidx.credentials.GetCredentialRequest
 import androidx.credentials.GetPasswordOption
+import androidx.datastore.core.DataStore
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import arrow.core.getOrElse
+import com.codepunk.hollarhype.data.datastore.entity.UserSettings
+import com.codepunk.hollarhype.data.mapper.toLocal
 import com.codepunk.hollarhype.di.qualifier.DefaultDispatcher
 import com.codepunk.hollarhype.di.qualifier.IoDispatcher
+import com.codepunk.hollarhype.domain.model.Authenticated
+import com.codepunk.hollarhype.domain.model.Unauthenticated
+import com.codepunk.hollarhype.domain.model.UserSession
+import com.codepunk.hollarhype.domain.repository.DataError
 import com.codepunk.hollarhype.domain.repository.HollarhypeRepository
 import com.codepunk.hollarhype.manager.UserSessionManager
 import com.codepunk.hollarhype.util.intl.Region
@@ -20,6 +28,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class AuthViewModel @Inject constructor(
+    private val dataStore: DataStore<UserSettings>,
     private val repository: HollarhypeRepository,
     private val credentialManager: CredentialManager,
     private val userSessionManager: UserSessionManager,
@@ -46,7 +55,7 @@ class AuthViewModel @Inject constructor(
         val getCredentialRequest = GetCredentialRequest(
             credentialOptions = listOf(GetPasswordOption())
         )
-        autoAuthenticate()
+        authenticate()
     }
 
     // endregion Constructors
@@ -95,13 +104,17 @@ class AuthViewModel @Inject constructor(
 
     // User actions
 
-    private fun autoAuthenticate() {
-        state = state.copy(loading = true)
+    private fun authenticate() {
+        state = state.copy(isLoading = true)
         viewModelScope.launch(ioDispatcher) {
             repository.authenticate().collect { result ->
+
+                // When no (authenticated) user session exists, result is right(Unauthenticated)
+                //
+
                 state = state.copy(
-                    loading = false,
-                    authResultFresh = true,
+                    isLoading = false,
+                    isAuthResultFresh = true,
                     authResult = result
                 )
             }
@@ -136,18 +149,15 @@ class AuthViewModel @Inject constructor(
     }
 
     private fun signIn(region: Region, phoneNumber: String) {
-        state = state.copy(loading = true)
+        state = state.copy(isLoading = true)
         viewModelScope.launch(ioDispatcher) {
             repository.login(
                 phoneNumber = phoneNumber,
                 region = region
             ).collect { result ->
-
-                // TODO Log in here
-
                 state = state.copy(
-                    loading = false,
-                    loginResultFresh = true,
+                    isLoading = false,
+                    isLoginResultFresh = true,
                     loginResult = result
                 )
             }
@@ -159,16 +169,28 @@ class AuthViewModel @Inject constructor(
         phoneNumber: String,
         otp: String
     ) {
-        state = state.copy(loading = true)
+        state = state.copy(isLoading = true)
         viewModelScope.launch(ioDispatcher) {
             repository.verify(
                 phoneNumber = phoneNumber,
                 otp = otp,
                 region = region
             ).collect { result ->
+                val userSession = result.getOrElse { Unauthenticated }
+
+                viewModelScope.launch(ioDispatcher) {
+                    dataStore.updateData {
+                        it.copy(
+                            userSession = userSession.toLocal()
+                        )
+                    }
+                }
+
+                userSessionManager.update(userSession)
+
                 state = state.copy(
-                    loading = false,
-                    verifyResultFresh = true,
+                    isLoading = false,
+                    isVerifyResultFresh = true,
                     verifyResult = result
                 )
             }
@@ -183,39 +205,39 @@ class AuthViewModel @Inject constructor(
 
     private fun consumeAuthResult() {
         state = state.copy(
-            authResultFresh = false
+            isAuthResultFresh = false
         )
     }
 
     private fun clearAuthResult() {
         state = state.copy(
-            authResultFresh = true,
+            isAuthResultFresh = true,
             authResult = null
         )
     }
 
     private fun consumeLoginResult() {
         state = state.copy(
-            loginResultFresh = false,
+            isLoginResultFresh = false,
         )
     }
 
     private fun clearLoginResult() {
         state = state.copy(
-            loginResultFresh = true,
+            isLoginResultFresh = true,
             loginResult = null
         )
     }
 
     private fun consumeVerifyResult() {
         state = state.copy(
-            verifyResultFresh = false,
+            isVerifyResultFresh = false,
         )
     }
 
     private fun clearVerifyResult() {
         state = state.copy(
-            verifyResultFresh = true,
+            isVerifyResultFresh = true,
             verifyResult = null
         )
     }

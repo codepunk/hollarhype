@@ -22,7 +22,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import arrow.core.getOrElse
 import com.codepunk.hollarhype.R
+import com.codepunk.hollarhype.domain.model.Authenticated
+import com.codepunk.hollarhype.domain.model.Unauthenticated
+import com.codepunk.hollarhype.domain.model.UserSession
 import com.codepunk.hollarhype.ui.preview.ScreenPreviews
 import com.codepunk.hollarhype.ui.screen.auth.AuthEvent.NavigateToSignIn
 import com.codepunk.hollarhype.ui.screen.auth.AuthEvent.NavigateToSignUp
@@ -43,11 +47,12 @@ fun AuthStartScreen(
     // TODO If auto-authenticating, show spinner ...
 
     // Do the following when verify result is "fresh"
-    if (state.authResultFresh) {
+    if (state.isAuthResultFresh) {
         onEvent(AuthEvent.ConsumeAuthResult)
         state.authResult?.run {
-            if (isRight()) {
-                onEvent(AuthEvent.ClearAuthResult)
+            onEvent(AuthEvent.ClearAuthResult)
+            val userSession = getOrElse { Unauthenticated }
+            if (userSession is Authenticated) {
                 onEvent(AuthEvent.NavigateToLanding)
             }
         }
@@ -59,7 +64,7 @@ fun AuthStartScreen(
             .fillMaxSize()
             .padding(all = layoutMargin)
     ) {
-        if (state.loading) {
+        if (state.isLoading) {
             CircularProgressIndicator(
                 modifier = Modifier.align(Alignment.Center),
                 color = MaterialTheme.colorScheme.secondaryContainer
