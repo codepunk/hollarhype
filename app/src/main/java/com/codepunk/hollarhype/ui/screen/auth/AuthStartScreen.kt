@@ -18,10 +18,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -47,16 +43,14 @@ fun AuthStartScreen(
 ) {
     // TODO If auto-authenticating, show spinner ...
 
-    var navigating by remember { mutableStateOf(true) }
-
     // Process any consumable (i.e. "single event") values
     state.authenticateResult?.consume { result ->
         result.toEither().onRight {
             // If we get here, we successfully auto-authenticated
-            navigating = true
-            onEvent(AuthEvent.ConsumeAuthenticationResult)
+            //navigating = true
             onEvent(AuthEvent.NavigateToLanding)
         }
+        onEvent(AuthEvent.ConsumeAuthenticationResult)
     }
 
     val layoutMargin = layoutMargin()
@@ -65,7 +59,7 @@ fun AuthStartScreen(
             .fillMaxSize()
             .padding(all = layoutMargin)
     ) {
-        if (state.loading || navigating) {
+        if (state.loading) {
             CircularProgressIndicator(
                 modifier = Modifier.align(Alignment.Center),
                 color = MaterialTheme.colorScheme.secondaryContainer
