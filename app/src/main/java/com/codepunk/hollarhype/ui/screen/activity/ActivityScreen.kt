@@ -8,8 +8,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import com.codepunk.hollarhype.ui.component.HollarHypeTopAppBar
+import com.codepunk.hollarhype.ui.preview.ScreenPreviews
 import com.codepunk.hollarhype.ui.theme.HollarhypeTheme
 
 @Composable
@@ -28,31 +28,19 @@ fun ActivityScreen(
                 .padding(innerPadding),
             contentAlignment = Alignment.Center
         ) {
-            Greeting(name = "Activity")
+            Text(text = "Activity")
         }
     }
 }
 
+@ScreenPreviews
 @Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
-
-@Preview
-@Composable
-fun ActivityScreenPreviewDark() {
-    HollarhypeTheme(darkTheme = true) {
-        ActivityScreen()
-    }
-}
-
-@Preview
-@Composable
-fun ActivityScreenPreviewLight() {
-    HollarhypeTheme(darkTheme = false) {
-        ActivityScreen()
+fun ActivityPreviews() {
+    HollarhypeTheme {
+        Scaffold { padding ->
+            ActivityScreen(
+                modifier = Modifier.padding(padding)
+            )
+        }
     }
 }

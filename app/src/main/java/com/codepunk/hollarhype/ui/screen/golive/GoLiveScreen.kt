@@ -10,6 +10,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.codepunk.hollarhype.ui.component.HollarHypeTopAppBar
+import com.codepunk.hollarhype.ui.preview.ScreenPreviews
+import com.codepunk.hollarhype.ui.screen.activity.ActivityScreen
 import com.codepunk.hollarhype.ui.theme.HollarhypeTheme
 
 @Composable
@@ -28,31 +30,19 @@ fun GoLiveScreen(
                 .padding(innerPadding),
             contentAlignment = Alignment.Center
         ) {
-            Greeting(name = "Go Live")
+            Text(text = "Go Live")
         }
     }
 }
 
+@ScreenPreviews
 @Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
-
-@Preview
-@Composable
-fun GoLiveScreenPreviewDark() {
-    HollarhypeTheme(darkTheme = true) {
-        GoLiveScreen()
-    }
-}
-
-@Preview
-@Composable
-fun GoLiveScreenPreviewLight() {
-    HollarhypeTheme(darkTheme = false) {
-        GoLiveScreen()
+fun GoLivePreviews() {
+    HollarhypeTheme {
+        Scaffold { padding ->
+            GoLiveScreen(
+                modifier = Modifier.padding(padding)
+            )
+        }
     }
 }

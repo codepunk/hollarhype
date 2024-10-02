@@ -1,4 +1,4 @@
-package com.codepunk.hollarhype.ui.screen.groups
+package com.codepunk.hollarhype.ui.screen.hype
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -15,7 +15,7 @@ import com.codepunk.hollarhype.ui.screen.activity.ActivityScreen
 import com.codepunk.hollarhype.ui.theme.HollarhypeTheme
 
 @Composable
-fun GroupsScreen(
+fun HypeScreen(
     modifier: Modifier = Modifier
 ) {
     Scaffold(
@@ -30,17 +30,17 @@ fun GroupsScreen(
                 .padding(innerPadding),
             contentAlignment = Alignment.Center
         ) {
-            Text(text = "Groups")
+            Text(text = "Hype")
         }
     }
 }
 
 @ScreenPreviews
 @Composable
-fun GroupsPreviews() {
+fun HypePreviews() {
     HollarhypeTheme {
         Scaffold { padding ->
-            GroupsScreen(
+            HypeScreen(
                 modifier = Modifier.padding(padding)
             )
         }
