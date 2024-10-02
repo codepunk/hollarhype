@@ -1,21 +1,14 @@
 package com.codepunk.hollarhype.ui.screen.auth
 
 import android.util.Log
-import androidx.credentials.CredentialManager
-import androidx.credentials.GetCredentialRequest
-import androidx.credentials.GetPasswordOption
 import androidx.datastore.core.DataStore
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import arrow.core.getOrElse
 import com.codepunk.hollarhype.data.datastore.entity.UserSettings
 import com.codepunk.hollarhype.data.mapper.toLocal
-import com.codepunk.hollarhype.di.qualifier.DefaultDispatcher
 import com.codepunk.hollarhype.di.qualifier.IoDispatcher
-import com.codepunk.hollarhype.domain.model.Authenticated
 import com.codepunk.hollarhype.domain.model.Unauthenticated
-import com.codepunk.hollarhype.domain.model.UserSession
-import com.codepunk.hollarhype.domain.repository.DataError
 import com.codepunk.hollarhype.domain.repository.HollarhypeRepository
 import com.codepunk.hollarhype.manager.UserSessionManager
 import com.codepunk.hollarhype.util.intl.Region
@@ -30,9 +23,7 @@ import javax.inject.Inject
 class AuthViewModel @Inject constructor(
     private val dataStore: DataStore<UserSettings>,
     private val repository: HollarhypeRepository,
-    private val credentialManager: CredentialManager,
     private val userSessionManager: UserSessionManager,
-    @DefaultDispatcher private val defaultDispatcher: CoroutineDispatcher,
     @IoDispatcher private val ioDispatcher: CoroutineDispatcher
 ) : ViewModel() {
 
@@ -48,17 +39,6 @@ class AuthViewModel @Inject constructor(
         set(value) { _stateFlow.value = value }
 
     // endregion Variables
-
-    // region Constructors
-
-    init {
-        val getCredentialRequest = GetCredentialRequest(
-            credentialOptions = listOf(GetPasswordOption())
-        )
-        authenticate()
-    }
-
-    // endregion Constructors
 
     // region Methods
 
@@ -103,23 +83,6 @@ class AuthViewModel @Inject constructor(
     // Navigation
 
     // User actions
-
-    private fun authenticate() {
-        state = state.copy(isLoading = true)
-        viewModelScope.launch(ioDispatcher) {
-            repository.authenticate().collect { result ->
-
-                // When no (authenticated) user session exists, result is right(Unauthenticated)
-                //
-
-                state = state.copy(
-                    isLoading = false,
-                    isAuthResultFresh = true,
-                    authResult = result
-                )
-            }
-        }
-    }
 
     private fun editAvatar() {
         Log.d("AuthViewModel", "editAvatar")
@@ -203,19 +166,6 @@ class AuthViewModel @Inject constructor(
 
     // Events/results
 
-    private fun consumeAuthResult() {
-        state = state.copy(
-            isAuthResultFresh = false
-        )
-    }
-
-    private fun clearAuthResult() {
-        state = state.copy(
-            isAuthResultFresh = true,
-            authResult = null
-        )
-    }
-
     private fun consumeLoginResult() {
         state = state.copy(
             isLoginResultFresh = false,
@@ -268,8 +218,6 @@ class AuthViewModel @Inject constructor(
 
             // Events/results
 
-            AuthEvent.ConsumeAuthResult -> consumeAuthResult()
-            AuthEvent.ClearAuthResult -> clearAuthResult()
             AuthEvent.ConsumeLoginResult -> consumeLoginResult()
             AuthEvent.ClearLoginResult -> clearLoginResult()
             AuthEvent.ConsumeVerifyResult -> consumeVerifyResult()

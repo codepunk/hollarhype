@@ -23,9 +23,7 @@ fun AuthNavigation(
         startDestination = AuthRoute.AuthOptions
     ) {
         composable<AuthRoute.AuthOptions> {
-            AuthStartScreen(
-                state = state
-            ) { event ->
+            AuthStartScreen { event ->
                 // Consume navigation events here as appropriate,
                 // everything else gets passed up the chain
                 when (event) {

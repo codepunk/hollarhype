@@ -15,14 +15,15 @@ import com.codepunk.hollarhype.ui.screen.landing.LandingViewModel
 
 @Composable
 fun Navigation(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    startDestination: Route = Route.Auth
 ) {
     val navController = rememberNavController()
 
     NavHost(
         modifier = modifier,
         navController = navController,
-        startDestination = Route.Auth
+        startDestination = startDestination
     ) {
         composable<Route.Auth> {
             val viewModel: AuthViewModel = hiltViewModel()

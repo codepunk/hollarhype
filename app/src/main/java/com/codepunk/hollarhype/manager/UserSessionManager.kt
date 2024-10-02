@@ -18,15 +18,15 @@ class UserSessionManager @Inject constructor() {
     val userSession: StateFlow<UserSession> = _userSession.asStateFlow()
 
     fun login(userSession: Authenticated) {
-        _userSession.tryEmit(userSession)
+        _userSession.value = userSession
     }
 
     fun logout() {
-        _userSession.tryEmit(Unauthenticated)
+        _userSession.value = Unauthenticated
     }
 
     fun update(userSession: UserSession) {
-        _userSession.tryEmit(userSession)
+        _userSession.value = userSession
     }
 
     fun isLoggedIn(): Boolean = userSession.value is Authenticated

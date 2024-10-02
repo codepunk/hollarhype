@@ -23,8 +23,6 @@ sealed interface AuthEvent {
 
     // Events/results
 
-    data object ConsumeAuthResult: AuthEvent
-    data object ClearAuthResult: AuthEvent
     data object ConsumeLoginResult: AuthEvent
     data object ClearLoginResult: AuthEvent
     data object ConsumeVerifyResult: AuthEvent
