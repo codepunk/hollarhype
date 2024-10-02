@@ -3,6 +3,7 @@ package com.codepunk.hollarhype.ui.component
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -30,6 +31,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import com.codepunk.hollarhype.R
 import com.codepunk.hollarhype.ui.preview.ComponentPreviews
 import com.codepunk.hollarhype.ui.theme.HollarhypeTheme
@@ -73,6 +75,7 @@ fun CountryCodePicker(
             colors = SearchBarDefaults.colors(
                 containerColor = MaterialTheme.colorScheme.surfaceVariant
             ),
+            windowInsets = WindowInsets(top = 0.dp),
             inputField = {
                 SearchBarDefaults.InputField(
                     query = query,

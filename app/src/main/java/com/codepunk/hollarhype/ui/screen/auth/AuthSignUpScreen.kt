@@ -19,16 +19,20 @@ import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilledIconButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SheetState
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -40,7 +44,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalConfiguration
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -49,11 +52,10 @@ import androidx.window.core.layout.WindowHeightSizeClass
 import androidx.window.core.layout.WindowWidthSizeClass
 import com.codepunk.hollarhype.R
 import com.codepunk.hollarhype.ui.component.CountryCodePicker
-import com.codepunk.hollarhype.ui.component.CountryCodePickerDialog
 import com.codepunk.hollarhype.ui.component.HollarHypeTopAppBar
 import com.codepunk.hollarhype.ui.component.PhoneNumber
-import com.codepunk.hollarhype.util.intl.Region
 import com.codepunk.hollarhype.ui.preview.ScreenPreviews
+import com.codepunk.hollarhype.ui.screen.auth.AuthEvent.SignUp
 import com.codepunk.hollarhype.ui.theme.HollarhypeTheme
 import com.codepunk.hollarhype.ui.theme.Size2xLarge
 import com.codepunk.hollarhype.ui.theme.Size3xLarge
@@ -68,9 +70,10 @@ import com.codepunk.hollarhype.ui.theme.largeGutterSize
 import com.codepunk.hollarhype.ui.theme.layoutMargin
 import com.codepunk.hollarhype.ui.theme.standardButtonHeight
 import com.codepunk.hollarhype.ui.theme.standardButtonWidth
-import com.codepunk.hollarhype.ui.screen.auth.AuthEvent.SignUp
+import com.codepunk.hollarhype.util.intl.Region
 import kotlin.math.sqrt
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AuthSignUpScreen(
     modifier: Modifier = Modifier,
@@ -81,6 +84,7 @@ fun AuthSignUpScreen(
     val snackBarHostState = remember { SnackbarHostState() }
     val keyboardController = LocalSoftwareKeyboardController.current
     var showRegionPicker by rememberSaveable { mutableStateOf(false) }
+    val modalBottomSheetState: SheetState = rememberModalBottomSheetState()
 
     // Do the following when signup result is "fresh"
     // ...
@@ -122,10 +126,12 @@ fun AuthSignUpScreen(
     }
 
     if (showRegionPicker) {
-        CountryCodePickerDialog(
-            onDismiss = { showRegionPicker = false }
+        ModalBottomSheet(
+            onDismissRequest = { showRegionPicker = false },
+            sheetState = modalBottomSheetState
         ) {
             CountryCodePicker(
+                modifier = Modifier.padding(SizeMedium.mid),
                 onItemSelected = {
                     onEvent(AuthEvent.UpdateRegion(it))
                     showRegionPicker = false

@@ -15,12 +15,16 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SheetState
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -37,7 +41,6 @@ import androidx.compose.ui.text.style.TextAlign
 import com.codepunk.hollarhype.R
 import com.codepunk.hollarhype.ui.common.showErrorSnackBar
 import com.codepunk.hollarhype.ui.component.CountryCodePicker
-import com.codepunk.hollarhype.ui.component.CountryCodePickerDialog
 import com.codepunk.hollarhype.ui.component.HollarHypeTopAppBar
 import com.codepunk.hollarhype.ui.component.PhoneNumber
 import com.codepunk.hollarhype.ui.preview.ScreenPreviews
@@ -51,6 +54,7 @@ import com.codepunk.hollarhype.ui.theme.standardButtonHeight
 import com.codepunk.hollarhype.ui.theme.standardButtonWidth
 import com.codepunk.hollarhype.util.http.HttpStatusException
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AuthSignInScreen(
     modifier: Modifier = Modifier,
@@ -61,6 +65,7 @@ fun AuthSignInScreen(
     val snackBarHostState = remember { SnackbarHostState() }
     val keyboardController = LocalSoftwareKeyboardController.current
     var showRegionPicker by rememberSaveable { mutableStateOf(false) }
+    val modalBottomSheetState: SheetState = rememberModalBottomSheetState()
 
     // Do the following when login result is "fresh"
     if (state.isLoginResultFresh) {
@@ -197,10 +202,12 @@ fun AuthSignInScreen(
     }
 
     if (showRegionPicker) {
-        CountryCodePickerDialog(
-            onDismiss = { showRegionPicker = false }
+        ModalBottomSheet(
+            onDismissRequest = { showRegionPicker = false },
+            sheetState = modalBottomSheetState
         ) {
             CountryCodePicker(
+                modifier = Modifier.padding(SizeMedium.mid),
                 onItemSelected = {
                     onEvent(AuthEvent.UpdateRegion(it))
                     showRegionPicker = false
