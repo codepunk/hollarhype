@@ -36,8 +36,8 @@ fun Navigation(
                 // everything else falls through to AuthViewModel
                 when (event) {
                     is AuthEvent.NavigateToLanding -> navController.navigate(Route.Landing) {
-                        popUpTo(Route.Auth) {
-                            inclusive = true
+                        popUpTo(navController.graph.id) {
+                            saveState = true
                         }
                     }
                     else -> viewModel.onEvent(event)
