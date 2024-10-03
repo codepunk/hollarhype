@@ -30,6 +30,7 @@ val hhMagenta = Color(0xFFFF3BFB)
 val hhGrayscaleLight = Color(0xFFFFFFFF)
 val hhGrayscaleMedium = Color(0xFFF5F5F5)
 val hhGrayscaleDark = Color(0xFF151925)
+val hhError = Color(0xFFFF5449)
 
 val hhGreenPalette = mapOf(
     Tone.TONE_0 to Color(0xFF000000),
@@ -133,5 +134,26 @@ val hhGrayscalePalette = mapOf(
     Tone.TONE_95 to Color(0xFFF4F0EF),
     Tone.TONE_98 to Color(0xFFFCF8F8),
     Tone.TONE_99 to Color(0xFFF6FEFF),
+    Tone.TONE_100 to Color(0xFFFFFFFF)
+)
+
+val hhErrorPalette = mapOf(
+    Tone.TONE_0 to Color(0xFF000000),
+    Tone.TONE_5 to Color(0xFF2D0001),
+    Tone.TONE_10 to Color(0xFF410002),
+    Tone.TONE_15 to Color(0xFF540003),
+    Tone.TONE_20 to Color(0xFF690005),
+    Tone.TONE_25 to Color(0xFF7E0007),
+    Tone.TONE_30 to Color(0xFF93000A),
+    Tone.TONE_35 to Color(0xFFA60F13),
+    Tone.TONE_40 to Color(0xFFB81F1E),
+    Tone.TONE_50 to Color(0xFFDB3A33),
+    Tone.TONE_60 to Color(0xFFFF5449),
+    Tone.TONE_70 to Color(0xFFFF897D),
+    Tone.TONE_80 to Color(0xFFFFB4AB),
+    Tone.TONE_90 to Color(0xFFFFDAD6),
+    Tone.TONE_95 to Color(0xFFFFEDEA),
+    Tone.TONE_98 to Color(0xFFFFF8F7),
+    Tone.TONE_99 to Color(0xFFFFFBFF),
     Tone.TONE_100 to Color(0xFFFFFFFF)
 )
