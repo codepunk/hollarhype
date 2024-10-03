@@ -82,6 +82,7 @@ google-fonts = { group = "androidx.compose.ui", name = "ui-text-google-fonts", v
 datastore-preferences = { group = "androidx.datastore", name = "datastore-preferences", version.ref = "datastore" }
 datastore = { group = "androidx.datastore", name = "datastore", version.ref = "datastore" }
 splashscreen = { group = "androidx.core", name = "core-splashscreen", version.ref = "splashscreen" }
+adaptive-navigation-suite = { group = "androidx.compose.material3", name="material3-adaptive-navigation-suite" }
 
 [plugins]
 # Supplied by New Project template

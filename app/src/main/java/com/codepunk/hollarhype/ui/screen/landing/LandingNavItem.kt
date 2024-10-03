@@ -1,11 +1,10 @@
 package com.codepunk.hollarhype.ui.screen.landing
 
 import com.codepunk.hollarhype.R
-import com.codepunk.hollarhype.ui.screen.auth.LandingRoute
 import kotlinx.serialization.Serializable
 
 @Serializable
-enum class BottomNavItem(
+enum class LandingNavItem(
     val route: LandingRoute,
     val iconRes: Int,
     val labelRes: Int,

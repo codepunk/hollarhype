@@ -1,6 +1,4 @@
-package com.codepunk.hollarhype.ui.screen.auth
-
-import com.codepunk.hollarhype.ui.screen.landing.LandingScreen
+package com.codepunk.hollarhype.ui.screen.landing
 
 import kotlinx.serialization.Serializable
 

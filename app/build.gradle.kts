@@ -200,4 +200,7 @@ dependencies {
 
     // Splashscreen
     implementation(libs.splashscreen)
+
+    // Adaptive Navigation Suite
+    implementation(libs.adaptive.navigation.suite)
 }
