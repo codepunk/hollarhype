@@ -1,9 +1,47 @@
 package com.codepunk.hollarhype.ui.theme
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.core.graphics.ColorUtils
+import com.codepunk.hollarhype.ui.theme.util.Palette
 
 val WhiteSmoke = Color(0xFFF5F5F5)
 val BlackSmoke = Color(0xFF0A0A0A)
+
+val HypeGreen = Color(0xFFB4F946)
+val HypeBlue = Color(0xFF3BA4FF)
+val HypeOrange = Color(0xFFFFB155)
+val HypeMagenta = Color(0xFFFF3BFB)
+val HypeLight = Color(0xFFF5F5F5)
+val HypeDark = Color(0xFF151925)
+val HypeError = Color(0xFFFF5449)
+val HypeTextDark = Color(0xFF151925)
+val HypeTextMedium = Color(0xFF8A8C92)
+val HypeTextLight = Color(0xFFE5E5E5)
+
+val hypeGreenPalette = Palette(HypeGreen)
+val hypeBluePalette = Palette(HypeBlue)
+val hypeOrangePalette = Palette(HypeOrange)
+val hypeMagentaPalette = Palette(HypeMagenta)
+val hypeDarkPalette = Palette(HypeDark)
+val hypeLightPalette = Palette(HypeLight)
+val hypeTextMediumPalette = Palette(HypeTextMedium)
 
 /**
  * These values were built by feeding core HollarHype colors
@@ -256,3 +294,147 @@ val onQuaternaryDarkHighContrast = Color(0xFF000000)
 val quaternaryContainerDarkHighContrast = Color(0xFFFFB0FC)
 val onQuaternaryContainerDarkHighContrast = Color(0xFF000000)
 
+@Composable
+private fun PreviewColor(
+    modifier: Modifier = Modifier,
+    color: Color,
+    palette: Palette,
+    title: String
+) {
+    Column(
+        modifier = modifier,
+        verticalArrangement = Arrangement.spacedBy(sizes.padding)
+    ) {
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .weight(1f)
+                .background(color)
+        ) {
+            val lum = ColorUtils.calculateLuminance(color.toArgb())
+            Text(
+                modifier = Modifier
+                    .padding(sizes.padding)
+                    .align(Alignment.BottomEnd),
+                text = title,
+                color = if (lum < 0.5f) Color.White else Color.Black
+            )
+        }
+
+        HorizontalDivider()
+
+        palette.colors.forEach {
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .weight(1f)
+                    .background(it.value)
+            ) {
+                val lum = ColorUtils.calculateLuminance(it.value.toArgb())
+                Text(
+                    modifier = Modifier
+                        .padding(sizes.padding)
+                        .align(Alignment.BottomEnd),
+                    text = it.key.toString(),
+                    color = if (lum < 0.5f) Color.White else Color.Black
+                )
+            }
+        }
+    }
+}
+
+@Preview
+@Composable
+fun PreviewColors() {
+    HollarhypeTheme {
+        Scaffold { padding ->
+            Row(
+                modifier = Modifier
+                    .padding(padding)
+                    .fillMaxSize()
+                    .padding(sizes.padding),
+                horizontalArrangement = Arrangement.spacedBy(sizes.padding)
+            ) {
+                PreviewColor(
+                    modifier = Modifier
+                        .fillMaxHeight()
+                        .weight(1f),
+                    color = HypeGreen,
+                    palette = hypeGreenPalette,
+                    title = "HypeGreen"
+                )
+
+                PreviewColor(
+                    modifier = Modifier
+                        .fillMaxHeight()
+                        .weight(1f),
+                    color = HypeBlue,
+                    palette = hypeBluePalette,
+                    title = "HypeBlue"
+                )
+
+                PreviewColor(
+                    modifier = Modifier
+                        .fillMaxHeight()
+                        .weight(1f),
+                    color = HypeOrange,
+                    palette = hypeOrangePalette,
+                    title = "HypeOrange"
+                )
+
+                PreviewColor(
+                    modifier = Modifier
+                        .fillMaxHeight()
+                        .weight(1f),
+                    color = HypeMagenta,
+                    palette = hypeMagentaPalette,
+                    title = "HypeMagenta"
+                )
+
+            }
+        }
+    }
+}
+
+@Preview
+@Composable
+fun PreviewGrayscale() {
+    HollarhypeTheme {
+        Scaffold { padding ->
+            Row(
+                modifier = Modifier
+                    .padding(padding)
+                    .fillMaxSize()
+                    .padding(sizes.padding),
+                horizontalArrangement = Arrangement.spacedBy(sizes.padding)
+            ) {
+                PreviewColor(
+                    modifier = Modifier
+                        .fillMaxHeight()
+                        .weight(1f),
+                    color = HypeDark,
+                    palette = hypeDarkPalette,
+                    title = "HypeDark"
+                )
+
+                PreviewColor(
+                    modifier = Modifier
+                        .fillMaxHeight()
+                        .weight(1f),
+                    color = HypeLight,
+                    palette = hypeLightPalette,
+                    title = "HypeLight"
+                )
+
+                PreviewColor(
+                    modifier = Modifier
+                        .fillMaxHeight()
+                        .weight(1f),
+                    color = HypeTextMedium,
+                    palette = hypeTextMediumPalette,
+                    title = "HypeTextMedium"
+                )
+            }
+        }
+    }
+}

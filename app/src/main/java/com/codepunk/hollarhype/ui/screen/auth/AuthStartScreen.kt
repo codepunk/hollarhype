@@ -26,12 +26,9 @@ import com.codepunk.hollarhype.ui.preview.ScreenPreviews
 import com.codepunk.hollarhype.ui.screen.auth.AuthEvent.NavigateToSignIn
 import com.codepunk.hollarhype.ui.screen.auth.AuthEvent.NavigateToSignUp
 import com.codepunk.hollarhype.ui.theme.HollarhypeTheme
-import com.codepunk.hollarhype.ui.theme.Size3xLarge
-import com.codepunk.hollarhype.ui.theme.SizeMedium
 import com.codepunk.hollarhype.ui.theme.buttonCornerRadius
-import com.codepunk.hollarhype.ui.theme.layoutMargin
-import com.codepunk.hollarhype.ui.theme.standardButtonHeight
-import com.codepunk.hollarhype.ui.theme.standardButtonWidth
+import com.codepunk.hollarhype.ui.theme.sizes
+import com.codepunk.hollarhype.ui.theme.util.layoutMargin
 
 @Composable
 fun AuthStartScreen(
@@ -46,12 +43,12 @@ fun AuthStartScreen(
     ) {
         Column(
             modifier = Modifier
-                .widthIn(max = Size3xLarge.mid)
+                .widthIn(max = sizes.regionXLarge)
                 .fillMaxSize()
                 .align(Alignment.Center),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(
-                space = SizeMedium.value,
+                space = sizes.paddingLarge,
                 alignment = Alignment.CenterVertically
             )
         ) {
@@ -63,8 +60,8 @@ fun AuthStartScreen(
 
             Button(
                 modifier = Modifier
-                    .width(standardButtonWidth)
-                    .height(standardButtonHeight),
+                    .width(sizes.regionMedium)
+                    .height(sizes.componentMedium),
                 shape = RoundedCornerShape(size = buttonCornerRadius),
                 colors = ButtonDefaults.buttonColors(
                     containerColor = MaterialTheme.colorScheme.secondaryContainer,
@@ -80,8 +77,8 @@ fun AuthStartScreen(
 
             Button(
                 modifier = Modifier
-                    .width(standardButtonWidth)
-                    .height(standardButtonHeight),
+                    .width(sizes.regionMedium)
+                    .height(sizes.componentMedium),
                 shape = RoundedCornerShape(size = buttonCornerRadius),
                 onClick = { onEvent(NavigateToSignIn) }
             ) {

@@ -21,11 +21,11 @@ fun ActivityScreen(
         topBar = {
             HollarHypeTopAppBar()
         }
-    ) { innerPadding ->
+    ) { padding ->
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(innerPadding),
+                .padding(padding),
             contentAlignment = Alignment.Center
         ) {
             Text(text = "Activity")

@@ -11,6 +11,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.unit.dp
+import com.codepunk.hollarhype.ui.theme.util.SizeScheme
+import com.codepunk.hollarhype.ui.theme.util.sizeScheme
 
 /**
  * These values were built by feeding core HollarHype colors
@@ -316,12 +319,15 @@ val unspecified_scheme = ColorFamily(
     Color.Unspecified, Color.Unspecified, Color.Unspecified, Color.Unspecified
 )
 
+val sizes = sizeScheme()
+val buttonCornerRadius = 8.dp
+
 @Composable
 fun HollarhypeTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
     // Dynamic color is available on Android 12+
     dynamicColor: Boolean = false,
-    content: @Composable() () -> Unit
+    content: @Composable () -> Unit
 ) {
     val colorScheme = when {
         dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {

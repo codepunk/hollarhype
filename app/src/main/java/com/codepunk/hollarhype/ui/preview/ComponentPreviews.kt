@@ -29,5 +29,4 @@ import androidx.compose.ui.tooling.preview.Preview
     device = Devices.TABLET,
     group = "Dark Mode"
 )
-
 annotation class ComponentPreviews

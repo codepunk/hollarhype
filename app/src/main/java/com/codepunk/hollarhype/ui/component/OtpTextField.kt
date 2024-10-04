@@ -34,10 +34,7 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
 import com.codepunk.hollarhype.ui.preview.ComponentPreviews
 import com.codepunk.hollarhype.ui.theme.HollarhypeTheme
-import com.codepunk.hollarhype.ui.theme.SizeLarge
-import com.codepunk.hollarhype.ui.theme.SizeLine
-import com.codepunk.hollarhype.ui.theme.SizeMedium
-import com.codepunk.hollarhype.ui.theme.SizeSmall
+import com.codepunk.hollarhype.ui.theme.sizes
 import com.codepunk.hollarhype.util.intl.Region
 import kotlin.math.roundToInt
 
@@ -72,7 +69,7 @@ fun OtpTextField(
         keyboardActions = keyboardActions,
         decorationBox = {
             Row(
-                horizontalArrangement = Arrangement.spacedBy(SizeSmall.value)
+                horizontalArrangement = Arrangement.spacedBy(sizes.padding)
             ) {
                 repeat(otpLength) { index ->
                     CharField(
@@ -103,9 +100,9 @@ fun CharField(
 
     Text(
         modifier = Modifier
-            .width(SizeLarge.mid)
+            .width(sizes.componentMedium)
             .border(
-                width = SizeLine.value,
+                width = sizes.border,
                 color = if (current) {
                     OutlinedTextFieldDefaults.colors().focusedIndicatorColor
                 } else {
@@ -113,7 +110,7 @@ fun CharField(
                 },
                 shape = OutlinedTextFieldDefaults.shape
             )
-            .padding(SizeMedium.value)
+            .padding(sizes.paddingLarge)
             .background(
                 color = if (current) {
                     OutlinedTextFieldDefaults.colors().focusedContainerColor

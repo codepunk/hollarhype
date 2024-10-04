@@ -35,8 +35,7 @@ import androidx.compose.ui.unit.dp
 import com.codepunk.hollarhype.R
 import com.codepunk.hollarhype.ui.preview.ComponentPreviews
 import com.codepunk.hollarhype.ui.theme.HollarhypeTheme
-import com.codepunk.hollarhype.ui.theme.SizeLarge
-import com.codepunk.hollarhype.ui.theme.SizeSmall
+import com.codepunk.hollarhype.ui.theme.sizes
 import com.codepunk.hollarhype.util.intl.Region
 import com.codepunk.hollarhype.util.intl.getSupportedRegions
 
@@ -62,7 +61,7 @@ fun CountryCodePicker(
     Column(
         modifier = modifier
             .fillMaxSize(),
-        verticalArrangement = Arrangement.spacedBy(SizeSmall.value)
+        verticalArrangement = Arrangement.spacedBy(sizes.padding)
     ) {
         Text(
             modifier = Modifier.fillMaxWidth(),
@@ -108,20 +107,20 @@ fun CountryCodePicker(
 
         LazyColumn(
             modifier = Modifier.fillMaxSize(),
-            verticalArrangement = Arrangement.spacedBy(SizeSmall.value)
+            verticalArrangement = Arrangement.spacedBy(sizes.padding)
         ) {
             items(count = filteredRegions.size) { index ->
                 val item = filteredRegions[index]
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(SizeLarge.value)
+                        .height(sizes.componentSmall)
                         .selectable(
                             selected = false,
                             onClick = { onItemSelected(item) }
                         ),
                     verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(SizeSmall.value)
+                    horizontalArrangement = Arrangement.spacedBy(sizes.padding)
                 ) {
                     Text(
                         text = item.flagEmoji

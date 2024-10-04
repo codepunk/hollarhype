@@ -57,19 +57,10 @@ import com.codepunk.hollarhype.ui.component.PhoneNumber
 import com.codepunk.hollarhype.ui.preview.ScreenPreviews
 import com.codepunk.hollarhype.ui.screen.auth.AuthEvent.SignUp
 import com.codepunk.hollarhype.ui.theme.HollarhypeTheme
-import com.codepunk.hollarhype.ui.theme.Size2xLarge
-import com.codepunk.hollarhype.ui.theme.Size3xLarge
-import com.codepunk.hollarhype.ui.theme.SizeHuge
-import com.codepunk.hollarhype.ui.theme.SizeLarge
-import com.codepunk.hollarhype.ui.theme.SizeMedium
-import com.codepunk.hollarhype.ui.theme.SizeSmall
-import com.codepunk.hollarhype.ui.theme.SizeXLarge
 import com.codepunk.hollarhype.ui.theme.buttonCornerRadius
-import com.codepunk.hollarhype.ui.theme.currentWindowAdaptiveInfoCustom
-import com.codepunk.hollarhype.ui.theme.largeGutterSize
-import com.codepunk.hollarhype.ui.theme.layoutMargin
-import com.codepunk.hollarhype.ui.theme.standardButtonHeight
-import com.codepunk.hollarhype.ui.theme.standardButtonWidth
+import com.codepunk.hollarhype.ui.theme.sizes
+import com.codepunk.hollarhype.ui.theme.util.currentWindowAdaptiveInfoCustom
+import com.codepunk.hollarhype.ui.theme.util.layoutMargin
 import com.codepunk.hollarhype.util.intl.Region
 import kotlin.math.sqrt
 
@@ -131,7 +122,7 @@ fun AuthSignUpScreen(
             sheetState = modalBottomSheetState
         ) {
             CountryCodePicker(
-                modifier = Modifier.padding(SizeMedium.mid),
+                modifier = Modifier.padding(sizes.paddingXLarge),
                 onItemSelected = {
                     onEvent(AuthEvent.UpdateRegion(it))
                     showRegionPicker = false
@@ -151,17 +142,17 @@ fun SignUpNonLandscape(
     // Avatar size is based on width
     val windowSizeClass = currentWindowAdaptiveInfoCustom().windowSizeClass.windowWidthSizeClass
     val avatarSize = when (windowSizeClass) {
-        WindowWidthSizeClass.COMPACT -> SizeXLarge.mid
-        else -> Size2xLarge.mid
+        WindowWidthSizeClass.COMPACT -> sizes.componentXLarge
+        else -> sizes.regionMedium
     }
 
     Column(
         modifier = Modifier
-            .widthIn(max = Size3xLarge.mid)
+            .widthIn(max = sizes.regionXLarge)
             .fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(
-            space = SizeLarge.value,
+            space = sizes.padding2xLarge,
             alignment = Alignment.CenterVertically
         )
     ) {
@@ -210,8 +201,8 @@ fun SignUpLandscape(
     // Avatar size is based on height
     val windowSizeClass = currentWindowAdaptiveInfoCustom().windowSizeClass.windowHeightSizeClass
     val avatarSize = when (windowSizeClass) {
-        WindowHeightSizeClass.COMPACT -> SizeXLarge.mid
-        else -> Size2xLarge.mid
+        WindowHeightSizeClass.COMPACT -> sizes.componentXLarge
+        else -> sizes.regionMedium
     }
 
     Row(
@@ -227,11 +218,11 @@ fun SignUpLandscape(
         ) {
             Column(
                 modifier = Modifier
-                    .widthIn(max = SizeHuge.value)
+                    .widthIn(max = sizes.region2XLarge)
                     .fillMaxWidth(),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.spacedBy(
-                    space = SizeLarge.value,
+                    space = sizes.padding2xLarge,
                     alignment = Alignment.CenterVertically
                 )
             ) {
@@ -259,7 +250,7 @@ fun SignUpLandscape(
 
         Spacer(
             modifier = Modifier
-                .width(largeGutterSize)
+                .width(sizes.padding2xLarge)
                 .fillMaxHeight()
         )
 
@@ -271,7 +262,7 @@ fun SignUpLandscape(
         ) {
             SignUpForm(
                 modifier = Modifier
-                    .widthIn(max = SizeHuge.value)
+                    .widthIn(max = sizes.region2XLarge)
                     .fillMaxWidth(),
                 firstName = state.firstName,
                 lastName = state.lastName,
@@ -363,7 +354,7 @@ fun SignUpForm(
 ) {
     Column(
         modifier = modifier,
-        verticalArrangement = Arrangement.spacedBy(SizeSmall.value)
+        verticalArrangement = Arrangement.spacedBy(sizes.padding)
     ) {
         OutlinedTextField(
             modifier = Modifier.fillMaxWidth(),
@@ -435,7 +426,7 @@ fun SignUpSubmit(
     Column(
         modifier = modifier,
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(SizeMedium.mid)
+        verticalArrangement = Arrangement.spacedBy(sizes.paddingXLarge)
     ) {
         Text(
             text = stringResource(id = R.string.disclaimer),
@@ -445,8 +436,8 @@ fun SignUpSubmit(
 
         Button(
             modifier = Modifier
-                .width(standardButtonWidth)
-                .height(standardButtonHeight),
+                .width(sizes.regionMedium)
+                .height(sizes.componentMedium),
             shape = RoundedCornerShape(size = buttonCornerRadius),
             onClick = { onSubmit() }
         ) {

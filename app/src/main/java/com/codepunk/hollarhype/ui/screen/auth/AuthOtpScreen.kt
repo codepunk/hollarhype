@@ -41,14 +41,10 @@ import com.codepunk.hollarhype.ui.component.HollarHypeTopAppBar
 import com.codepunk.hollarhype.ui.component.OtpTextField
 import com.codepunk.hollarhype.ui.preview.ScreenPreviews
 import com.codepunk.hollarhype.ui.theme.HollarhypeTheme
-import com.codepunk.hollarhype.ui.theme.Size3xLarge
-import com.codepunk.hollarhype.ui.theme.SizeLarge
-import com.codepunk.hollarhype.ui.theme.SizeMedium
 import com.codepunk.hollarhype.ui.theme.baseline
 import com.codepunk.hollarhype.ui.theme.buttonCornerRadius
-import com.codepunk.hollarhype.ui.theme.layoutMargin
-import com.codepunk.hollarhype.ui.theme.standardButtonHeight
-import com.codepunk.hollarhype.ui.theme.standardButtonWidth
+import com.codepunk.hollarhype.ui.theme.sizes
+import com.codepunk.hollarhype.ui.theme.util.layoutMargin
 import com.codepunk.hollarhype.util.http.HttpStatusException
 
 const val OTP_LENGTH = 5
@@ -113,13 +109,13 @@ fun AuthOtpScreen(
         ) {
             Column(
                 modifier = Modifier
-                    .widthIn(max = Size3xLarge.mid)
+                    .widthIn(max = sizes.regionXLarge)
                     .fillMaxSize()
                     .padding(
-                        bottom = SizeLarge.value
+                        bottom = sizes.paddingXLarge
                     ),
                 horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.spacedBy(SizeMedium.value)
+                verticalArrangement = Arrangement.spacedBy(sizes.paddingLarge)
             ) {
                 Spacer(
                     modifier = Modifier
@@ -129,8 +125,8 @@ fun AuthOtpScreen(
 
                 Text(
                     modifier = Modifier
-                        .padding(SizeLarge.value)
-                        .widthIn(max = Size3xLarge.value),
+                        .padding(sizes.paddingXLarge)
+                        .widthIn(max = sizes.regionLarge),
                     text = stringResource(id = R.string.enter_otp).uppercase(),
                     color = MaterialTheme.colorScheme.onBackground,
                     style = MaterialTheme.typography.headlineSmall,
@@ -172,7 +168,7 @@ fun AuthOtpScreen(
                 )
 
                 TextButton(
-                    modifier = Modifier.padding(top = SizeMedium.value),
+                    modifier = Modifier.padding(top = sizes.paddingLarge),
                     onClick = { onEvent(AuthEvent.ResendOtp) }
                 ) {
                     Text(
@@ -191,8 +187,8 @@ fun AuthOtpScreen(
 
                 Button(
                     modifier = Modifier
-                        .width(standardButtonWidth)
-                        .height(standardButtonHeight),
+                        .width(sizes.regionMedium)
+                        .height(sizes.componentMedium),
                     shape = RoundedCornerShape(size = buttonCornerRadius),
                     enabled = (!state.isLoading && state.otp.length == OTP_LENGTH),
                     onClick = {

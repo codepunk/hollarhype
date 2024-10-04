@@ -34,9 +34,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import com.codepunk.hollarhype.R
 import com.codepunk.hollarhype.ui.preview.ComponentPreviews
 import com.codepunk.hollarhype.ui.theme.HollarhypeTheme
-import com.codepunk.hollarhype.ui.theme.SizeLarge
-import com.codepunk.hollarhype.ui.theme.SizeSmall
-import com.codepunk.hollarhype.ui.theme.SizeTiny
+import com.codepunk.hollarhype.ui.theme.sizes
 import com.codepunk.hollarhype.util.intl.PhoneNumberVisualTransformation
 import com.codepunk.hollarhype.util.intl.Region
 import com.google.i18n.phonenumbers.PhoneNumberUtil
@@ -75,11 +73,11 @@ fun PhoneNumber(
         modifier = modifier
             .width(IntrinsicSize.Min),
         verticalAlignment = Alignment.Top,
-        horizontalArrangement = Arrangement.spacedBy(SizeSmall.value)
+        horizontalArrangement = Arrangement.spacedBy(sizes.padding)
     ) {
         OutlinedButton(
             modifier = Modifier.padding(top = buttonTopPadding),
-            shape = RoundedCornerShape(size = SizeTiny.value),
+            shape = RoundedCornerShape(size = sizes.roundedCorner),
             colors = ButtonDefaults.buttonColors(
                 containerColor = MaterialTheme.colorScheme.surfaceVariant
             ),
@@ -90,7 +88,7 @@ fun PhoneNumber(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    modifier = Modifier.widthIn(min = SizeLarge.value),
+                    modifier = Modifier.widthIn(min = sizes.componentMedium),
                     text = "+$countryCode",
                     color = MaterialTheme.colorScheme.onBackground,
                     style = MaterialTheme.typography.labelMedium
