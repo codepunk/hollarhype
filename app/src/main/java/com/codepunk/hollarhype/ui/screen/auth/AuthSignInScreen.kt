@@ -170,6 +170,10 @@ fun AuthSignInScreen(
                         .width(sizes.regionMedium)
                         .height(sizes.componentMedium),
                     shape = RoundedCornerShape(size = buttonCornerRadius),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = MaterialTheme.colorScheme.inverseSurface,
+                        contentColor = MaterialTheme.colorScheme.inverseOnSurface
+                    ),
                     enabled = (!state.isLoading),
                     onClick = {
                         onEvent(AuthEvent.ClearLoginResult)
