@@ -109,7 +109,6 @@ fun AuthOtpScreen(
         ) {
             Column(
                 modifier = Modifier
-                    .widthIn(max = sizes.regionXLarge)
                     .fillMaxSize()
                     .padding(
                         bottom = sizes.paddingXLarge
@@ -125,7 +124,6 @@ fun AuthOtpScreen(
 
                 Text(
                     modifier = Modifier
-                        .padding(sizes.paddingXLarge)
                         .widthIn(max = sizes.regionLarge),
                     text = stringResource(id = R.string.enter_otp).uppercase(),
                     color = MaterialTheme.colorScheme.onBackground,

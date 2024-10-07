@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilledIconButton
@@ -56,7 +57,6 @@ import com.codepunk.hollarhype.ui.component.PhoneNumber
 import com.codepunk.hollarhype.ui.preview.ScreenPreviews
 import com.codepunk.hollarhype.ui.screen.auth.AuthEvent.SignUp
 import com.codepunk.hollarhype.ui.theme.HollarhypeTheme
-import com.codepunk.hollarhype.ui.theme.hypeButtonCornerRadius
 import com.codepunk.hollarhype.ui.theme.hypeButtonHeight
 import com.codepunk.hollarhype.ui.theme.hypeButtonWidth
 import com.codepunk.hollarhype.ui.theme.sizes
@@ -353,69 +353,77 @@ fun SignUpForm(
     onPhoneNumberChange: (String) -> Unit,
     onShowRegionPicker: () -> Unit
 ) {
-    Column(
+    LazyColumn(
         modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(sizes.padding)
     ) {
-        OutlinedTextField(
-            modifier = Modifier.fillMaxWidth(),
-            colors = OutlinedTextFieldDefaults.colors(
-                focusedContainerColor = MaterialTheme.colorScheme.surfaceVariant,
-                unfocusedContainerColor = MaterialTheme.colorScheme.surfaceVariant
-            ),
-            maxLines = 1,
-            singleLine = true,
-            value = firstName,
-            label = {
-                Text(
-                    text = stringResource(id = R.string.first_name)
-                )
-            },
-            onValueChange = onFirstNameChange
-        )
+        item {
+            OutlinedTextField(
+                modifier = Modifier.fillMaxWidth(),
+                colors = OutlinedTextFieldDefaults.colors(
+                    focusedContainerColor = MaterialTheme.colorScheme.surfaceVariant,
+                    unfocusedContainerColor = MaterialTheme.colorScheme.surfaceVariant
+                ),
+                maxLines = 1,
+                singleLine = true,
+                value = firstName,
+                label = {
+                    Text(
+                        text = stringResource(id = R.string.first_name)
+                    )
+                },
+                onValueChange = onFirstNameChange
+            )
+        }
 
-        OutlinedTextField(
-            modifier = Modifier.fillMaxWidth(),
-            value = lastName,
-            colors = OutlinedTextFieldDefaults.colors(
-                focusedContainerColor = MaterialTheme.colorScheme.surfaceVariant,
-                unfocusedContainerColor = MaterialTheme.colorScheme.surfaceVariant
-            ),
-            maxLines = 1,
-            singleLine = true,
-            label = {
-                Text(
-                    text = stringResource(id = R.string.last_name),
-                )
-            },
-            onValueChange = onLastNameChange
-        )
+        item {
+            OutlinedTextField(
+                modifier = Modifier.fillMaxWidth(),
+                value = lastName,
+                colors = OutlinedTextFieldDefaults.colors(
+                    focusedContainerColor = MaterialTheme.colorScheme.surfaceVariant,
+                    unfocusedContainerColor = MaterialTheme.colorScheme.surfaceVariant
+                ),
+                maxLines = 1,
+                singleLine = true,
+                label = {
+                    Text(
+                        text = stringResource(id = R.string.last_name),
+                    )
+                },
+                onValueChange = onLastNameChange
+            )
+        }
 
-        OutlinedTextField(
-            modifier = Modifier.fillMaxWidth(),
-            value = emailAddress,
-            colors = OutlinedTextFieldDefaults.colors(
-                focusedContainerColor = MaterialTheme.colorScheme.surfaceVariant,
-                unfocusedContainerColor = MaterialTheme.colorScheme.surfaceVariant
-            ),
-            maxLines = 1,
-            singleLine = true,
-            label = {
-                Text(
-                    text = stringResource(id = R.string.email_address),
-                )
-            },
-            onValueChange = onEmailAddressChange
-        )
+        item {
+            OutlinedTextField(
+                modifier = Modifier.fillMaxWidth(),
+                value = emailAddress,
+                colors = OutlinedTextFieldDefaults.colors(
+                    focusedContainerColor = MaterialTheme.colorScheme.surfaceVariant,
+                    unfocusedContainerColor = MaterialTheme.colorScheme.surfaceVariant
+                ),
+                maxLines = 1,
+                singleLine = true,
+                label = {
+                    Text(
+                        text = stringResource(id = R.string.email_address),
+                    )
+                },
+                onValueChange = onEmailAddressChange
+            )
+        }
 
-        PhoneNumber(
-            modifier = modifier.fillMaxWidth(),
-            regionCode = region.regionCode,
-            countryCode = region.countryCode,
-            phoneNumber = phoneNumber,
-            onCountryCodeClick = { onShowRegionPicker() },
-            onPhoneNumberChange = onPhoneNumberChange
-        )
+        item {
+            PhoneNumber(
+                modifier = modifier.fillMaxWidth(),
+                regionCode = region.regionCode,
+                countryCode = region.countryCode,
+                phoneNumber = phoneNumber,
+                onCountryCodeClick = { onShowRegionPicker() },
+                onPhoneNumberChange = onPhoneNumberChange
+            )
+        }
     }
 }
 
