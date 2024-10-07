@@ -26,9 +26,7 @@ import com.codepunk.hollarhype.ui.screen.auth.AuthEvent.NavigateToSignIn
 import com.codepunk.hollarhype.ui.screen.auth.AuthEvent.NavigateToSignUp
 import com.codepunk.hollarhype.ui.theme.HollarhypeTheme
 import com.codepunk.hollarhype.ui.theme.LocalFixedColors
-import com.codepunk.hollarhype.ui.theme.hypeButtonHeight
-import com.codepunk.hollarhype.ui.theme.hypeButtonWidth
-import com.codepunk.hollarhype.ui.theme.sizes
+import com.codepunk.hollarhype.ui.theme.LocalSizes
 import com.codepunk.hollarhype.ui.theme.util.layoutMargin
 
 @Composable
@@ -36,6 +34,8 @@ fun AuthStartScreen(
     modifier: Modifier = Modifier,
     onEvent: (AuthEvent) -> Unit = {}
 ) {
+    val sizes = LocalSizes.current
+
     val layoutMargin = layoutMargin()
     Box(
         modifier = modifier
@@ -44,7 +44,7 @@ fun AuthStartScreen(
     ) {
         Column(
             modifier = Modifier
-                .widthIn(max = sizes.regionXLarge)
+                .widthIn(max = sizes.region2xLarge)
                 .fillMaxSize()
                 .align(Alignment.Center),
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -61,8 +61,8 @@ fun AuthStartScreen(
 
             HypeButton(
                 modifier = Modifier
-                    .width(hypeButtonWidth)
-                    .height(hypeButtonHeight),
+                    .width(sizes.region)
+                    .height(sizes.component),
                 colors = ButtonDefaults.buttonColors(
                     containerColor = LocalFixedColors.current.primaryFixed,
                     contentColor = LocalFixedColors.current.onPrimaryFixed
@@ -77,8 +77,8 @@ fun AuthStartScreen(
 
             HypeButton(
                 modifier = Modifier
-                    .width(hypeButtonWidth)
-                    .height(hypeButtonHeight),
+                    .width(sizes.region)
+                    .height(sizes.component),
                 onClick = { onEvent(NavigateToSignIn) }
             ) {
                 Text(

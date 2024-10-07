@@ -35,7 +35,7 @@ import androidx.compose.ui.unit.dp
 import com.codepunk.hollarhype.R
 import com.codepunk.hollarhype.ui.preview.ComponentPreviews
 import com.codepunk.hollarhype.ui.theme.HollarhypeTheme
-import com.codepunk.hollarhype.ui.theme.sizes
+import com.codepunk.hollarhype.ui.theme.LocalSizes
 import com.codepunk.hollarhype.util.intl.Region
 import com.codepunk.hollarhype.util.intl.getSupportedRegions
 
@@ -45,6 +45,7 @@ fun CountryCodePicker(
     modifier: Modifier = Modifier,
     onItemSelected: (Region) -> Unit = { }
 ) {
+    val sizes = LocalSizes.current
     val keyboardController = LocalSoftwareKeyboardController.current
 
     val supportedRegions by remember { mutableStateOf(getSupportedRegions()) }

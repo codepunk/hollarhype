@@ -15,10 +15,7 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.staticCompositionLocalOf
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.unit.dp
-import com.codepunk.hollarhype.ui.theme.util.sizeScheme
 
 private const val MEDIUM_CONTRAST = (1f / 3)
 private const val HIGH_CONTRAST = (2f / 3)
@@ -310,30 +307,6 @@ val extendedDarkHighContrast = ExtendedColorScheme(
     ),
 )
 
-@Immutable
-data class ColorFamily(
-    val color: Color,
-    val onColor: Color,
-    val colorContainer: Color,
-    val onColorContainer: Color
-)
-
-@Immutable
-data class FixedColorScheme(
-    val primaryFixed: Color,
-    val onPrimaryFixed: Color,
-    val secondaryFixed: Color,
-    val onSecondaryFixed: Color,
-    val tertiaryFixed: Color,
-    val onTertiaryFixed: Color,
-    val quaternaryFixed: Color,
-    val onQuaternaryFixed: Color,
-    val primaryFixedDim: Color,
-    val secondaryFixedDim: Color,
-    val tertiaryFixedDim: Color,
-    val quaternaryFixedDim: Color
-)
-
 val fixedColors = FixedColorScheme(
     primaryFixed = HypeGreen,
     onPrimaryFixed = HypeNeutral,
@@ -343,10 +316,39 @@ val fixedColors = FixedColorScheme(
     onTertiaryFixed = HypeNeutral,
     quaternaryFixed = HypeMagenta,
     onQuaternaryFixed = HypeNeutral,
-    primaryFixedDim = primaryDark,
-    secondaryFixedDim = secondaryDark,
-    tertiaryFixedDim = tertiaryDark,
-    quaternaryFixedDim = quaternaryDark
+    primaryFixedDim = primaryLight,
+    onPrimaryFixedDim = onPrimaryLight,
+    secondaryFixedDim = secondaryLight,
+    onSecondaryFixedDim = onSecondaryLight,
+    tertiaryFixedDim = tertiaryLight,
+    onTertiaryFixedDim = onTertiaryLight,
+    quaternaryFixedDim = quaternaryLight,
+    onQuaternaryFixedDim = onQuaternaryLight
+)
+
+val fixedSizes = FixedSizeScheme(
+    border = border,
+    borderThick = borderThick,
+    paddingSmall = paddingSmall,
+    padding = padding,
+    paddingLarge = paddingLarge,
+    paddingXLarge = paddingXLarge,
+    padding2xLarge = padding2xLarge,
+    component2xSmall = component2xSmall,
+    componentXSmall = componentXSmall,
+    componentSmall = componentSmall,
+    component = component,
+    componentLarge = componentLarge,
+    componentXLarge = componentXLarge,
+    component2xLarge = component2xLarge,
+    region2xSmall = region2xSmall,
+    regionXSmall = regionXSmall,
+    regionSmall = regionSmall,
+    region = region,
+    regionLarge = regionLarge,
+    regionXLarge = regionXLarge,
+    region2xLarge = region2xLarge,
+    region3xLarge = region3xLarge
 )
 
 val LocalAppColors = staticCompositionLocalOf { lightScheme }
@@ -355,21 +357,26 @@ val LocalExtendedColors = staticCompositionLocalOf { extendedLight }
 
 val LocalFixedColors = staticCompositionLocalOf { fixedColors }
 
+val LocalSizes = staticCompositionLocalOf { fixedSizes }
+
 @Composable
-fun ProvideColors(
+fun ExtendedTheme(
     colorScheme: ColorScheme,
     extendedColorScheme: ExtendedColorScheme = LocalExtendedColors.current,
     fixedColorScheme: FixedColorScheme = LocalFixedColors.current,
+    fixesSizeScheme: FixedSizeScheme = LocalSizes.current,
     content: @Composable () -> Unit
 ) {
     val colorCache = remember { colorScheme }
     val extendedColorCache = remember { extendedColorScheme }
     val fixedColorCache = remember { fixedColorScheme }
+    val fixedSizeCache = remember { fixesSizeScheme }
 
     CompositionLocalProvider(
         LocalAppColors provides colorCache,
         LocalExtendedColors provides extendedColorCache,
         LocalFixedColors provides fixedColorCache,
+        LocalSizes provides fixedSizeCache,
         content = content
     )
 }
@@ -418,7 +425,7 @@ private fun <S> chooseColorScheme(
 fun HollarhypeTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
     // Dynamic color is available on Android 12+
-    dynamicColor: Boolean = true,
+    dynamicColor: Boolean = false,
     content: @Composable () -> Unit
 ) {
     val colorScheme = chooseColorScheme(
@@ -449,7 +456,7 @@ fun HollarhypeTheme(
         highContrastDarkColorScheme = extendedDarkHighContrast
     )
 
-    ProvideColors(
+    ExtendedTheme(
         colorScheme = colorScheme,
         extendedColorScheme = extendedColorScheme
     ) {
@@ -460,8 +467,3 @@ fun HollarhypeTheme(
         )
     }
 }
-
-val sizes = sizeScheme()
-val hypeButtonCornerRadius = 8.dp
-val hypeButtonWidth = sizes.regionMedium
-val hypeButtonHeight = sizes.componentMedium

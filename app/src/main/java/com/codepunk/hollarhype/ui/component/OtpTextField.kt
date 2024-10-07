@@ -34,7 +34,7 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
 import com.codepunk.hollarhype.ui.preview.ComponentPreviews
 import com.codepunk.hollarhype.ui.theme.HollarhypeTheme
-import com.codepunk.hollarhype.ui.theme.sizes
+import com.codepunk.hollarhype.ui.theme.LocalSizes
 import com.codepunk.hollarhype.util.intl.Region
 import kotlin.math.roundToInt
 
@@ -48,6 +48,8 @@ fun OtpTextField(
     onTextChange: (String, Boolean) -> Unit = { _, _ -> },
     keyboardActions: KeyboardActions = KeyboardActions.Default
 ) {
+    val sizes = LocalSizes.current
+
     LaunchedEffect(Unit) {
         if (text.length > otpLength) {
             throw IllegalArgumentException("Otp text value must not have more than otpCount: $otpLength characters")
@@ -88,6 +90,7 @@ fun CharField(
     text: String = "",
     index: Int
 ) {
+    val sizes = LocalSizes.current
     val blinkTransition = rememberInfiniteTransition(BLINKING_CURSOR)
     var focused by remember { mutableStateOf(true) }
     val current by remember(text, index) { mutableStateOf(text.length == index) }
@@ -100,7 +103,7 @@ fun CharField(
 
     Text(
         modifier = Modifier
-            .width(sizes.componentMedium)
+            .width(sizes.component)
             .border(
                 width = sizes.border,
                 color = if (current) {
@@ -119,7 +122,7 @@ fun CharField(
                 }
             )
             .onFocusChanged { focusState ->
-                //focused = focusState.isFocused
+                focused = focusState.isFocused
             },
         text = char,
         minLines = 1,

@@ -44,9 +44,7 @@ import com.codepunk.hollarhype.ui.component.HypeButton
 import com.codepunk.hollarhype.ui.component.PhoneNumber
 import com.codepunk.hollarhype.ui.preview.ScreenPreviews
 import com.codepunk.hollarhype.ui.theme.HollarhypeTheme
-import com.codepunk.hollarhype.ui.theme.hypeButtonHeight
-import com.codepunk.hollarhype.ui.theme.hypeButtonWidth
-import com.codepunk.hollarhype.ui.theme.sizes
+import com.codepunk.hollarhype.ui.theme.LocalSizes
 import com.codepunk.hollarhype.ui.theme.util.layoutMargin
 import com.codepunk.hollarhype.util.http.HttpStatusException
 
@@ -57,9 +55,11 @@ fun AuthSignInScreen(
     state: AuthState,
     onEvent: (AuthEvent) -> Unit = {}
 ) {
+    val sizes = LocalSizes.current
+    val keyboardController = LocalSoftwareKeyboardController.current
+
     val coroutineScope = rememberCoroutineScope()
     val snackBarHostState = remember { SnackbarHostState() }
-    val keyboardController = LocalSoftwareKeyboardController.current
     var showRegionPicker by rememberSaveable { mutableStateOf(false) }
     val modalBottomSheetState: SheetState = rememberModalBottomSheetState()
 
@@ -108,7 +108,7 @@ fun AuthSignInScreen(
         ) {
             Column(
                 modifier = Modifier
-                    .widthIn(max = sizes.regionXLarge)
+                    .widthIn(max = sizes.region2xLarge)
                     .fillMaxSize()
                     .padding(
                         bottom = sizes.paddingXLarge
@@ -167,8 +167,8 @@ fun AuthSignInScreen(
 
                 HypeButton(
                     modifier = Modifier
-                        .width(hypeButtonWidth)
-                        .height(hypeButtonHeight),
+                        .width(sizes.region)
+                        .height(sizes.component),
                     enabled = (!state.isLoading),
                     onClick = {
                         onEvent(AuthEvent.ClearLoginResult)

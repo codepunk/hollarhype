@@ -57,9 +57,7 @@ import com.codepunk.hollarhype.ui.component.PhoneNumber
 import com.codepunk.hollarhype.ui.preview.ScreenPreviews
 import com.codepunk.hollarhype.ui.screen.auth.AuthEvent.SignUp
 import com.codepunk.hollarhype.ui.theme.HollarhypeTheme
-import com.codepunk.hollarhype.ui.theme.hypeButtonHeight
-import com.codepunk.hollarhype.ui.theme.hypeButtonWidth
-import com.codepunk.hollarhype.ui.theme.sizes
+import com.codepunk.hollarhype.ui.theme.LocalSizes
 import com.codepunk.hollarhype.ui.theme.util.currentWindowAdaptiveInfoCustom
 import com.codepunk.hollarhype.ui.theme.util.layoutMargin
 import com.codepunk.hollarhype.util.intl.Region
@@ -72,9 +70,11 @@ fun AuthSignUpScreen(
     state: AuthState,
     onEvent: (AuthEvent) -> Unit = {}
 ) {
+    val sizes = LocalSizes.current
+    val keyboardController = LocalSoftwareKeyboardController.current
+
     val coroutineScope = rememberCoroutineScope()
     val snackBarHostState = remember { SnackbarHostState() }
-    val keyboardController = LocalSoftwareKeyboardController.current
     var showRegionPicker by rememberSaveable { mutableStateOf(false) }
     val modalBottomSheetState: SheetState = rememberModalBottomSheetState()
 
@@ -139,17 +139,18 @@ fun SignUpNonLandscape(
     onEvent: (AuthEvent) -> Unit,
     onShowRegionPicker: () -> Unit
 ) {
+    val sizes = LocalSizes.current
 
     // Avatar size is based on width
     val windowSizeClass = currentWindowAdaptiveInfoCustom().windowSizeClass.windowWidthSizeClass
     val avatarSize = when (windowSizeClass) {
-        WindowWidthSizeClass.COMPACT -> sizes.componentXLarge
-        else -> sizes.regionMedium
+        WindowWidthSizeClass.COMPACT -> sizes.component2xLarge
+        else -> sizes.region
     }
 
     Column(
         modifier = Modifier
-            .widthIn(max = sizes.regionXLarge)
+            .widthIn(max = sizes.region2xLarge)
             .fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(
@@ -199,11 +200,13 @@ fun SignUpLandscape(
     onEvent: (AuthEvent) -> Unit,
     onShowRegionPicker: () -> Unit
 ) {
+    val sizes = LocalSizes.current
+
     // Avatar size is based on height
     val windowSizeClass = currentWindowAdaptiveInfoCustom().windowSizeClass.windowHeightSizeClass
     val avatarSize = when (windowSizeClass) {
-        WindowHeightSizeClass.COMPACT -> sizes.componentXLarge
-        else -> sizes.regionMedium
+        WindowHeightSizeClass.COMPACT -> sizes.component2xLarge
+        else -> sizes.region
     }
 
     Row(
@@ -219,7 +222,7 @@ fun SignUpLandscape(
         ) {
             Column(
                 modifier = Modifier
-                    .widthIn(max = sizes.region2XLarge)
+                    .widthIn(max = sizes.region3xLarge)
                     .fillMaxWidth(),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.spacedBy(
@@ -263,7 +266,7 @@ fun SignUpLandscape(
         ) {
             SignUpForm(
                 modifier = Modifier
-                    .widthIn(max = sizes.region2XLarge)
+                    .widthIn(max = sizes.region3xLarge)
                     .fillMaxWidth(),
                 firstName = state.firstName,
                 lastName = state.lastName,
@@ -353,6 +356,8 @@ fun SignUpForm(
     onPhoneNumberChange: (String) -> Unit,
     onShowRegionPicker: () -> Unit
 ) {
+    val sizes = LocalSizes.current
+
     LazyColumn(
         modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(sizes.padding)
@@ -432,6 +437,8 @@ fun SignUpSubmit(
     modifier: Modifier = Modifier,
     onSubmit: () -> Unit
 ) {
+    val sizes = LocalSizes.current
+
     Column(
         modifier = modifier,
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -445,8 +452,8 @@ fun SignUpSubmit(
 
         HypeButton(
             modifier = Modifier
-                .width(hypeButtonWidth)
-                .height(hypeButtonHeight),
+                .width(sizes.region)
+                .height(sizes.component),
             onClick = { onSubmit() }
         ) {
             Text(

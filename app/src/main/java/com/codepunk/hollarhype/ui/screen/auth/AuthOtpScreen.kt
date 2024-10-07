@@ -40,10 +40,8 @@ import com.codepunk.hollarhype.ui.component.HypeButton
 import com.codepunk.hollarhype.ui.component.OtpTextField
 import com.codepunk.hollarhype.ui.preview.ScreenPreviews
 import com.codepunk.hollarhype.ui.theme.HollarhypeTheme
+import com.codepunk.hollarhype.ui.theme.LocalSizes
 import com.codepunk.hollarhype.ui.theme.baseline
-import com.codepunk.hollarhype.ui.theme.hypeButtonHeight
-import com.codepunk.hollarhype.ui.theme.hypeButtonWidth
-import com.codepunk.hollarhype.ui.theme.sizes
 import com.codepunk.hollarhype.ui.theme.util.layoutMargin
 import com.codepunk.hollarhype.util.http.HttpStatusException
 
@@ -55,10 +53,12 @@ fun AuthOtpScreen(
     state: AuthState,
     onEvent: (AuthEvent) -> Unit = {}
 ) {
+    val sizes = LocalSizes.current
+    val keyboardController = LocalSoftwareKeyboardController.current
+
     val coroutineScope = rememberCoroutineScope()
     val snackBarHostState = remember { SnackbarHostState() }
     val focusRequester = remember { FocusRequester() }
-    val keyboardController = LocalSoftwareKeyboardController.current
 
     // Do the following when verify result is "fresh"
     if (state.isVerifyResultFresh) {
@@ -124,7 +124,7 @@ fun AuthOtpScreen(
 
                 Text(
                     modifier = Modifier
-                        .widthIn(max = sizes.regionLarge),
+                        .widthIn(max = sizes.regionXLarge),
                     text = stringResource(id = R.string.enter_otp).uppercase(),
                     color = MaterialTheme.colorScheme.onBackground,
                     style = MaterialTheme.typography.headlineSmall,
@@ -185,8 +185,8 @@ fun AuthOtpScreen(
 
                 HypeButton(
                     modifier = Modifier
-                        .width(hypeButtonWidth)
-                        .height(hypeButtonHeight),
+                        .width(sizes.region)
+                        .height(sizes.component),
                     enabled = (!state.isLoading && state.otp.length == OTP_LENGTH),
                     onClick = {
                         onEvent(

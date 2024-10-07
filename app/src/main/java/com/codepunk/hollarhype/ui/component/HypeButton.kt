@@ -15,14 +15,14 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Shape
-import com.codepunk.hollarhype.ui.theme.hypeButtonCornerRadius
+import com.codepunk.hollarhype.ui.theme.roundedCorner
 
 @Composable
 fun HypeButton(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
-    shape: Shape = RoundedCornerShape(size = hypeButtonCornerRadius),
+    shape: Shape = RoundedCornerShape(size = roundedCorner),
     colors: ButtonColors = ButtonDefaults.buttonColors(
         containerColor = MaterialTheme.colorScheme.inverseSurface,
         contentColor = MaterialTheme.colorScheme.inverseOnSurface

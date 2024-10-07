@@ -1,6 +1,35 @@
 package com.codepunk.hollarhype.ui.theme
 
+import androidx.compose.runtime.Immutable
 import androidx.compose.ui.graphics.Color
+
+@Immutable
+data class ColorFamily(
+    val color: Color,
+    val onColor: Color,
+    val colorContainer: Color,
+    val onColorContainer: Color
+)
+
+@Immutable
+data class FixedColorScheme(
+    val primaryFixed: Color,
+    val onPrimaryFixed: Color,
+    val secondaryFixed: Color,
+    val onSecondaryFixed: Color,
+    val tertiaryFixed: Color,
+    val onTertiaryFixed: Color,
+    val quaternaryFixed: Color,
+    val onQuaternaryFixed: Color,
+    val primaryFixedDim: Color,
+    val onPrimaryFixedDim: Color,
+    val secondaryFixedDim: Color,
+    val onSecondaryFixedDim: Color,
+    val tertiaryFixedDim: Color,
+    val onTertiaryFixedDim: Color,
+    val quaternaryFixedDim: Color,
+    val onQuaternaryFixedDim: Color
+)
 
 val HypeGreen = Color(0xFFB4F946)
 val HypeBlue = Color(0xFF3BA4FF)
