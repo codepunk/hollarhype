@@ -1,24 +1,27 @@
 package com.codepunk.hollarhype.ui.theme
 
+import android.app.UiModeManager
+import android.content.Context
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.material3.ColorScheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.dynamicDarkColorScheme
 import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.Immutable
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
-import com.codepunk.hollarhype.ui.theme.util.SizeScheme
 import com.codepunk.hollarhype.ui.theme.util.sizeScheme
 
-/**
- * These values were built by feeding core HollarHype colors
- * into Google's Material Theme Builder
- */
+private const val MEDIUM_CONTRAST = (1f / 3)
+private const val HIGH_CONTRAST = (2f / 3)
 
 @Immutable
 data class ExtendedColorScheme(
@@ -315,33 +318,150 @@ data class ColorFamily(
     val onColorContainer: Color
 )
 
-val unspecified_scheme = ColorFamily(
-    Color.Unspecified, Color.Unspecified, Color.Unspecified, Color.Unspecified
+@Immutable
+data class FixedColorScheme(
+    val primaryFixed: Color,
+    val onPrimaryFixed: Color,
+    val secondaryFixed: Color,
+    val onSecondaryFixed: Color,
+    val tertiaryFixed: Color,
+    val onTertiaryFixed: Color,
+    val quaternaryFixed: Color,
+    val onQuaternaryFixed: Color,
+    val primaryFixedDim: Color,
+    val secondaryFixedDim: Color,
+    val tertiaryFixedDim: Color,
+    val quaternaryFixedDim: Color
 )
 
-val sizes = sizeScheme()
-val buttonCornerRadius = 8.dp
+val fixedColors = FixedColorScheme(
+    primaryFixed = HypeGreen,
+    onPrimaryFixed = HypeNeutral,
+    secondaryFixed = HypeBlue,
+    onSecondaryFixed = HypeNeutral,
+    tertiaryFixed = HypeOrange,
+    onTertiaryFixed = HypeNeutral,
+    quaternaryFixed = HypeMagenta,
+    onQuaternaryFixed = HypeNeutral,
+    primaryFixedDim = primaryDark,
+    secondaryFixedDim = secondaryDark,
+    tertiaryFixedDim = tertiaryDark,
+    quaternaryFixedDim = quaternaryDark
+)
 
+val LocalAppColors = staticCompositionLocalOf { lightScheme }
+
+val LocalExtendedColors = staticCompositionLocalOf { extendedLight }
+
+val LocalFixedColors = staticCompositionLocalOf { fixedColors }
+
+@Composable
+fun ProvideColors(
+    colorScheme: ColorScheme,
+    extendedColorScheme: ExtendedColorScheme = LocalExtendedColors.current,
+    fixedColorScheme: FixedColorScheme = LocalFixedColors.current,
+    content: @Composable () -> Unit
+) {
+    val colorCache = remember { colorScheme }
+    val extendedColorCache = remember { extendedColorScheme }
+    val fixedColorCache = remember { fixedColorScheme }
+
+    CompositionLocalProvider(
+        LocalAppColors provides colorCache,
+        LocalExtendedColors provides extendedColorCache,
+        LocalFixedColors provides fixedColorCache,
+        content = content
+    )
+}
+
+@Composable
+private fun <S> chooseColorScheme(
+    darkTheme: Boolean,
+    dynamicColor: Boolean,
+    lightScheme: S,
+    darkScheme: S,
+    mediumContrastLightColorScheme: S,
+    mediumContrastDarkColorScheme: S,
+    highContrastLightColorScheme: S,
+    highContrastDarkColorScheme: S,
+    dynamicChooser: (Context) -> S? = { _ -> null }
+): S {
+    val context = LocalContext.current
+    val uiModeManager = context.getSystemService(Context.UI_MODE_SERVICE) as UiModeManager
+    return if (!dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+        if (darkTheme) {
+            when {
+                uiModeManager.contrast >= HIGH_CONTRAST -> highContrastDarkColorScheme
+                uiModeManager.contrast >= MEDIUM_CONTRAST -> mediumContrastDarkColorScheme
+                else -> darkScheme
+            }
+        } else {
+            when {
+                uiModeManager.contrast >= HIGH_CONTRAST -> highContrastLightColorScheme
+                uiModeManager.contrast >= MEDIUM_CONTRAST -> mediumContrastLightColorScheme
+                else -> lightScheme
+            }
+        }
+    } else if (dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+        dynamicChooser(context)
+    } else {
+        null
+    } ?: if (darkTheme) {
+        darkScheme
+    } else {
+        lightScheme
+    }
+}
+
+@Suppress("SpellCheckingInspection")
 @Composable
 fun HollarhypeTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
     // Dynamic color is available on Android 12+
-    dynamicColor: Boolean = false,
+    dynamicColor: Boolean = true,
     content: @Composable () -> Unit
 ) {
-    val colorScheme = when {
-        dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
-            val context = LocalContext.current
-            if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
+    val colorScheme = chooseColorScheme(
+        darkTheme = darkTheme,
+        dynamicColor = dynamicColor,
+        lightScheme = lightScheme,
+        darkScheme = darkScheme,
+        mediumContrastLightColorScheme = mediumContrastLightColorScheme,
+        mediumContrastDarkColorScheme = mediumContrastDarkColorScheme,
+        highContrastLightColorScheme = highContrastLightColorScheme,
+        highContrastDarkColorScheme = highContrastDarkColorScheme
+    ) { context ->
+        if (darkTheme) {
+            dynamicDarkColorScheme(context)
+        } else {
+            dynamicLightColorScheme(context)
         }
-
-        darkTheme -> darkScheme
-        else -> lightScheme
     }
 
-    MaterialTheme(
-        colorScheme = colorScheme,
-        typography = AppTypography,
-        content = content
+    val extendedColorScheme = chooseColorScheme(
+        darkTheme = darkTheme,
+        dynamicColor = dynamicColor,
+        lightScheme = extendedLight,
+        darkScheme = extendedDark,
+        mediumContrastLightColorScheme = extendedLightMediumContrast,
+        mediumContrastDarkColorScheme = extendedDarkMediumContrast,
+        highContrastLightColorScheme = extendedLightHighContrast,
+        highContrastDarkColorScheme = extendedDarkHighContrast
     )
+
+    ProvideColors(
+        colorScheme = colorScheme,
+        extendedColorScheme = extendedColorScheme
+    ) {
+        MaterialTheme(
+            colorScheme = colorScheme,
+            typography = AppTypography,
+            content = content
+        )
+    }
 }
+
+val sizes = sizeScheme()
+val hypeButtonCornerRadius = 8.dp
+val hypeButtonWidth = sizes.regionMedium
+val hypeButtonHeight = sizes.componentMedium

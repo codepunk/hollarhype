@@ -4,7 +4,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
 import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteScaffold
 import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteScaffoldDefaults
 import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteType
@@ -26,6 +25,7 @@ import com.codepunk.hollarhype.ui.screen.golive.GoLiveScreen
 import com.codepunk.hollarhype.ui.screen.groups.GroupsScreen
 import com.codepunk.hollarhype.ui.screen.hype.HypeScreen
 import com.codepunk.hollarhype.ui.theme.HollarhypeTheme
+import com.codepunk.hollarhype.ui.theme.util.currentWindowAdaptiveInfoCustom
 
 @Composable
 fun LandingScreen(
@@ -37,7 +37,7 @@ fun LandingScreen(
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination
 
-    val adaptiveInfo = currentWindowAdaptiveInfo()
+    val adaptiveInfo = currentWindowAdaptiveInfoCustom()
     val customNavSuiteType = with(adaptiveInfo) {
         when (windowSizeClass.windowWidthSizeClass) {
             WindowWidthSizeClass.EXPANDED -> when (windowSizeClass.windowHeightSizeClass) {

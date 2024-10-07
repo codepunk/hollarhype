@@ -16,6 +16,12 @@ val provider = GoogleFont.Provider(
     certificates = R.array.com_google_android_gms_fonts_certs
 )
 
+@Suppress("SpellCheckingInspection")
+private val futuraFontFamily = FontFamily(
+    Font(R.font.futura_medium, weight = FontWeight.Medium),
+    Font(R.font.futura_medium_italic, weight = FontWeight.Medium, style = FontStyle.Italic)
+)
+
 val poppinsFontFamily = FontFamily(
     Font(R.font.poppins_regular),
     Font(R.font.poppins_italic, style = FontStyle.Italic),
@@ -39,24 +45,40 @@ val rigidSquareFontFamily = FontFamily(
 val baseline = Typography()
 
 val AppTypography = Typography(
-    //displayLarge = baseline.displayLarge.copy(fontFamily = displayFontFamily),
-    //displayMedium = baseline.displayMedium.copy(fontFamily = displayFontFamily),
-    //displaySmall = baseline.displaySmall.copy(fontFamily = displayFontFamily),
-    headlineLarge = baseline.headlineLarge.copy(fontFamily = rigidSquareFontFamily),
-    headlineMedium = baseline.headlineMedium.copy(fontFamily = rigidSquareFontFamily),
+    displayLarge = baseline.displayLarge.copy(
+        fontFamily = futuraFontFamily,
+        fontStyle = FontStyle.Italic
+    ),
+    displayMedium = baseline.displayMedium.copy(
+        fontFamily = futuraFontFamily,
+        fontStyle = FontStyle.Italic
+    ),
+    displaySmall = baseline.displaySmall.copy(
+        fontFamily = futuraFontFamily,
+        fontStyle = FontStyle.Italic
+    ),
+    headlineLarge = baseline.headlineLarge.copy(
+        fontFamily = rigidSquareFontFamily
+    ),
+    headlineMedium = baseline.headlineMedium.copy(
+        fontFamily = rigidSquareFontFamily
+    ),
     headlineSmall = baseline.headlineSmall.copy(
         fontFamily = rigidSquareFontFamily,
         fontWeight = FontWeight.SemiBold,
         fontSize = 18.sp
     ),
-    //titleLarge = baseline.titleLarge.copy(fontFamily = displayFontFamily),
-    //titleMedium = baseline.titleMedium.copy(fontFamily = displayFontFamily),
-    //titleSmall = baseline.titleSmall.copy(fontFamily = displayFontFamily),
+    titleLarge = baseline.titleLarge,
+    titleMedium = baseline.titleMedium,
+    titleSmall = baseline.titleSmall,
     bodyLarge = baseline.bodyLarge.copy(
         fontFamily = rigidSquareFontFamily,
         fontWeight = FontWeight.Light
     ),
-    bodyMedium = baseline.bodyMedium.copy(fontFamily = poppinsFontFamily),
+    bodyMedium = baseline.bodyMedium.copy(
+        fontFamily = poppinsFontFamily,
+        fontWeight = FontWeight.Bold
+    ),
     bodySmall = baseline.bodySmall.copy(
         fontFamily = poppinsFontFamily,
         fontWeight = FontWeight.Medium,

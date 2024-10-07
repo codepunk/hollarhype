@@ -17,9 +17,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilledIconButton
 import androidx.compose.material3.Icon
@@ -54,11 +51,14 @@ import androidx.window.core.layout.WindowWidthSizeClass
 import com.codepunk.hollarhype.R
 import com.codepunk.hollarhype.ui.component.CountryCodePicker
 import com.codepunk.hollarhype.ui.component.HollarHypeTopAppBar
+import com.codepunk.hollarhype.ui.component.HypeButton
 import com.codepunk.hollarhype.ui.component.PhoneNumber
 import com.codepunk.hollarhype.ui.preview.ScreenPreviews
 import com.codepunk.hollarhype.ui.screen.auth.AuthEvent.SignUp
 import com.codepunk.hollarhype.ui.theme.HollarhypeTheme
-import com.codepunk.hollarhype.ui.theme.buttonCornerRadius
+import com.codepunk.hollarhype.ui.theme.hypeButtonCornerRadius
+import com.codepunk.hollarhype.ui.theme.hypeButtonHeight
+import com.codepunk.hollarhype.ui.theme.hypeButtonWidth
 import com.codepunk.hollarhype.ui.theme.sizes
 import com.codepunk.hollarhype.ui.theme.util.currentWindowAdaptiveInfoCustom
 import com.codepunk.hollarhype.ui.theme.util.layoutMargin
@@ -323,14 +323,14 @@ fun UserAvatar(
                 FilledIconButton(
                     modifier = Modifier.fillMaxSize(),
                     colors = IconButtonDefaults.iconButtonColors(
-                        containerColor = MaterialTheme.colorScheme.primary
+                        containerColor = MaterialTheme.colorScheme.inverseSurface
                     ),
                     onClick = onClick
                 ) {
                     Icon(
                         modifier = Modifier.fillMaxSize(1 / sqrt2),
                         painter = painterResource(id = R.drawable.ic_camera_black_24),
-                        tint = MaterialTheme.colorScheme.onSecondary,
+                        tint = MaterialTheme.colorScheme.inverseOnSurface,
                         contentDescription = ""
                     )
                 }
@@ -435,15 +435,10 @@ fun SignUpSubmit(
             textAlign = TextAlign.Center
         )
 
-        Button(
+        HypeButton(
             modifier = Modifier
-                .width(sizes.regionMedium)
-                .height(sizes.componentMedium),
-            shape = RoundedCornerShape(size = buttonCornerRadius),
-            colors = ButtonDefaults.buttonColors(
-                containerColor = MaterialTheme.colorScheme.inverseSurface,
-                contentColor = MaterialTheme.colorScheme.inverseOnSurface
-            ),
+                .width(hypeButtonWidth)
+                .height(hypeButtonHeight),
             onClick = { onSubmit() }
         ) {
             Text(

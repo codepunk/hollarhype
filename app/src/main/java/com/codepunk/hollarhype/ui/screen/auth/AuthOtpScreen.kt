@@ -11,10 +11,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
@@ -38,11 +36,13 @@ import androidx.compose.ui.text.style.TextAlign
 import com.codepunk.hollarhype.R
 import com.codepunk.hollarhype.ui.common.showErrorSnackBar
 import com.codepunk.hollarhype.ui.component.HollarHypeTopAppBar
+import com.codepunk.hollarhype.ui.component.HypeButton
 import com.codepunk.hollarhype.ui.component.OtpTextField
 import com.codepunk.hollarhype.ui.preview.ScreenPreviews
 import com.codepunk.hollarhype.ui.theme.HollarhypeTheme
 import com.codepunk.hollarhype.ui.theme.baseline
-import com.codepunk.hollarhype.ui.theme.buttonCornerRadius
+import com.codepunk.hollarhype.ui.theme.hypeButtonHeight
+import com.codepunk.hollarhype.ui.theme.hypeButtonWidth
 import com.codepunk.hollarhype.ui.theme.sizes
 import com.codepunk.hollarhype.ui.theme.util.layoutMargin
 import com.codepunk.hollarhype.util.http.HttpStatusException
@@ -185,11 +185,10 @@ fun AuthOtpScreen(
                         .weight(1f)
                 )
 
-                Button(
+                HypeButton(
                     modifier = Modifier
-                        .width(sizes.regionMedium)
-                        .height(sizes.componentMedium),
-                    shape = RoundedCornerShape(size = buttonCornerRadius),
+                        .width(hypeButtonWidth)
+                        .height(hypeButtonHeight),
                     enabled = (!state.isLoading && state.otp.length == OTP_LENGTH),
                     onClick = {
                         onEvent(
