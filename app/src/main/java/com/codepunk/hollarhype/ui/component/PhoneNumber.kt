@@ -1,36 +1,31 @@
 package com.codepunk.hollarhype.ui.component
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextFieldDefaults
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.style.TextAlign
 import com.codepunk.hollarhype.R
 import com.codepunk.hollarhype.ui.preview.ComponentPreviews
 import com.codepunk.hollarhype.ui.theme.HollarhypeTheme
@@ -59,84 +54,61 @@ fun PhoneNumber(
         )
     }
 
-    // We need to align the country code button with the phone number TextField.
-    // To do this we need to divide the bodySmall lineHeight (used for TextField labels)
-    // by 2.
-    val density = LocalDensity.current
-    val bodySmallLineHeight = MaterialTheme.typography.bodySmall.lineHeight
-    val buttonTopPadding by remember {
-        mutableStateOf(
-            with(density) {
-                bodySmallLineHeight.toDp().div(2)
-            }
-        )
-    }
-
-    Row(
-        modifier = modifier
-            .width(IntrinsicSize.Min),
-        verticalAlignment = Alignment.Top,
-        horizontalArrangement = Arrangement.spacedBy(sizes.padding)
-    ) {
-        OutlinedButton(
-            modifier = Modifier.padding(top = buttonTopPadding),
-            shape = RoundedCornerShape(size = roundedCorner),
-            colors = ButtonDefaults.buttonColors(
-                containerColor = MaterialTheme.colorScheme.surfaceVariant
-            ),
-            onClick = onCountryCodeClick,
-            contentPadding = TextFieldDefaults.contentPaddingWithoutLabel()
-        ) {
-            Row(
-                verticalAlignment = Alignment.CenterVertically
+    OutlinedTextField(
+        modifier = Modifier.fillMaxWidth(),
+        value = phoneNumber,
+        leadingIcon = {
+            TextButton(
+                shape = RoundedCornerShape(size = roundedCorner),
+                onClick = onCountryCodeClick
             ) {
-                Text(
-                    modifier = Modifier.widthIn(min = sizes.component),
-                    text = "+$countryCode",
-                    color = MaterialTheme.colorScheme.onBackground,
-                    style = MaterialTheme.typography.labelMedium
-                )
-                Icon(
-                    imageVector = Icons.Default.ArrowDropDown,
-                    tint = MaterialTheme.colorScheme.onBackground,
-                    contentDescription = null
-                )
-            }
-        }
-
-        OutlinedTextField(
-            modifier = Modifier.fillMaxWidth(),
-            value = phoneNumber,
-            colors = OutlinedTextFieldDefaults.colors(
-                focusedContainerColor = MaterialTheme.colorScheme.surfaceVariant,
-                unfocusedContainerColor = MaterialTheme.colorScheme.surfaceVariant
-            ),
-            textStyle = MaterialTheme.typography.labelMedium,
-            maxLines = 1,
-            singleLine = true,
-            keyboardOptions = KeyboardOptions(
-                keyboardType = KeyboardType.Phone,
-                imeAction = ImeAction.Go
-            ),
-            keyboardActions = KeyboardActions { onSubmit() },
-            label = {
-                Text(
-                    text = stringResource(id = R.string.phone_number),
-                )
-            },
-            supportingText = {
-                if (phoneNumberError.isNotBlank()) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
                     Text(
-                        maxLines = 1,
-                        text = phoneNumberError,
-                        color = MaterialTheme.colorScheme.error
+                        modifier = Modifier.widthIn(min = sizes.componentSmall),
+                        text = "+$countryCode",
+                        color = MaterialTheme.colorScheme.onBackground,
+                        style = MaterialTheme.typography.labelMedium,
+                        textAlign = TextAlign.Center
+                    )
+                    Icon(
+                        imageVector = Icons.Default.ArrowDropDown,
+                        tint = MaterialTheme.colorScheme.onBackground,
+                        contentDescription = null
                     )
                 }
-            },
-            visualTransformation = visualTransformation,
-            onValueChange = { onPhoneNumberChange(it) }
-        )
-    }
+            }
+        },
+        colors = OutlinedTextFieldDefaults.colors(
+            focusedContainerColor = MaterialTheme.colorScheme.surfaceVariant,
+            unfocusedContainerColor = MaterialTheme.colorScheme.surfaceVariant
+        ),
+        textStyle = MaterialTheme.typography.labelMedium,
+        maxLines = 1,
+        singleLine = true,
+        keyboardOptions = KeyboardOptions(
+            keyboardType = KeyboardType.Phone,
+            imeAction = ImeAction.Go
+        ),
+        keyboardActions = KeyboardActions { onSubmit() },
+        label = {
+            Text(
+                text = stringResource(id = R.string.phone_number),
+            )
+        },
+        supportingText = {
+            if (phoneNumberError.isNotBlank()) {
+                Text(
+                    maxLines = 1,
+                    text = phoneNumberError,
+                    color = MaterialTheme.colorScheme.error
+                )
+            }
+        },
+        visualTransformation = visualTransformation,
+        onValueChange = { onPhoneNumberChange(it) }
+    )
 }
 
 @ComponentPreviews

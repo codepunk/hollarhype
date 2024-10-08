@@ -61,6 +61,8 @@ import com.codepunk.hollarhype.ui.theme.LocalSizes
 import com.codepunk.hollarhype.ui.theme.util.currentWindowAdaptiveInfoCustom
 import com.codepunk.hollarhype.ui.theme.util.layoutMargin
 import com.codepunk.hollarhype.util.intl.Region
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import kotlin.math.sqrt
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -125,8 +127,11 @@ fun AuthSignUpScreen(
             CountryCodePicker(
                 modifier = Modifier.padding(sizes.paddingXLarge),
                 onItemSelected = {
+                    coroutineScope.launch(Dispatchers.Main) {
+                        modalBottomSheetState.hide()
+                        showRegionPicker = false
+                    }
                     onEvent(AuthEvent.UpdateRegion(it))
-                    showRegionPicker = false
                 }
             )
         }

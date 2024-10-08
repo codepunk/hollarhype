@@ -47,6 +47,8 @@ import com.codepunk.hollarhype.ui.theme.HollarhypeTheme
 import com.codepunk.hollarhype.ui.theme.LocalSizes
 import com.codepunk.hollarhype.ui.theme.util.layoutMargin
 import com.codepunk.hollarhype.util.http.HttpStatusException
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -204,8 +206,11 @@ fun AuthSignInScreen(
             CountryCodePicker(
                 modifier = Modifier.padding(sizes.paddingXLarge),
                 onItemSelected = {
+                    coroutineScope.launch(Dispatchers.Main) {
+                        modalBottomSheetState.hide()
+                        showRegionPicker = false
+                    }
                     onEvent(AuthEvent.UpdateRegion(it))
-                    showRegionPicker = false
                 }
             )
         }
