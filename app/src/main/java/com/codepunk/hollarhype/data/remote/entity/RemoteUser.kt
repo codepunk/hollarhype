@@ -1,10 +1,12 @@
 package com.codepunk.hollarhype.data.remote.entity
 
+import com.codepunk.hollarhype.data.remote.serializer.RegionSerializer
+import com.codepunk.hollarhype.util.intl.Region
+import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
 import kotlinx.datetime.serializers.InstantIso8601Serializer
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
-import java.util.Locale
 
 @Serializable
 data class RemoteUser(
@@ -21,15 +23,16 @@ data class RemoteUser(
     val profilePic: String = "",
     @SerialName("transcribe_enabled")
     val transcribeEnabled: Boolean = false,
+    @Serializable(with = RegionSerializer::class)
     @SerialName("region_code")
-    val regionCode: String = Locale.getDefault().country,
+    val region: Region = Region.getDefault(),
     val roles: String = "",
     @SerialName("can_create_campaigns")
     val canCreateCampaigns: Boolean = false,
     @SerialName("created_at")
     @Serializable(with = InstantIso8601Serializer::class)
-    val createdAt: Instant? = null,
+    val createdAt: Instant = Clock.System.now(),
     @SerialName("updated_at")
     @Serializable(with = InstantIso8601Serializer::class)
-    val updatedAt: Instant? = null
+    val updatedAt: Instant = Clock.System.now()
 )

@@ -3,7 +3,9 @@ package com.codepunk.hollarhype.data.local.entity
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import java.util.Locale
+import com.codepunk.hollarhype.util.intl.Region
+import kotlinx.datetime.Clock
+import kotlinx.datetime.Instant
 
 @Entity(
     tableName = "user"
@@ -15,7 +17,7 @@ data class LocalUser(
     val firstName: String = "",
     @ColumnInfo(name = "last_name")
     val lastName: String = "",
-    @ColumnInfo(name = "mobile")
+    @ColumnInfo(name = "phone_number")
     val phoneNumber: String = "",
     @ColumnInfo(name = "email")
     val emailAddress: String = "",
@@ -24,8 +26,12 @@ data class LocalUser(
     @ColumnInfo(name = "transcribe_enabled")
     val transcribeEnabled: Boolean = false,
     @ColumnInfo(name = "region_code")
-    val regionCode: String = Locale.getDefault().country,
+    val region: Region = Region.getDefault(),
     val roles: String = "",
     @ColumnInfo(name = "can_create_campaigns")
     val canCreateCampaigns: Boolean = false,
+    @ColumnInfo(name = "created_at")
+    val createdAt: Instant = Clock.System.now(),
+    @ColumnInfo(name = "updated_at")
+    val updatedAt: Instant = Clock.System.now()
 )

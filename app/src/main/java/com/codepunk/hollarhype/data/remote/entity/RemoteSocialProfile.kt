@@ -8,7 +8,7 @@ data class RemoteSocialProfile(
     @SerialName("athlete")
     val user: RemoteUser = RemoteUser(),
     @SerialName("sent_messages")
-    val sentMessage: Int = 0,
+    val sentMessages: Int = 0,
     @SerialName("received_messages")
     val receivedMessages: Int = 0,
     @SerialName("favorite_audios")

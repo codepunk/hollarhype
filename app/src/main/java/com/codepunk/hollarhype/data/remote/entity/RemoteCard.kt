@@ -4,5 +4,5 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class RemoteCard(
-    val id: Long = 0L
+    val id: Long = -1L
 )

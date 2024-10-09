@@ -1,5 +1,6 @@
 package com.codepunk.hollarhype.data.remote.entity
 
+import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.serializers.InstantIso8601Serializer
@@ -9,7 +10,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class RemoteRun(
-    val id: Long = 0L,
+    val id: Long = -1L,
     @SerialName("status_message")
     val statusMessage: String = "",
     val status: Status = Status.INACTIVE,
@@ -24,22 +25,21 @@ data class RemoteRun(
     val user: RemoteUser = RemoteUser(),
     val messages: List<RemoteMessage> = emptyList(),
     @SerialName("athlete_id")
-    val userId: Long = 0L,
+    val userId: Long? = null,
     @SerialName("enable_gps")
     val enableGps: Boolean = false,
     @SerialName("total_message_count")
     val totalMessageCount: Int = 0,
     @SerialName("created_at")
     @Serializable(with = InstantIso8601Serializer::class)
-    val createdAt: Instant? = null,
+    val createdAt: Instant = Clock.System.now(),
     @SerialName("updated_at")
     @Serializable(with = InstantIso8601Serializer::class)
-    val updatedAt: Instant? = null
+    val updatedAt: Instant = Clock.System.now()
 ) {
 
     // region Nested & inner classes
 
-    @Serializable
     enum class Status {
 
         @SerialName("inactive")

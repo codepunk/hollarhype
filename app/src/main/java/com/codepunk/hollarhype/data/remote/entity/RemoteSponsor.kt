@@ -1,5 +1,6 @@
 package com.codepunk.hollarhype.data.remote.entity
 
+import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
 import kotlinx.datetime.serializers.InstantIso8601Serializer
 import kotlinx.serialization.SerialName
@@ -7,8 +8,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class RemoteSponsor(
-    @SerialName("id")
-    val runId: Long = 0L,
+    val id: Long = -1L,
     val name: String = "",
     @SerialName("text_copy")
     val textCopy: String = "",
@@ -19,8 +19,8 @@ data class RemoteSponsor(
     val active: Boolean = false,
     @SerialName("created_at")
     @Serializable(with = InstantIso8601Serializer::class)
-    val createdAt: Instant? = null,
+    val createdAt: Instant = Clock.System.now(),
     @SerialName("updated_at")
     @Serializable(with = InstantIso8601Serializer::class)
-    val updatedAt: Instant? = null
+    val updatedAt: Instant = Clock.System.now()
 )

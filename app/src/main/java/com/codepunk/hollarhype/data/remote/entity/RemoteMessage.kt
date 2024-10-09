@@ -1,5 +1,6 @@
 package com.codepunk.hollarhype.data.remote.entity
 
+import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
 import kotlinx.datetime.serializers.InstantIso8601Serializer
 import kotlinx.serialization.SerialName
@@ -7,21 +8,21 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class RemoteMessage(
-    val id: Long = 0L,
+    val id: Long = -1L,
+    val run: RemoteRun? = null,
     @SerialName("sender_id")
-    val senderId: Int,
+    val senderUserId: Long? = null,
+    @SerialName("sender_details")
+    val sender: RemoteUser? = null,
     @SerialName("recipient_id")
-    val recipientId: Int,
+    val recipientUserId: Long? = null,
     @SerialName("voice_message")
     val voiceMessage: String,
-    @SerialName("sender_details")
-    val senderDetails: RemoteUser = RemoteUser(),
-    val run: RemoteRun = RemoteRun(),
     val favorite: Boolean = false,
-    val sponsor: RemoteSponsor = RemoteSponsor(),
+    val sponsor: RemoteSponsor? = null,
     val transcript: String = "",
     val isPlaying: Boolean = false,
     @SerialName("created_at")
     @Serializable(with = InstantIso8601Serializer::class)
-    val createdAt: Instant? = null
+    val createdAt: Instant = Clock.System.now()
 )
