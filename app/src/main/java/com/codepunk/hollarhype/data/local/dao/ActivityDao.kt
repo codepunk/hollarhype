@@ -18,8 +18,14 @@ abstract class ActivityDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     abstract suspend fun insertActivities(activities: List<LocalActivity>): List<Long>
 
+    @Query("DELETE FROM activity")
+    abstract suspend fun clearActivities()
+
     @Query("SELECT * FROM activity WHERE id = :activityId")
     abstract fun getActivity(activityId: Long): Flow<LocalActivity?>
+
+    @Query("SELECT * FROM activity")
+    abstract fun getAllActivities(): Flow<LocalActivity>
 
     // endregion Methods
 

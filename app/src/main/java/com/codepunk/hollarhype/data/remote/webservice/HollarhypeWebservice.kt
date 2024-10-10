@@ -1,12 +1,16 @@
 package com.codepunk.hollarhype.data.remote.webservice
 
 import arrow.retrofit.adapter.either.ResponseE
+import com.codepunk.hollarhype.data.remote.entity.RemoteActivityFeed
 import com.codepunk.hollarhype.data.remote.entity.RemoteAuthenticateResult
 import com.codepunk.hollarhype.data.remote.entity.RemoteLoginResult
 import com.codepunk.hollarhype.data.remote.entity.RemoteVerifyResult
 import com.codepunk.hollarhype.data.remote.entity.RemoteError
 import com.codepunk.hollarhype.data.remote.entity.RemoteSocialProfile
+import kotlinx.datetime.Clock
 import kotlinx.datetime.LocalDateTime
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toLocalDateTime
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
 import retrofit2.http.GET
@@ -36,15 +40,10 @@ interface HollarhypeWebservice {
     @GET("/athlete/athlete_social_profile")
     suspend fun authenticate(): ResponseE<RemoteError, RemoteAuthenticateResult>
 
-    @GET("/run/get_social_feed")
-    suspend fun socialFeed(
-        @Query("device_time") deviceTime: LocalDateTime,
-        @Query("page") page: Int = 1
-    )
-
     @GET("/activity_feed/feed")
     suspend fun activityFeed(
-        @Query("device_time") deviceTime: LocalDateTime,
+        @Query("device_time") deviceDateTime: LocalDateTime =
+            Clock.System.now().toLocalDateTime(timeZone = TimeZone.UTC),
         @Query("page") page: Int = 1
-    )
+    ): ResponseE<RemoteError, RemoteActivityFeed>
 }

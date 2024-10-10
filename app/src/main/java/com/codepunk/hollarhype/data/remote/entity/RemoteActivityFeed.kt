@@ -5,6 +5,8 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class RemoteActivityFeed(
+    @Suppress("SpellCheckingInspection")
+    @SerialName("activitites")
     val activities: List<RemoteActivity> = emptyList(),
     @SerialName("active_run")
     val activeRun: RemoteRun?,

@@ -2,9 +2,7 @@ package com.codepunk.hollarhype.data.remote.entity
 
 import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
-import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.serializers.InstantIso8601Serializer
-import kotlinx.datetime.serializers.LocalDateTimeIso8601Serializer
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -15,11 +13,11 @@ data class RemoteRun(
     val statusMessage: String = "",
     val status: Status = Status.INACTIVE,
     @SerialName("start_time")
-    @Serializable(with = LocalDateTimeIso8601Serializer::class)
-    val startTime: LocalDateTime? = null,
+    @Serializable(with = InstantIso8601Serializer::class)
+    val startTime: Instant? = null,
     @SerialName("end_time")
-    @Serializable(with = LocalDateTimeIso8601Serializer::class)
-    val endTime: LocalDateTime? = null,
+    @Serializable(with = InstantIso8601Serializer::class)
+    val endTime: Instant? = null,
     val distance: Float = 0f,
     @SerialName("athlete")
     val user: RemoteUser = RemoteUser(),

@@ -14,7 +14,9 @@ import com.codepunk.hollarhype.ui.theme.HollarhypeTheme
 
 @Composable
 fun ActivityScreen(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    state: ActivityState,
+    onEvent: (ActivityEvent) -> Unit = {}
 ) {
     Scaffold(
         modifier = modifier,
@@ -39,7 +41,8 @@ fun ActivityPreviews() {
     HollarhypeTheme {
         Scaffold { padding ->
             ActivityScreen(
-                modifier = Modifier.padding(padding)
+                modifier = Modifier.padding(padding),
+                state = ActivityState()
             )
         }
     }

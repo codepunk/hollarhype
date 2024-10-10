@@ -8,11 +8,13 @@ import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteScaffo
 import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteScaffoldDefaults
 import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteType
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -22,6 +24,7 @@ import androidx.window.core.layout.WindowHeightSizeClass
 import androidx.window.core.layout.WindowWidthSizeClass
 import com.codepunk.hollarhype.ui.preview.ScreenPreviews
 import com.codepunk.hollarhype.ui.screen.activity.ActivityScreen
+import com.codepunk.hollarhype.ui.screen.activity.ActivityViewModel
 import com.codepunk.hollarhype.ui.screen.golive.GoLiveScreen
 import com.codepunk.hollarhype.ui.screen.groups.GroupsScreen
 import com.codepunk.hollarhype.ui.screen.hype.HypeScreen
@@ -85,7 +88,14 @@ fun LandingScreen(
             startDestination = LandingRoute.Activity
         ) {
             composable<LandingRoute.Activity> {
-                ActivityScreen()
+                val viewModel: ActivityViewModel = hiltViewModel()
+                val activityState = viewModel.stateFlow.collectAsState()
+                ActivityScreen(
+                    modifier = modifier,
+                    state = activityState.value
+                ) { event ->
+                    viewModel.onEvent(event)
+                }
             }
 
             composable<LandingRoute.GoLive> {

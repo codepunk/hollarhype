@@ -6,7 +6,6 @@ import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
 import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
-import kotlinx.datetime.LocalDateTime
 
 @Entity(
     tableName = "run",
@@ -29,9 +28,9 @@ data class LocalRun(
     val statusMessage: String = "",
     val status: Status = Status.INACTIVE,
     @ColumnInfo(name = "start_time")
-    val startTime: LocalDateTime? = null,
+    val startTime: Instant? = null,
     @ColumnInfo(name = "end_time")
-    val endTime: LocalDateTime? = null,
+    val endTime: Instant? = null,
     val distance: Float = 0f,
     @ColumnInfo(name = "enable_gps")
     val enableGps: Boolean = false,
