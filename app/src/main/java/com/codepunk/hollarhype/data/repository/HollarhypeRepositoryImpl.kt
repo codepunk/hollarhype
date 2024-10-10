@@ -13,19 +13,18 @@ import arrow.core.rightIor
 import com.codepunk.hollarhype.data.util.cachedDataResource
 import com.codepunk.hollarhype.data.datastore.entity.UserSettings
 import com.codepunk.hollarhype.data.local.HollarhypeDatabase
-import com.codepunk.hollarhype.data.mapper.toDataError
 import com.codepunk.hollarhype.data.mapper.toDomain
 import com.codepunk.hollarhype.data.mapper.toLocal
+import com.codepunk.hollarhype.data.mapper.toRepositoryException
 import com.codepunk.hollarhype.data.mediator.ActivityFeedRemoteMediator
 import com.codepunk.hollarhype.data.util.networkDataResource
 import com.codepunk.hollarhype.data.remote.webservice.HollarhypeWebservice
 import com.codepunk.hollarhype.domain.model.Activity
-import com.codepunk.hollarhype.domain.model.ActivityFeed
 import com.codepunk.hollarhype.domain.model.Authenticated
 import com.codepunk.hollarhype.domain.model.Unauthenticated
 import com.codepunk.hollarhype.domain.model.UserSession
-import com.codepunk.hollarhype.domain.repository.DataError
 import com.codepunk.hollarhype.domain.repository.HollarhypeRepository
+import com.codepunk.hollarhype.domain.repository.RepositoryException
 import com.codepunk.hollarhype.util.intl.Region
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emitAll
@@ -44,7 +43,7 @@ class HollarhypeRepositoryImpl(
 
     private val userDao by lazy { database.userDao() }
 
-    override fun authenticate(): Flow<Ior<DataError, UserSession>> = flow {
+    override fun authenticate(): Flow<Ior<RepositoryException, UserSession>> = flow {
         val userSettings = dataStore.data.firstOrNull()
         val userSession = userSettings?.userSession?.toDomain() ?: Unauthenticated
         if (userSession is Authenticated) {
@@ -56,9 +55,9 @@ class HollarhypeRepositoryImpl(
                     fetch = {
                         try {
                             webservice.authenticate().run {
-                                body.mapLeft { it.toDataError(code, message) }
+                                body.mapLeft { it.toRepositoryException(code, message) }
                             }
-                        } catch (cause: Throwable) { DataError(cause = cause).left() }
+                        } catch (cause: Throwable) { RepositoryException(cause = cause).left() }
                     },
                     shouldEmitCachedWhileFetching = { false },
                     saveFetchResult = { userDao.insertUser(it.user.toLocal()) }
@@ -72,16 +71,16 @@ class HollarhypeRepositoryImpl(
     override fun login(
         phoneNumber: String,
         region: Region
-    ): Flow<Either<DataError, Boolean>> = networkDataResource(
+    ): Flow<Either<RepositoryException, Boolean>> = networkDataResource(
         fetch = {
             try {
                 webservice.login(
                     phoneNumber = phoneNumber,
                     regionCode = region.regionCode
                 ).run {
-                    body.mapLeft { it.toDataError(code, message) }
+                    body.mapLeft { it.toRepositoryException(code, message) }
                 }
-            } catch (cause: Throwable) { DataError(cause = cause).left() }
+            } catch (cause: Throwable) { RepositoryException(cause = cause).left() }
         }
     ) { it.success }
 
@@ -89,7 +88,7 @@ class HollarhypeRepositoryImpl(
         phoneNumber: String,
         otp: String,
         region: Region
-    ): Flow<Either<DataError, UserSession>> = networkDataResource(
+    ): Flow<Either<RepositoryException, UserSession>> = networkDataResource(
         fetch = {
             try {
                 webservice.verify(
@@ -100,10 +99,10 @@ class HollarhypeRepositoryImpl(
                     body.onRight {
                         userDao.insertUser(it.user.toLocal())
                     }.mapLeft {
-                        it.toDataError(code, message)
+                        it.toRepositoryException(code, message)
                     }
                 }
-            } catch (cause: Throwable) { DataError(cause = cause).left() }
+            } catch (cause: Throwable) { RepositoryException(cause = cause).left() }
         }
     ) {
         it.toDomain()

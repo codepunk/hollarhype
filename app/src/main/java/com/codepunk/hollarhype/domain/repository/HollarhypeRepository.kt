@@ -7,25 +7,22 @@ import com.codepunk.hollarhype.domain.model.Activity
 import com.codepunk.hollarhype.domain.model.UserSession
 import com.codepunk.hollarhype.util.intl.Region
 import kotlinx.coroutines.flow.Flow
-import kotlinx.datetime.Clock
 import kotlinx.datetime.LocalDateTime
-import kotlinx.datetime.TimeZone
-import kotlinx.datetime.toLocalDateTime
 
 interface HollarhypeRepository {
 
-    fun authenticate(): Flow<Ior<DataError, UserSession>>
+    fun authenticate(): Flow<Ior<RepositoryException, UserSession>>
 
     fun login(
         phoneNumber: String,
         region: Region
-    ): Flow<Either<DataError, Boolean>>
+    ): Flow<Either<RepositoryException, Boolean>>
 
     fun verify(
         phoneNumber: String,
         otp: String,
         region: Region
-    ): Flow<Either<DataError, UserSession>>
+    ): Flow<Either<RepositoryException, UserSession>>
 
     fun activityFeed(
         deviceDateTime: LocalDateTime,

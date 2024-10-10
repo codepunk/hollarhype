@@ -2,7 +2,7 @@ package com.codepunk.hollarhype.ui.screen.auth
 
 import arrow.core.Either
 import com.codepunk.hollarhype.domain.model.UserSession
-import com.codepunk.hollarhype.domain.repository.DataError
+import com.codepunk.hollarhype.domain.repository.RepositoryException
 import com.codepunk.hollarhype.util.intl.Region
 
 data class AuthState(
@@ -23,9 +23,9 @@ data class AuthState(
     // Events/results
 
     val isLoginResultFresh: Boolean = false,
-    val loginResult: Either<DataError, Boolean>? = null,
+    val loginResult: Either<RepositoryException, Boolean>? = null,
 
     val isVerifyResultFresh: Boolean = false,
-    val verifyResult: Either<DataError, UserSession>? = null
+    val verifyResult: Either<RepositoryException, UserSession>? = null
 
 )

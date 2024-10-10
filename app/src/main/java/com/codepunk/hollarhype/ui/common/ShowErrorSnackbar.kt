@@ -5,10 +5,10 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import com.codepunk.hollarhype.R
-import com.codepunk.hollarhype.util.http.NoConnectivityException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import java.io.IOException
 
 @Composable
 fun showErrorSnackBar(
@@ -18,7 +18,7 @@ fun showErrorSnackBar(
     coroutineScope: CoroutineScope,
     message: () -> String = {
         when (cause) {
-            is NoConnectivityException -> context.getString(R.string.error_no_internet_try_again)
+            is IOException -> context.getString(R.string.error_no_internet_try_again)
             else -> cause?.localizedMessage ?: context.getString(R.string.error_unknown)
         }
     }
