@@ -7,7 +7,7 @@ import androidx.paging.RemoteMediator
 import androidx.room.withTransaction
 import com.codepunk.hollarhype.data.local.HollarhypeDatabase
 import com.codepunk.hollarhype.data.local.entity.LocalActivity
-import com.codepunk.hollarhype.data.local.entity.LocalActivityFeed
+import com.codepunk.hollarhype.data.local.entity.LocalActivityFeedEntry
 import com.codepunk.hollarhype.data.mapper.toLocal
 import com.codepunk.hollarhype.data.mapper.toRepositoryException
 import com.codepunk.hollarhype.data.remote.webservice.HollarhypeWebservice
@@ -73,7 +73,7 @@ class ActivityFeedRemoteMediator(
                             )
                             database.activityFeedDao().insertActivityFeed(
                                 activityFeed.activities.map { activity ->
-                                    LocalActivityFeed(
+                                    LocalActivityFeedEntry(
                                         activityId = activity.id,
                                         delta = activityFeed.delta,
                                         nextPage = activityFeed.nextPage,
@@ -94,7 +94,7 @@ class ActivityFeedRemoteMediator(
 
     private suspend fun getActivityFeedClosestToCurrentPosition(
         state: PagingState<Int, LocalActivity>
-    ): LocalActivityFeed? = state.anchorPosition?.let { position ->
+    ): LocalActivityFeedEntry? = state.anchorPosition?.let { position ->
         state.closestItemToPosition(position)?.id?.let { activityId ->
             database.withTransaction {
                 database.activityFeedDao().getActivityFeedByActivityId(activityId).firstOrNull()
@@ -104,7 +104,7 @@ class ActivityFeedRemoteMediator(
 
     private suspend fun getActivityFeedForLastItem(
         state: PagingState<Int, LocalActivity>
-    ): LocalActivityFeed? = state.lastItemOrNull()?.let {
+    ): LocalActivityFeedEntry? = state.lastItemOrNull()?.let {
         database.withTransaction {
             database.activityFeedDao().getActivityFeedByActivityId(
                 it.id

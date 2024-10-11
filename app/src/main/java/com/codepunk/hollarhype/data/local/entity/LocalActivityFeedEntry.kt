@@ -5,7 +5,7 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 @Entity(tableName = "activity_feed")
-data class LocalActivityFeed(
+data class LocalActivityFeedEntry(
     @PrimaryKey(autoGenerate = false)
     @ColumnInfo(name = "activity_id")
     val activityId: Long = -1L,

@@ -11,7 +11,7 @@ import com.codepunk.hollarhype.data.local.dao.RunDao
 import com.codepunk.hollarhype.data.local.dao.SponsorDao
 import com.codepunk.hollarhype.data.local.dao.UserDao
 import com.codepunk.hollarhype.data.local.entity.LocalActivity
-import com.codepunk.hollarhype.data.local.entity.LocalActivityFeed
+import com.codepunk.hollarhype.data.local.entity.LocalActivityFeedEntry
 import com.codepunk.hollarhype.data.local.entity.LocalGroup
 import com.codepunk.hollarhype.data.local.entity.LocalMessage
 import com.codepunk.hollarhype.data.local.entity.LocalRun
@@ -27,7 +27,7 @@ import com.codepunk.hollarhype.data.local.typeconverter.RegionTypeConverter
     version = 1,
     entities = [
         LocalActivity::class,
-        LocalActivityFeed::class,
+        LocalActivityFeedEntry::class,
         LocalGroup::class,
         LocalMessage::class,
         LocalRun::class,
