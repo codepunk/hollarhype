@@ -18,8 +18,8 @@ abstract class SponsorDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     abstract suspend fun insertSponsors(sponsors: List<LocalSponsor>)
 
-    @Query("SELECT * FROM sponsor WHERE id = :sponsorId")
-    abstract fun getSponsor(sponsorId: Long): Flow<LocalSponsor?>
+    @Query("SELECT * FROM sponsor WHERE run_id = :runId")
+    abstract fun getSponsor(runId: Long): Flow<LocalSponsor?>
 
     // endregion Methods
     

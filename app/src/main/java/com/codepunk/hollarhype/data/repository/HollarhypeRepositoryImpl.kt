@@ -17,7 +17,8 @@ import com.codepunk.hollarhype.data.local.HollarhypeDatabase
 import com.codepunk.hollarhype.data.mapper.toDomain
 import com.codepunk.hollarhype.data.mapper.toLocal
 import com.codepunk.hollarhype.data.mapper.toRepositoryException
-import com.codepunk.hollarhype.data.mediator.ActivityFeedRemoteMediator
+import com.codepunk.hollarhype.data.paging.ActivityFeedRemoteMediator
+import com.codepunk.hollarhype.data.paging.ActivityFeedRemoteMediatorFactory
 import com.codepunk.hollarhype.data.util.networkDataResource
 import com.codepunk.hollarhype.data.remote.webservice.HollarhypeWebservice
 import com.codepunk.hollarhype.domain.model.Activity
@@ -39,7 +40,7 @@ class HollarhypeRepositoryImpl(
     private val database: HollarhypeDatabase,
     private val dataStore: DataStore<UserSettings>,
     private val webservice: HollarhypeWebservice,
-    private val activityFeedRemoteMediator: ActivityFeedRemoteMediator
+    private val activityFeedRemoteMediatorFactory: ActivityFeedRemoteMediatorFactory
 ) : HollarhypeRepository {
 
     private val userDao by lazy { database.userDao() }
@@ -111,19 +112,20 @@ class HollarhypeRepositoryImpl(
 
     @OptIn(ExperimentalPagingApi::class)
     override fun activityFeed(
-        deviceDateTime: LocalDateTime,
-        page: Int
+        deviceDateTime: LocalDateTime
     ): Flow<PagingData<Activity>> = Pager(
         config = PagingConfig(
             pageSize = ACTIVITY_FEED_PAGE_SIZE,
             enablePlaceholders = true
         ),
-        remoteMediator = activityFeedRemoteMediator,
+        remoteMediator = activityFeedRemoteMediatorFactory.create(deviceDateTime),
         pagingSourceFactory = {
             database.activityDao().getActivitiesPaginated()
         }
     ).flow.map { pagingData ->
-        pagingData.map { it.toDomain() }
+        pagingData.map {
+            it.toDomain()
+        }
     }
 
     companion object {

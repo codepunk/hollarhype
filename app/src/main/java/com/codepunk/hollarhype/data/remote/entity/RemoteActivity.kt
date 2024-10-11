@@ -8,13 +8,15 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class RemoteActivity(
     val id: Long = -1L,
+    @SerialName("target_id")
+    val targetId: Long? = null,
+    val data: RemoteData = RemoteData(),
     @SerialName("activity_text")
     val activityText: String = "",
     @SerialName("activity_type")
     val activityType: Type = Type.FINISH_RUN,
-    @SerialName("target_id")
-    val targetId: Long? = null,
-    val data: RemoteData = RemoteData(),
+    @SerialName("athlete_id")
+    val userId: Long? = null,
     @SerialName("created_at")
     val createdAt: Instant = Clock.System.now()
 ) {

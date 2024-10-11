@@ -10,7 +10,7 @@ data class RemoteActivityFeed(
     val activities: List<RemoteActivity> = emptyList(),
     @SerialName("active_run")
     val activeRun: RemoteRun?,
-    val delta: Int = 0,
+    val delta: Long = 0L,
     @SerialName("next_page")
     val nextPage: Int,
     @SerialName("last_page")

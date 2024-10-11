@@ -5,7 +5,7 @@ import com.codepunk.hollarhype.data.remote.entity.RemoteSponsor
 import com.codepunk.hollarhype.domain.model.Sponsor
 
 fun RemoteSponsor.toLocal(): LocalSponsor = LocalSponsor(
-    id = id,
+    runId = runId,
     name = name,
     textCopy = textCopy,
     url = url,
@@ -17,7 +17,7 @@ fun RemoteSponsor.toLocal(): LocalSponsor = LocalSponsor(
 )
 
 fun LocalSponsor.toDomain(): Sponsor = Sponsor(
-    id = id,
+    runId = runId,
     name = name,
     textCopy = textCopy,
     url = url,

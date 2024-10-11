@@ -4,7 +4,7 @@ import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
 
 data class Sponsor(
-    val id: Long = -1L,
+    val runId: Long = -1L,
     val name: String = "",
     val textCopy: String = "",
     val url: String = "",

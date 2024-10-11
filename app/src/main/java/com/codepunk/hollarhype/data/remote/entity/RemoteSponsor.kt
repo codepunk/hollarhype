@@ -8,7 +8,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class RemoteSponsor(
-    val id: Long = -1L,
+    val runId: Long = -1L,
     val name: String = "",
     @SerialName("text_copy")
     val textCopy: String = "",

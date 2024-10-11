@@ -6,10 +6,13 @@ import androidx.room.PrimaryKey
 import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
 
-@Entity(tableName = "sponsor")
+@Entity(
+    tableName = "sponsor"
+)
 data class LocalSponsor(
     @PrimaryKey(autoGenerate = false)
-    val id: Long = -1L,
+    @ColumnInfo(name = "run_id")
+    val runId: Long = -1L,
     val name: String = "",
     @ColumnInfo(name = "text_copy")
     val textCopy: String = "",

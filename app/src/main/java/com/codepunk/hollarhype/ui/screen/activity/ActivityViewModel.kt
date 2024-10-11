@@ -38,8 +38,7 @@ class ActivityViewModel @Inject constructor(
 
     init {
         activityFeed(
-            deviceDateTime = Clock.System.now().toLocalDateTime(TimeZone.UTC),
-            page = 1
+            deviceDateTime = Clock.System.now().toLocalDateTime(TimeZone.UTC)
         )
     }
 
@@ -48,15 +47,15 @@ class ActivityViewModel @Inject constructor(
     // region Methods
 
     private fun activityFeed(
-        deviceDateTime: LocalDateTime,
-        page: Int
+        deviceDateTime: LocalDateTime
     ) {
         viewModelScope.launch(ioDispatcher) {
             repository.activityFeed(
-                deviceDateTime = deviceDateTime,
-                page = page
-            ).collect {
-                val x = "$it"
+                deviceDateTime = deviceDateTime
+            ).collect { activityFeed ->
+                state = state.copy(
+                    activityFeed = activityFeed
+                )
             }
         }
     }

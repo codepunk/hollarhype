@@ -8,7 +8,7 @@ import androidx.room.PrimaryKey
 data class LocalActivityFeed(
     @PrimaryKey(autoGenerate = false)
     @ColumnInfo(name = "activity_id")
-    val activityId: Long = 0L,
+    val activityId: Long = -1L,
     val delta: Long = 0L,
     @ColumnInfo(name = "next_page")
     val nextPage: Int = 0,

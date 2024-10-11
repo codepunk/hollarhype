@@ -203,4 +203,8 @@ dependencies {
 
     // Adaptive Navigation Suite
     implementation(libs.adaptive.navigation.suite)
+
+    // Paging
+    implementation(libs.paging)
+    implementation(libs.paging.compose)
 }

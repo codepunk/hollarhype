@@ -1,4 +1,4 @@
-package com.codepunk.hollarhype.data.mediator
+package com.codepunk.hollarhype.data.paging
 
 import androidx.paging.ExperimentalPagingApi
 import androidx.paging.LoadType
@@ -8,13 +8,16 @@ import androidx.room.withTransaction
 import com.codepunk.hollarhype.data.local.HollarhypeDatabase
 import com.codepunk.hollarhype.data.local.entity.LocalActivity
 import com.codepunk.hollarhype.data.local.entity.LocalActivityFeed
+import com.codepunk.hollarhype.data.mapper.toLocal
+import com.codepunk.hollarhype.data.mapper.toRepositoryException
 import com.codepunk.hollarhype.data.remote.webservice.HollarhypeWebservice
 import kotlinx.coroutines.flow.firstOrNull
+import kotlinx.datetime.LocalDateTime
 import java.io.IOException
-import javax.inject.Inject
 
 @OptIn(ExperimentalPagingApi::class)
-class ActivityFeedRemoteMediator @Inject constructor(
+class ActivityFeedRemoteMediator(
+    private val deviceDateTime: LocalDateTime,
     private val webservice: HollarhypeWebservice,
     private val database: HollarhypeDatabase
 ) : RemoteMediator<Int, LocalActivity>() {
@@ -47,16 +50,45 @@ class ActivityFeedRemoteMediator @Inject constructor(
             }
         }
 
-        try {
-            webservice.activityFeed(page = page).run {
-                val x = "$body"
-                body
+        return try {
+            webservice.activityFeed(
+                deviceDateTime = deviceDateTime,
+                page = page
+            ).run {
+                body.fold(
+                    ifLeft = { remoteError ->
+                        MediatorResult.Error(remoteError.toRepositoryException(code, message))
+                    },
+                    ifRight = { activityFeed ->
+                        // Save
+                        database.withTransaction {
+                            if (loadType == LoadType.REFRESH) {
+                                database.activityFeedDao().clearActivityFeed()
+                                database.activityDao().clearActivities()
+                            }
+                            database.activityDao().insertActivities(
+                                activityFeed.activities.map {
+                                    it.toLocal() // TODO to LocalWithDetails!!!!
+                                }
+                            )
+                            database.activityFeedDao().insertActivityFeed(
+                                activityFeed.activities.map { activity ->
+                                    LocalActivityFeed(
+                                        activityId = activity.id,
+                                        delta = activityFeed.delta,
+                                        nextPage = activityFeed.nextPage,
+                                        lastPage = activityFeed.lastPage
+                                    )
+                                }
+                            )
+                        }
+
+                        MediatorResult.Success(endOfPaginationReached = activityFeed.lastPage)
+                    }
+                )
             }
-            TODO("Not yet implemented")
         } catch (e: IOException) {
-            return MediatorResult.Error(e)
-        } catch (e: NotImplementedError) {
-            return MediatorResult.Error(e)
+            MediatorResult.Error(e)
         }
     }
 

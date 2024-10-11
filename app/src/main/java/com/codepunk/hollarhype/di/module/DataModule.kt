@@ -4,7 +4,8 @@ import android.net.ConnectivityManager
 import androidx.datastore.core.DataStore
 import com.codepunk.hollarhype.data.datastore.entity.UserSettings
 import com.codepunk.hollarhype.data.local.HollarhypeDatabase
-import com.codepunk.hollarhype.data.mediator.ActivityFeedRemoteMediator
+import com.codepunk.hollarhype.data.paging.ActivityFeedRemoteMediator
+import com.codepunk.hollarhype.data.paging.ActivityFeedRemoteMediatorFactory
 import com.codepunk.hollarhype.data.remote.webservice.HollarhypeWebservice
 import com.codepunk.hollarhype.data.repository.HollarhypeRepositoryImpl
 import com.codepunk.hollarhype.domain.repository.HollarhypeRepository
@@ -27,13 +28,13 @@ class DataModule {
         database: HollarhypeDatabase,
         dataStore: DataStore<UserSettings>,
         webservice: HollarhypeWebservice,
-        activityFeedRemoteMediator: ActivityFeedRemoteMediator
+        activityFeedRemoteMediatorFactory: ActivityFeedRemoteMediatorFactory
     ): HollarhypeRepository = HollarhypeRepositoryImpl(
         connectivityManager = connectivityManager,
         dataStore = dataStore,
         database = database,
         webservice = webservice,
-        activityFeedRemoteMediator = activityFeedRemoteMediator
+        activityFeedRemoteMediatorFactory = activityFeedRemoteMediatorFactory
     )
 
     // endregion Methods

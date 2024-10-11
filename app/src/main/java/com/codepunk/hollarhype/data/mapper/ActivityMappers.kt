@@ -14,13 +14,15 @@ fun RemoteActivity.Type.toLocal(): LocalActivity.Type = when (this) {
 }
 
 fun RemoteActivity.toLocal(): LocalActivity = LocalActivity(
-    dataGroupId = data.group?.id,
-    dataMessageId = data.message?.id,
-    dataRunId = data.run?.id,
-    dataUserId = data.user?.id,
+    id = id,
     targetId = targetId,
+    targetGroupId = data.group?.id,
+    targetMessageId = data.message?.id,
+    targetRunId = data.run?.id,
+    targetUserId = data.user?.id,
     activityText = activityText,
     activityType = activityType.toLocal(),
+    userId = userId,
     createdAt = createdAt
 )
 
@@ -47,7 +49,7 @@ fun LocalActivity.toDomain(): Activity = Activity(
     activityText = activityText,
     activityType = activityType.toDomain(),
     targetId = targetId,
-    data = Data(),
+    data = Data(), // TODO
     createdAt = createdAt
 )
 

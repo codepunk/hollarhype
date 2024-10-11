@@ -21,6 +21,8 @@
     <string name="enter_otp">Please enter verification code</string>
     <string name="resend_otp">Resend verification code</string>
 
+    <string name="activity_feed">Activity Feed</string>
+
     <string name="unknown">Unknown</string>
 
     <!-- region Country code picker -->

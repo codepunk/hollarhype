@@ -7,7 +7,6 @@ fun RemoteMessage.toLocal(): LocalMessage = LocalMessage(
     id = id,
     senderUserId = senderUserId,
     recipientUserId = recipientUserId,
-    sponsorId = sponsor?.id,
     voiceMessage = voiceMessage,
     favorite = favorite,
     transcript = transcript,
