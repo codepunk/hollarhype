@@ -13,7 +13,7 @@ data class RemoteActivity(
     @SerialName("activity_type")
     val activityType: Type = Type.FINISH_RUN,
     @SerialName("target_id")
-    val targetUserId: Long? = null,
+    val targetId: Long? = null,
     val data: RemoteData = RemoteData(),
     @SerialName("created_at")
     val createdAt: Instant = Clock.System.now()

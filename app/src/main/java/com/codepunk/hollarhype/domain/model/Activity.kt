@@ -7,7 +7,7 @@ data class Activity(
     val id: Long = -1L,
     val activityText: String = "",
     val activityType: Type = Type.FINISH_RUN,
-    val targetUserId: Long? = null,
+    val targetId: Long? = null,
     val data: Data = Data(),
     val createdAt: Instant = Clock.System.now()
 ) {

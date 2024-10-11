@@ -2,29 +2,15 @@ package com.codepunk.hollarhype.data.local.entity
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
-import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
 import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
 
-@Entity(
-    tableName = "group",
-    foreignKeys = [
-        ForeignKey(
-            entity = LocalUser::class,
-            parentColumns = ["id"],
-            childColumns = ["user_id"],
-            onUpdate = ForeignKey.CASCADE,
-            onDelete = ForeignKey.SET_NULL
-        )
-    ]
-)
+@Entity(tableName = "group")
 data class LocalGroup(
     @PrimaryKey(autoGenerate = false)
     val id: Long = -1L,
-    @ColumnInfo(name = "user_id")
-    val userId: Long? = null,
     val name: String = "",
     val desc: String = "",
     val access: String = "",

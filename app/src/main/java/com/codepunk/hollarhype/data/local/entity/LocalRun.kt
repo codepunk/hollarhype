@@ -7,18 +7,7 @@ import androidx.room.PrimaryKey
 import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
 
-@Entity(
-    tableName = "run",
-    foreignKeys = [
-        ForeignKey(
-            entity = LocalUser::class,
-            parentColumns = ["id"],
-            childColumns = ["user_id"],
-            onUpdate = ForeignKey.CASCADE,
-            onDelete = ForeignKey.SET_NULL
-        )
-    ]
-)
+@Entity(tableName = "run")
 data class LocalRun(
     @PrimaryKey(autoGenerate = false)
     val id: Long = -1L,

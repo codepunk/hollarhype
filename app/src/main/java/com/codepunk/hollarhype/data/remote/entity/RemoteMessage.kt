@@ -9,7 +9,6 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class RemoteMessage(
     val id: Long = -1L,
-    val run: RemoteRun? = null,
     @SerialName("sender_id")
     val senderUserId: Long? = null,
     @SerialName("sender_details")

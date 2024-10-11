@@ -6,7 +6,6 @@ import com.codepunk.hollarhype.domain.model.Group
 
 fun RemoteGroup.toLocal(): LocalGroup = LocalGroup(
     id = id,
-    userId = userId,
     name = name,
     desc = desc,
     access = access,
@@ -24,7 +23,6 @@ fun RemoteGroup.toLocal(): LocalGroup = LocalGroup(
 
 fun LocalGroup.toDomain(): Group = Group(
     id = id,
-    userId = userId,
     name = name,
     desc = desc,
     access = access,

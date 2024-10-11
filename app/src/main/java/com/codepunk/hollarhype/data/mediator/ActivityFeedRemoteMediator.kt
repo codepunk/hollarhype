@@ -5,49 +5,78 @@ import androidx.paging.LoadType
 import androidx.paging.PagingState
 import androidx.paging.RemoteMediator
 import androidx.room.withTransaction
-import arrow.retrofit.adapter.either.ResponseE
 import com.codepunk.hollarhype.data.local.HollarhypeDatabase
-import com.codepunk.hollarhype.data.remote.entity.RemoteActivityFeed
-import com.codepunk.hollarhype.data.remote.entity.RemoteError
+import com.codepunk.hollarhype.data.local.entity.LocalActivity
+import com.codepunk.hollarhype.data.local.entity.LocalActivityFeed
 import com.codepunk.hollarhype.data.remote.webservice.HollarhypeWebservice
-import okio.IOException
+import kotlinx.coroutines.flow.firstOrNull
+import java.io.IOException
 import javax.inject.Inject
 
 @OptIn(ExperimentalPagingApi::class)
 class ActivityFeedRemoteMediator @Inject constructor(
-    val webservice: HollarhypeWebservice,
-    val database: HollarhypeDatabase
-) : RemoteMediator<Int, ResponseE<RemoteError, RemoteActivityFeed>>() {
+    private val webservice: HollarhypeWebservice,
+    private val database: HollarhypeDatabase
+) : RemoteMediator<Int, LocalActivity>() {
+
+    override suspend fun initialize(): InitializeAction {
+        return super.initialize()
+    }
 
     override suspend fun load(
         loadType: LoadType,
-        state: PagingState<Int, ResponseE<RemoteError, RemoteActivityFeed>>
+        state: PagingState<Int, LocalActivity>
     ): MediatorResult {
-        return try {
-            val page = when (loadType) {
-                LoadType.REFRESH -> 1
-                LoadType.PREPEND -> return MediatorResult.Success(endOfPaginationReached = true)
-                LoadType.APPEND ->
-                    state.lastItemOrNull()?.body?.getOrNull()?.nextPage
-                        ?: return MediatorResult.Success(endOfPaginationReached = true)
+        val page = when (loadType) {
+            LoadType.REFRESH -> {
+                // TODO Simplify this?
+                val activityFeed = getActivityFeedClosestToCurrentPosition(state)
+                activityFeed?.nextPage?.minus(1) ?: 1
             }
-
-            val activityFeed = webservice.activityFeed(
-                page = page
-            )
-
-
-
-            database.withTransaction {
-                if (loadType == LoadType.REFRESH) {
-                    database.activityDao().clearActivities()
-
+            LoadType.PREPEND -> return MediatorResult.Success(endOfPaginationReached = true)
+            LoadType.APPEND -> {
+                val activityFeed = getActivityFeedForLastItem(state)
+                when {
+                    activityFeed == null -> return MediatorResult.Error(
+                        IllegalStateException("Result is empty")
+                    )
+                    activityFeed.lastPage ->
+                        return MediatorResult.Success(endOfPaginationReached = true)
+                    else -> activityFeed.nextPage
                 }
             }
+        }
 
-            MediatorResult.Success(endOfPaginationReached = true)
+        try {
+            webservice.activityFeed(page = page).run {
+                val x = "$body"
+                body
+            }
+            TODO("Not yet implemented")
         } catch (e: IOException) {
-            MediatorResult.Error(e)
+            return MediatorResult.Error(e)
+        } catch (e: NotImplementedError) {
+            return MediatorResult.Error(e)
+        }
+    }
+
+    private suspend fun getActivityFeedClosestToCurrentPosition(
+        state: PagingState<Int, LocalActivity>
+    ): LocalActivityFeed? = state.anchorPosition?.let { position ->
+        state.closestItemToPosition(position)?.id?.let { activityId ->
+            database.withTransaction {
+                database.activityFeedDao().getActivityFeedByActivityId(activityId).firstOrNull()
+            }
+        }
+    }
+
+    private suspend fun getActivityFeedForLastItem(
+        state: PagingState<Int, LocalActivity>
+    ): LocalActivityFeed? = state.lastItemOrNull()?.let {
+        database.withTransaction {
+            database.activityFeedDao().getActivityFeedByActivityId(
+                it.id
+            ).firstOrNull()
         }
     }
 }

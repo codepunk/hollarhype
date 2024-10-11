@@ -6,6 +6,7 @@ import androidx.paging.ExperimentalPagingApi
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
+import androidx.paging.map
 import arrow.core.Either
 import arrow.core.Ior
 import arrow.core.left
@@ -112,13 +113,22 @@ class HollarhypeRepositoryImpl(
     override fun activityFeed(
         deviceDateTime: LocalDateTime,
         page: Int
-    ): Flow<PagingData<Activity>> = flow {
-        val activityFeed = webservice.activityFeed(
-            deviceDateTime = deviceDateTime,
-            page = page
-        )
-        val x = "$activityFeed"
+    ): Flow<PagingData<Activity>> = Pager(
+        config = PagingConfig(
+            pageSize = ACTIVITY_FEED_PAGE_SIZE,
+            enablePlaceholders = true
+        ),
+        remoteMediator = activityFeedRemoteMediator,
+        pagingSourceFactory = {
+            database.activityDao().getActivitiesPaginated()
+        }
+    ).flow.map { pagingData ->
+        pagingData.map { it.toDomain() }
+    }
 
-        TODO("Not yet implemented")
+    companion object {
+
+        private const val ACTIVITY_FEED_PAGE_SIZE = 10
+
     }
 }

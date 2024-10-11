@@ -1,7 +1,6 @@
 package com.codepunk.hollarhype.data.mapper
 
 import com.codepunk.hollarhype.data.local.entity.LocalRun
-import com.codepunk.hollarhype.data.local.relation.LocalRunWithDetails
 import com.codepunk.hollarhype.data.remote.entity.RemoteRun
 import com.codepunk.hollarhype.domain.model.Run
 
@@ -24,17 +23,20 @@ fun RemoteRun.toLocal(): LocalRun = LocalRun(
     updatedAt = updatedAt
 )
 
+/*
 fun RemoteRun.toLocalWithDetails(): LocalRunWithDetails = LocalRunWithDetails(
     run = toLocal(),
     user = user.toLocal(),
     messages = messages.map { it.toLocalWithDetails() }
 )
+ */
 
 fun LocalRun.Status.toDomain(): Run.Status = when (this) {
     LocalRun.Status.INACTIVE -> TODO()
     LocalRun.Status.ACTIVE -> TODO()
 }
 
+/*
 fun LocalRunWithDetails.toDomain(): Run = Run(
     id = run.id,
     statusMessage = run.statusMessage,
@@ -50,3 +52,4 @@ fun LocalRunWithDetails.toDomain(): Run = Run(
     createdAt = run.createdAt,
     updatedAt = run.updatedAt
 )
+ */

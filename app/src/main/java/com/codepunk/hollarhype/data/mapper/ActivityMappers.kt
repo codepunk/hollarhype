@@ -1,7 +1,6 @@
 package com.codepunk.hollarhype.data.mapper
 
 import com.codepunk.hollarhype.data.local.entity.LocalActivity
-import com.codepunk.hollarhype.data.local.relation.LocalActivityWithDetails
 import com.codepunk.hollarhype.data.remote.entity.RemoteActivity
 import com.codepunk.hollarhype.domain.model.Activity
 import com.codepunk.hollarhype.domain.model.Data
@@ -15,16 +14,17 @@ fun RemoteActivity.Type.toLocal(): LocalActivity.Type = when (this) {
 }
 
 fun RemoteActivity.toLocal(): LocalActivity = LocalActivity(
-    groupId = data.group?.id,
-    messageId = data.message?.id,
-    runId = data.run?.id,
-    userId = data.user?.id,
-    targetUserId = targetUserId,
+    dataGroupId = data.group?.id,
+    dataMessageId = data.message?.id,
+    dataRunId = data.run?.id,
+    dataUserId = data.user?.id,
+    targetId = targetId,
     activityText = activityText,
     activityType = activityType.toLocal(),
     createdAt = createdAt
 )
 
+/*
 fun RemoteActivity.toLocalWithDetails(): LocalActivityWithDetails = LocalActivityWithDetails(
     activity = toLocal(),
     group = data.group?.toLocal(),
@@ -32,6 +32,7 @@ fun RemoteActivity.toLocalWithDetails(): LocalActivityWithDetails = LocalActivit
     run = data.run?.toLocalWithDetails(),
     user = data.user?.toLocal()
 )
+ */
 
 fun LocalActivity.Type.toDomain(): Activity.Type = when (this) {
     LocalActivity.Type.CREATE_GROUP -> Activity.Type.CREATE_GROUP
@@ -41,6 +42,16 @@ fun LocalActivity.Type.toDomain(): Activity.Type = when (this) {
     LocalActivity.Type.VOICE_MESSAGE -> Activity.Type.VOICE_MESSAGE
 }
 
+fun LocalActivity.toDomain(): Activity = Activity(
+    id = id,
+    activityText = activityText,
+    activityType = activityType.toDomain(),
+    targetId = targetId,
+    data = Data(),
+    createdAt = createdAt
+)
+
+/*
 fun LocalActivityWithDetails.toDomain(): Activity = Activity(
     id = activity.id,
     activityText = activity.activityText,
@@ -54,3 +65,4 @@ fun LocalActivityWithDetails.toDomain(): Activity = Activity(
     ),
     createdAt = activity.createdAt
 )
+ */

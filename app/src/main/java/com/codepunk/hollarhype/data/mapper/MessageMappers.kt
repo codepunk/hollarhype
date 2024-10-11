@@ -1,13 +1,10 @@
 package com.codepunk.hollarhype.data.mapper
 
 import com.codepunk.hollarhype.data.local.entity.LocalMessage
-import com.codepunk.hollarhype.data.local.relation.LocalMessageWithDetails
 import com.codepunk.hollarhype.data.remote.entity.RemoteMessage
-import com.codepunk.hollarhype.domain.model.Message
 
 fun RemoteMessage.toLocal(): LocalMessage = LocalMessage(
     id = id,
-    runId = run?.id,
     senderUserId = senderUserId,
     recipientUserId = recipientUserId,
     sponsorId = sponsor?.id,
@@ -18,6 +15,7 @@ fun RemoteMessage.toLocal(): LocalMessage = LocalMessage(
     createdAt = createdAt
 )
 
+/*
 fun RemoteMessage.toLocalWithDetails(): LocalMessageWithDetails = LocalMessageWithDetails(
     message = toLocal(),
     run = run?.toLocalWithDetails(),
@@ -36,3 +34,4 @@ fun LocalMessageWithDetails.toDomain(): Message = Message(
     isPlaying = message.isPlaying,
     createdAt = message.createdAt
 )
+ */

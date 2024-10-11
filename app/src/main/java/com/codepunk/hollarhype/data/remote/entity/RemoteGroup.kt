@@ -9,8 +9,6 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class RemoteGroup(
     val id: Long = -1L,
-    @SerialName("athlete_id")
-    val userId: Long? = null,
     val name: String = "",
     val desc: String = "",
     val access: String = "",

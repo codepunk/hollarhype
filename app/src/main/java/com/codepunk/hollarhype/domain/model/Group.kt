@@ -6,7 +6,6 @@ import kotlinx.datetime.LocalDate
 
 data class Group(
     val id: Long = -1L,
-    val userId: Long? = null,
     val name: String = "",
     val desc: String = "",
     val access: String = "",

@@ -52,14 +52,12 @@ class ActivityViewModel @Inject constructor(
         page: Int
     ) {
         viewModelScope.launch(ioDispatcher) {
-            /*
             repository.activityFeed(
                 deviceDateTime = deviceDateTime,
                 page = page
             ).collect {
                 val x = "$it"
             }
-             */
         }
     }
 
