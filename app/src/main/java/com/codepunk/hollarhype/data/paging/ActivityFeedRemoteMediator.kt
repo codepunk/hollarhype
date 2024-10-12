@@ -41,7 +41,7 @@ class ActivityFeedRemoteMediator(
         val page = when (loadType) {
             LoadType.REFRESH -> {
                 val activityFeed = getActivityFeedClosestToCurrentPosition(state)
-                activityFeed?.nextPage?.minus(1) ?: 1
+                activityFeed?.page ?: 1
             }
             LoadType.PREPEND -> return MediatorResult.Success(endOfPaginationReached = true)
             LoadType.APPEND -> {
@@ -56,6 +56,10 @@ class ActivityFeedRemoteMediator(
                 }
             }
         }
+
+        // TODO NEXT: Why doesn't 2nd page load upon 1st visit to activity feed?
+        //  (It only works if you load 1 page, then leave and come back, then paging
+        //  works as intended after that
 
         return try {
             webservice.activityFeed(
