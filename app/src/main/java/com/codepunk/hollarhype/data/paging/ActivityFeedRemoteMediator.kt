@@ -6,7 +6,6 @@ import androidx.paging.PagingState
 import androidx.paging.RemoteMediator
 import androidx.room.withTransaction
 import com.codepunk.hollarhype.data.local.HollarhypeDatabase
-import com.codepunk.hollarhype.data.local.entity.LocalActivity
 import com.codepunk.hollarhype.data.local.entity.LocalActivityFeedEntry
 import com.codepunk.hollarhype.data.local.relation.LocalActivityWithDetails
 import com.codepunk.hollarhype.data.mapper.toLocal
@@ -66,12 +65,11 @@ class ActivityFeedRemoteMediator(
                                 database.activityFeedDao().clearActivityFeed()
                                 database.activityDao().clearActivities()
                             }
-                            database.activityDao().insertActivities(
-                                activityFeed.activities.map {
-                                    it.toLocal().activity // TODO NEXT Change this to LocalActivityWithDetails?????
-                                }
+                            database.activityDao().insertActivitiesWithDetails(
+                                activityFeed.activities.map { it.toLocal() }
                             )
                             database.activityFeedDao().insertActivityFeed(
+                                // TODO Simplify? Better mapper?
                                 activityFeed.activities.map { activity ->
                                     LocalActivityFeedEntry(
                                         activityId = activity.id,

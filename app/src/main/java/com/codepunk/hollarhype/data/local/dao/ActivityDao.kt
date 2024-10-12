@@ -5,32 +5,64 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import androidx.room.Transaction
+import com.codepunk.hollarhype.data.local.HollarhypeDatabase
 import com.codepunk.hollarhype.data.local.entity.LocalActivity
 import com.codepunk.hollarhype.data.local.relation.LocalActivityWithDetails
 import kotlinx.coroutines.flow.Flow
 
 @Dao
-interface ActivityDao {
+abstract class ActivityDao(
+    private val database: HollarhypeDatabase
+) {
+
+    // region Variables
+
+    private val groupDao = database.groupDao()
+    private val messageDao = database.messageDao()
+    private val runDao = database.runDao()
+    private val userDao = database.userDao()
+
+    // endregion Variables
 
     // region Methods
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertActivity(activity: LocalActivity): Long
+    abstract suspend fun insertActivity(activity: LocalActivity)
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertActivities(activities: List<LocalActivity>): List<Long>
+    @Transaction
+    @Query("")
+    suspend fun insertActivityWithDetails(
+        activityWithDetails: LocalActivityWithDetails
+    ) {
+        activityWithDetails.group?.also { group ->
+            groupDao.insertGroup(group)
+        }
+        activityWithDetails.message?.also { message ->
+            messageDao.insertMessageWithDetails(message)
+        }
+        activityWithDetails.run?.also { run ->
+            runDao.insertRunWithDetails(run)
+        }
+        activityWithDetails.user?.also { user ->
+            userDao.insertUser(user)
+        }
+        return insertActivity(activityWithDetails.activity)
+    }
+
+    @Transaction
+    @Query("")
+    suspend fun insertActivitiesWithDetails(
+        activitiesWithDetails: List<LocalActivityWithDetails>
+    ) {
+        activitiesWithDetails.forEach { insertActivityWithDetails(it) }
+    }
 
     @Query("DELETE FROM activity")
-    suspend fun clearActivities()
-
-    @Query("SELECT * FROM activity WHERE id = :activityId")
-    fun getActivity(activityId: Long): Flow<LocalActivity?>
+    abstract suspend fun clearActivities()
 
     @Query("SELECT * FROM activity ORDER BY created_at DESC")
-    fun getAllActivities(): Flow<LocalActivity>
-
-    @Query("SELECT * FROM activity ORDER BY created_at DESC")
-    fun getActivitiesPaginated(): PagingSource<Int, LocalActivityWithDetails>
+    abstract fun getActivitiesPaginated(): PagingSource<Int, LocalActivityWithDetails>
 
     // endregion Methods
 
