@@ -4,7 +4,6 @@ import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import com.codepunk.hollarhype.data.local.dao.ActivityDao
-import com.codepunk.hollarhype.data.local.dao.ActivityFeedEntryDao
 import com.codepunk.hollarhype.data.local.dao.GroupDao
 import com.codepunk.hollarhype.data.local.dao.MessageDao
 import com.codepunk.hollarhype.data.local.dao.RunDao
@@ -12,12 +11,12 @@ import com.codepunk.hollarhype.data.local.dao.SponsorDao
 import com.codepunk.hollarhype.data.local.dao.UserDao
 import com.codepunk.hollarhype.data.local.entity.LocalActivity
 import com.codepunk.hollarhype.data.local.entity.LocalActivityFeed
-import com.codepunk.hollarhype.data.local.entity.LocalActivityFeedEntry
 import com.codepunk.hollarhype.data.local.entity.LocalGroup
 import com.codepunk.hollarhype.data.local.entity.LocalMessage
 import com.codepunk.hollarhype.data.local.entity.LocalRun
 import com.codepunk.hollarhype.data.local.entity.LocalSponsor
 import com.codepunk.hollarhype.data.local.entity.LocalUser
+import com.codepunk.hollarhype.data.local.relation.LocalActivityFeedActivityCrossRef
 import com.codepunk.hollarhype.data.local.typeconverter.BigDecimalTypeConverter
 import com.codepunk.hollarhype.data.local.typeconverter.InstantTypeConverter
 import com.codepunk.hollarhype.data.local.typeconverter.LocalDateTimeTypeConverter
@@ -29,7 +28,7 @@ import com.codepunk.hollarhype.data.local.typeconverter.RegionTypeConverter
     entities = [
         LocalActivity::class,
         LocalActivityFeed::class,
-        LocalActivityFeedEntry::class,
+        LocalActivityFeedActivityCrossRef::class,
         LocalGroup::class,
         LocalMessage::class,
         LocalRun::class,
@@ -49,8 +48,6 @@ import com.codepunk.hollarhype.data.local.typeconverter.RegionTypeConverter
 abstract class HollarhypeDatabase: RoomDatabase() {
 
     // region Methods
-
-    abstract fun activityFeedEntryDao(): ActivityFeedEntryDao
 
     abstract fun activityDao(): ActivityDao
 

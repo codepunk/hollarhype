@@ -8,7 +8,11 @@ import androidx.room.Query
 import androidx.room.Transaction
 import com.codepunk.hollarhype.data.local.HollarhypeDatabase
 import com.codepunk.hollarhype.data.local.entity.LocalActivity
+import com.codepunk.hollarhype.data.local.entity.LocalActivityFeed
+import com.codepunk.hollarhype.data.local.relation.LocalActivityFeedActivityCrossRef
+import com.codepunk.hollarhype.data.local.relation.LocalActivityFeedWithDetails
 import com.codepunk.hollarhype.data.local.relation.LocalActivityWithDetails
+import com.codepunk.hollarhype.data.mapper.toCrossRefs
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -26,6 +30,8 @@ abstract class ActivityDao(
     // endregion Variables
 
     // region Methods
+
+    // Insert
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     abstract suspend fun insertActivity(activity: LocalActivity)
@@ -58,11 +64,55 @@ abstract class ActivityDao(
         activitiesWithDetails.forEach { insertActivityWithDetails(it) }
     }
 
-    @Query("DELETE FROM activity")
-    abstract suspend fun clearActivities()
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    abstract suspend fun insertActivityFeed(activityFeed: LocalActivityFeed)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    abstract suspend fun insertActivityFeedActivityCrossRefs(
+        crossRefs: List<LocalActivityFeedActivityCrossRef>
+    )
+
+    @Transaction
+    @Query("")
+    suspend fun insertActivityFeedWithDetails(
+        activityFeedWithDetails: LocalActivityFeedWithDetails
+    ) {
+        insertActivitiesWithDetails(activityFeedWithDetails.activities)
+        activityFeedWithDetails.activeRun?.also { activeRun ->
+            runDao.insertRunWithDetails(activeRun)
+        }
+        insertActivityFeed(activityFeedWithDetails.activityFeed)
+        insertActivityFeedActivityCrossRefs(activityFeedWithDetails.toCrossRefs())
+    }
+
+    // Select
 
     @Query("SELECT * FROM activity ORDER BY created_at DESC")
     abstract fun getActivitiesPaginated(): PagingSource<Int, LocalActivityWithDetails>
+
+    @Query("""
+        SELECT f.*
+        FROM activity_feed f, 
+            activity_feed_activity_cross_ref x
+        WHERE f.page = x.activity_feed_page
+        AND x.activity_id = :activityId
+    """)
+    abstract fun getActivityFeedPageByActivityId(activityId: Long): Flow<LocalActivityFeed?>
+
+    // Delete
+
+    @Query("DELETE FROM activity")
+    abstract suspend fun clearActivities()
+
+    @Query("DELETE FROM activity_feed")
+    abstract suspend fun clearActivityFeed()
+
+    @Transaction
+    @Query("")
+    suspend fun clearActivityFeedAndActivities() {
+        clearActivityFeed()
+        clearActivities()
+    }
 
     // endregion Methods
 

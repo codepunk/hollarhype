@@ -5,7 +5,6 @@ import androidx.room.Room
 import com.codepunk.hollarhype.BuildConfig
 import com.codepunk.hollarhype.data.local.HollarhypeDatabase
 import com.codepunk.hollarhype.data.local.dao.ActivityDao
-import com.codepunk.hollarhype.data.local.dao.ActivityFeedEntryDao
 import com.codepunk.hollarhype.data.local.dao.GroupDao
 import com.codepunk.hollarhype.data.local.dao.MessageDao
 import com.codepunk.hollarhype.data.local.dao.RunDao
@@ -36,12 +35,6 @@ object LocalModule {
     @Provides
     @Singleton
     fun provideActivityDao(database: HollarhypeDatabase): ActivityDao = database.activityDao()
-
-    @Provides
-    @Singleton
-    fun provideActivityFeedEntryDao(
-        database: HollarhypeDatabase
-    ): ActivityFeedEntryDao = database.activityFeedEntryDao()
 
     @Provides
     @Singleton

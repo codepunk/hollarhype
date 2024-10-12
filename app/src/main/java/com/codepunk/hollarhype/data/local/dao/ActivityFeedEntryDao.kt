@@ -4,9 +4,9 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import com.codepunk.hollarhype.data.local.entity.LocalActivityFeedEntry
 import kotlinx.coroutines.flow.Flow
 
+/*
 @Dao
 interface ActivityFeedEntryDao {
 
@@ -20,3 +20,4 @@ interface ActivityFeedEntryDao {
     suspend fun clearActivityFeedEntries()
 
 }
+ */
