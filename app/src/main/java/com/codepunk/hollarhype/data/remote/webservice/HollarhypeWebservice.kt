@@ -1,7 +1,7 @@
 package com.codepunk.hollarhype.data.remote.webservice
 
 import arrow.retrofit.adapter.either.ResponseE
-import com.codepunk.hollarhype.data.remote.entity.RemoteActivityFeed
+import com.codepunk.hollarhype.data.remote.entity.RemoteActivityFeedPage
 import com.codepunk.hollarhype.data.remote.entity.RemoteAuthenticateResult
 import com.codepunk.hollarhype.data.remote.entity.RemoteLoginResult
 import com.codepunk.hollarhype.data.remote.entity.RemoteVerifyResult
@@ -45,5 +45,5 @@ interface HollarhypeWebservice {
         @Query("device_time") deviceDateTime: LocalDateTime =
             Clock.System.now().toLocalDateTime(timeZone = TimeZone.UTC),
         @Query("page") page: Int = 1
-    ): ResponseE<RemoteError, RemoteActivityFeed>
+    ): ResponseE<RemoteError, RemoteActivityFeedPage>
 }

@@ -14,14 +14,8 @@ fun AuthScreen(
 ) {
     Scaffold(
         modifier = modifier,
-        /*
-        topBar = {
-            HHTopAppBar()
-        }
-         */
-    ) { innerPadding ->
+    ) { _ ->
         AuthNavigation(
-            paddingValues = innerPadding,
             state = state,
             onEvent = onEvent
         )

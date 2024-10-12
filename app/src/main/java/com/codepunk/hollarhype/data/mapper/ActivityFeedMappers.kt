@@ -1,13 +1,13 @@
 package com.codepunk.hollarhype.data.mapper
 
-import com.codepunk.hollarhype.data.local.entity.LocalActivityFeed
-import com.codepunk.hollarhype.data.local.relation.LocalActivityFeedWithDetails
-import com.codepunk.hollarhype.data.remote.entity.RemoteActivityFeed
+import com.codepunk.hollarhype.data.local.entity.LocalActivityFeedPage
+import com.codepunk.hollarhype.data.local.relation.LocalActivityFeedPageWithDetails
+import com.codepunk.hollarhype.data.remote.entity.RemoteActivityFeedPage
 
-fun RemoteActivityFeed.toLocal(
+fun RemoteActivityFeedPage.toLocal(
     page: Int
-): LocalActivityFeedWithDetails = LocalActivityFeedWithDetails(
-    activityFeed = LocalActivityFeed(
+): LocalActivityFeedPageWithDetails = LocalActivityFeedPageWithDetails(
+    activityFeed = LocalActivityFeedPage(
         page = page,
         activeRunId = activeRun?.id,
         nextPage = nextPage,

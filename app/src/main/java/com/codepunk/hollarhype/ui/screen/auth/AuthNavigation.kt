@@ -11,14 +11,13 @@ import androidx.navigation.compose.rememberNavController
 @Composable
 fun AuthNavigation(
     modifier: Modifier = Modifier,
-    paddingValues: PaddingValues,
     state: AuthState,
     onEvent: (AuthEvent) -> Unit = {}
 ) {
     val navController = rememberNavController()
 
     NavHost(
-        modifier = modifier.padding(paddingValues),
+        modifier = modifier,
         navController = navController,
         startDestination = AuthRoute.AuthOptions
     ) {

@@ -35,6 +35,7 @@ datastore = "1.1.1"
 desugar = "2.1.2"
 splashscreen = "1.2.0-alpha02"
 paging = "3.3.2"
+coil = "3.0.0-rc01"
 
 [libraries]
 # Supplied by New Project template
@@ -86,6 +87,9 @@ splashscreen = { group = "androidx.core", name = "core-splashscreen", version.re
 adaptive-navigation-suite = { group = "androidx.compose.material3", name="material3-adaptive-navigation-suite" }
 paging = { group = "androidx.paging", name = "paging-runtime", version.ref = "paging" }
 paging-compose = { group = "androidx.paging", name = "paging-compose", version.ref = "paging" }
+coil = { group = "io.coil-kt.coil3", name = "coil-compose", version.ref = "coil" }
+coil-networking = { group = "io.coil-kt.coil3", name = "coil-network-okhttp", version.ref = "coil" }
+coil-gif = { group = "io.coil-kt.coil3", name = "coil-gif", version.ref = "coil" }
 
 [plugins]
 # Supplied by New Project template

@@ -4,7 +4,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class RemoteActivityFeed(
+data class RemoteActivityFeedPage(
     @Suppress("SpellCheckingInspection")
     @SerialName("activitites")
     val activities: List<RemoteActivity> = emptyList(),

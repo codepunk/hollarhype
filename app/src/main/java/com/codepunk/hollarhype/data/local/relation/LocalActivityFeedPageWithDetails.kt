@@ -4,18 +4,18 @@ import androidx.room.Embedded
 import androidx.room.Junction
 import androidx.room.Relation
 import com.codepunk.hollarhype.data.local.entity.LocalActivity
-import com.codepunk.hollarhype.data.local.entity.LocalActivityFeed
+import com.codepunk.hollarhype.data.local.entity.LocalActivityFeedPage
 import com.codepunk.hollarhype.data.local.entity.LocalRun
 
-data class LocalActivityFeedWithDetails(
+data class LocalActivityFeedPageWithDetails(
     @Embedded
-    val activityFeed: LocalActivityFeed = LocalActivityFeed(),
+    val activityFeed: LocalActivityFeedPage = LocalActivityFeedPage(),
     @Relation(
         entity = LocalActivity::class,
         parentColumn = "page",
         entityColumn = "id",
         associateBy = Junction(
-            LocalActivityFeedActivityCrossRef::class
+            LocalActivityFeedPageActivityCrossRef::class
         )
     )
     val activities: List<LocalActivityWithDetails> = emptyList(),

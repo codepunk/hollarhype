@@ -1,8 +1,8 @@
 package com.codepunk.hollarhype.data.mapper
 
 import com.codepunk.hollarhype.data.local.entity.LocalActivity
-import com.codepunk.hollarhype.data.local.relation.LocalActivityFeedActivityCrossRef
-import com.codepunk.hollarhype.data.local.relation.LocalActivityFeedWithDetails
+import com.codepunk.hollarhype.data.local.relation.LocalActivityFeedPageActivityCrossRef
+import com.codepunk.hollarhype.data.local.relation.LocalActivityFeedPageWithDetails
 import com.codepunk.hollarhype.data.local.relation.LocalActivityWithDetails
 import com.codepunk.hollarhype.data.remote.entity.RemoteActivity
 import com.codepunk.hollarhype.domain.model.Activity
@@ -58,9 +58,9 @@ fun LocalActivityWithDetails.toDomain(): Activity = Activity(
     createdAt = activity.createdAt
 )
 
-fun LocalActivityFeedWithDetails.toCrossRefs(): List<LocalActivityFeedActivityCrossRef> =
+fun LocalActivityFeedPageWithDetails.toCrossRefs(): List<LocalActivityFeedPageActivityCrossRef> =
     activities.map {
-        LocalActivityFeedActivityCrossRef(
+        LocalActivityFeedPageActivityCrossRef(
             activityFeedPage = activityFeed.page,
             activityId = it.activity.id
         )

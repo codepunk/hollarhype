@@ -10,13 +10,13 @@ import com.codepunk.hollarhype.data.local.dao.RunDao
 import com.codepunk.hollarhype.data.local.dao.SponsorDao
 import com.codepunk.hollarhype.data.local.dao.UserDao
 import com.codepunk.hollarhype.data.local.entity.LocalActivity
-import com.codepunk.hollarhype.data.local.entity.LocalActivityFeed
+import com.codepunk.hollarhype.data.local.entity.LocalActivityFeedPage
 import com.codepunk.hollarhype.data.local.entity.LocalGroup
 import com.codepunk.hollarhype.data.local.entity.LocalMessage
 import com.codepunk.hollarhype.data.local.entity.LocalRun
 import com.codepunk.hollarhype.data.local.entity.LocalSponsor
 import com.codepunk.hollarhype.data.local.entity.LocalUser
-import com.codepunk.hollarhype.data.local.relation.LocalActivityFeedActivityCrossRef
+import com.codepunk.hollarhype.data.local.relation.LocalActivityFeedPageActivityCrossRef
 import com.codepunk.hollarhype.data.local.typeconverter.BigDecimalTypeConverter
 import com.codepunk.hollarhype.data.local.typeconverter.InstantTypeConverter
 import com.codepunk.hollarhype.data.local.typeconverter.LocalDateTimeTypeConverter
@@ -27,8 +27,8 @@ import com.codepunk.hollarhype.data.local.typeconverter.RegionTypeConverter
     version = 1,
     entities = [
         LocalActivity::class,
-        LocalActivityFeed::class,
-        LocalActivityFeedActivityCrossRef::class,
+        LocalActivityFeedPage::class,
+        LocalActivityFeedPageActivityCrossRef::class,
         LocalGroup::class,
         LocalMessage::class,
         LocalRun::class,

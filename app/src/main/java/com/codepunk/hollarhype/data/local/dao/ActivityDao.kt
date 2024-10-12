@@ -8,9 +8,9 @@ import androidx.room.Query
 import androidx.room.Transaction
 import com.codepunk.hollarhype.data.local.HollarhypeDatabase
 import com.codepunk.hollarhype.data.local.entity.LocalActivity
-import com.codepunk.hollarhype.data.local.entity.LocalActivityFeed
-import com.codepunk.hollarhype.data.local.relation.LocalActivityFeedActivityCrossRef
-import com.codepunk.hollarhype.data.local.relation.LocalActivityFeedWithDetails
+import com.codepunk.hollarhype.data.local.entity.LocalActivityFeedPage
+import com.codepunk.hollarhype.data.local.relation.LocalActivityFeedPageActivityCrossRef
+import com.codepunk.hollarhype.data.local.relation.LocalActivityFeedPageWithDetails
 import com.codepunk.hollarhype.data.local.relation.LocalActivityWithDetails
 import com.codepunk.hollarhype.data.mapper.toCrossRefs
 import kotlinx.coroutines.flow.Flow
@@ -65,24 +65,24 @@ abstract class ActivityDao(
     }
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    abstract suspend fun insertActivityFeed(activityFeed: LocalActivityFeed)
+    abstract suspend fun insertActivityFeedPage(activityFeed: LocalActivityFeedPage)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    abstract suspend fun insertActivityFeedActivityCrossRefs(
-        crossRefs: List<LocalActivityFeedActivityCrossRef>
+    abstract suspend fun insertActivityFeedPageActivityCrossRefs(
+        crossRefs: List<LocalActivityFeedPageActivityCrossRef>
     )
 
     @Transaction
     @Query("")
-    suspend fun insertActivityFeedWithDetails(
-        activityFeedWithDetails: LocalActivityFeedWithDetails
+    suspend fun insertActivityFeedPageWithDetails(
+        activityFeedWithDetails: LocalActivityFeedPageWithDetails
     ) {
         insertActivitiesWithDetails(activityFeedWithDetails.activities)
         activityFeedWithDetails.activeRun?.also { activeRun ->
             runDao.insertRunWithDetails(activeRun)
         }
-        insertActivityFeed(activityFeedWithDetails.activityFeed)
-        insertActivityFeedActivityCrossRefs(activityFeedWithDetails.toCrossRefs())
+        insertActivityFeedPage(activityFeedWithDetails.activityFeed)
+        insertActivityFeedPageActivityCrossRefs(activityFeedWithDetails.toCrossRefs())
     }
 
     // Select
@@ -93,11 +93,11 @@ abstract class ActivityDao(
     @Query("""
         SELECT f.*
         FROM activity_feed f, 
-            activity_feed_activity_cross_ref x
+            activity_feed_page_activity_cross_ref x
         WHERE f.page = x.activity_feed_page
         AND x.activity_id = :activityId
     """)
-    abstract fun getActivityFeedPageByActivityId(activityId: Long): Flow<LocalActivityFeed?>
+    abstract fun getActivityFeedPageByActivityId(activityId: Long): Flow<LocalActivityFeedPage?>
 
     // Delete
 

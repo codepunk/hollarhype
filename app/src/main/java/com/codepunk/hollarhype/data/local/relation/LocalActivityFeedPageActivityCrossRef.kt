@@ -5,10 +5,10 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
 import com.codepunk.hollarhype.data.local.entity.LocalActivity
-import com.codepunk.hollarhype.data.local.entity.LocalActivityFeed
+import com.codepunk.hollarhype.data.local.entity.LocalActivityFeedPage
 
 @Entity(
-    tableName = "activity_feed_activity_cross_ref",
+    tableName = "activity_feed_page_activity_cross_ref",
     primaryKeys = ["activity_feed_page", "activity_id"],
     indices = [
         Index("activity_feed_page"),
@@ -16,7 +16,7 @@ import com.codepunk.hollarhype.data.local.entity.LocalActivityFeed
     ],
     foreignKeys = [
         ForeignKey(
-            entity = LocalActivityFeed::class,
+            entity = LocalActivityFeedPage::class,
             parentColumns = ["page"],
             childColumns = ["activity_feed_page"],
             onUpdate = ForeignKey.CASCADE,
@@ -31,7 +31,7 @@ import com.codepunk.hollarhype.data.local.entity.LocalActivityFeed
         )
     ]
 )
-data class LocalActivityFeedActivityCrossRef(
+data class LocalActivityFeedPageActivityCrossRef(
     @ColumnInfo(name = "activity_feed_page")
     val activityFeedPage: Int = 0,
     @ColumnInfo(name = "activity_id")

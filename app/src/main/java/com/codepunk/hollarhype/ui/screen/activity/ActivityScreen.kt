@@ -2,6 +2,7 @@ package com.codepunk.hollarhype.ui.screen.activity
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -21,6 +22,7 @@ import androidx.compose.ui.text.fromHtml
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemKey
 import com.codepunk.hollarhype.R
+import com.codepunk.hollarhype.domain.model.Activity
 import com.codepunk.hollarhype.ui.component.HollarHypeTopAppBar
 import com.codepunk.hollarhype.ui.preview.ScreenPreviews
 import com.codepunk.hollarhype.ui.theme.HollarhypeTheme
@@ -60,30 +62,39 @@ fun ActivityScreen(
             LazyColumn(
                 modifier = Modifier.fillMaxSize(),
                 verticalArrangement = Arrangement.spacedBy(LocalSizes.current.paddingLarge),
-                state = activityFeedLazyListState
+                state = activityFeedLazyListState,
+                contentPadding = PaddingValues(bottom = LocalSizes.current.paddingLarge)
             ) {
                 items(
                     count = activityFeed.itemCount,
                     key = activityFeed.itemKey { it.id }
                 ) { index ->
-                    activityFeed[index]?.also {
-                        Card(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .height(LocalSizes.current.regionSmall),
-                            onClick = { /*TODO*/ }
-                        ) {
-                            Text(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(LocalSizes.current.padding),
-                                text = AnnotatedString.fromHtml(it.activityText)
-                            )
-                        }
+                    activityFeed[index]?.also { activity ->
+                        ActivityCard(activity = activity)
                     }
                 }
             }
         }
+    }
+}
+
+@Composable
+fun ActivityCard(
+    modifier: Modifier = Modifier,
+    activity: Activity
+) {
+    Card(
+        modifier = modifier
+            .fillMaxWidth()
+            .height(LocalSizes.current.regionSmall),
+        onClick = { /*TODO*/ }
+    ) {
+        Text(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(LocalSizes.current.padding),
+            text = AnnotatedString.fromHtml(activity.activityText)
+        )
     }
 }
 
