@@ -2,6 +2,7 @@ package com.codepunk.hollarhype.ui.screen.activity
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -52,22 +53,21 @@ fun ActivityScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(padding)
+                .padding(
+                    start = LocalSizes.current.paddingLarge,
+                    top = LocalSizes.current.paddingLarge,
+                    end = LocalSizes.current.paddingLarge,
+                )
         ) {
             Text(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(LocalSizes.current.paddingLarge),
+                modifier = Modifier.fillMaxWidth(),
                 style = MaterialTheme.typography.headlineSmall,
                 text = stringResource(id = R.string.activity_feed).uppercase()
             )
+            Spacer(modifier = Modifier.height(LocalSizes.current.padding))
             LazyColumn(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(
-                        start = LocalSizes.current.paddingLarge,
-                        end = LocalSizes.current.paddingLarge
-                    ),
-                verticalArrangement = Arrangement.spacedBy(LocalSizes.current.padding),
+                modifier = Modifier.fillMaxSize(),
+                verticalArrangement = Arrangement.spacedBy(LocalSizes.current.paddingLarge),
                 state = activityFeedLazyListState
             ) {
                 items(
