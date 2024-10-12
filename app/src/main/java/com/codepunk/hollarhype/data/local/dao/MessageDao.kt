@@ -8,18 +8,18 @@ import com.codepunk.hollarhype.data.local.entity.LocalMessage
 import kotlinx.coroutines.flow.Flow
 
 @Dao
-abstract class MessageDao {
+interface MessageDao {
 
     // region Methods
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    abstract suspend fun insertMessage(message: LocalMessage)
+    suspend fun insertMessage(message: LocalMessage)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    abstract suspend fun insertMessages(messages: List<LocalMessage>)
+    suspend fun insertMessages(messages: List<LocalMessage>)
 
     @Query("SELECT * FROM message WHERE id = :messageId")
-    abstract fun getMessage(messageId: Long): Flow<LocalMessage?>
+    fun getMessage(messageId: Long): Flow<LocalMessage?>
 
     // endregion Methods
     

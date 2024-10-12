@@ -8,18 +8,18 @@ import com.codepunk.hollarhype.data.local.entity.LocalSponsor
 import kotlinx.coroutines.flow.Flow
 
 @Dao
-abstract class SponsorDao {
+interface SponsorDao {
 
     // region Methods
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    abstract suspend fun insertSponsor(sponsor: LocalSponsor)
+    suspend fun insertSponsor(sponsor: LocalSponsor)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    abstract suspend fun insertSponsors(sponsors: List<LocalSponsor>)
+    suspend fun insertSponsors(sponsors: List<LocalSponsor>)
 
     @Query("SELECT * FROM sponsor WHERE run_id = :runId")
-    abstract fun getSponsor(runId: Long): Flow<LocalSponsor?>
+    fun getSponsor(runId: Long): Flow<LocalSponsor?>
 
     // endregion Methods
     

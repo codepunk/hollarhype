@@ -8,18 +8,18 @@ import com.codepunk.hollarhype.data.local.entity.LocalUser
 import kotlinx.coroutines.flow.Flow
 
 @Dao
-abstract class UserDao {
+interface UserDao {
 
     // region Methods
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    abstract suspend fun insertUser(user: LocalUser)
+    suspend fun insertUser(user: LocalUser)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    abstract suspend fun insertUsers(users: List<LocalUser>)
+    suspend fun insertUsers(users: List<LocalUser>)
 
     @Query("SELECT * FROM user WHERE id = :userId")
-    abstract fun getUser(userId: Long): Flow<LocalUser?>
+    fun getUser(userId: Long): Flow<LocalUser?>
 
     // endregion Methods
 
