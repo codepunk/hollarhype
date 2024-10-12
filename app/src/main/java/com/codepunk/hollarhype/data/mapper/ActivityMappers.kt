@@ -1,6 +1,7 @@
 package com.codepunk.hollarhype.data.mapper
 
 import com.codepunk.hollarhype.data.local.entity.LocalActivity
+import com.codepunk.hollarhype.data.local.relation.LocalActivityWithDetails
 import com.codepunk.hollarhype.data.remote.entity.RemoteActivity
 import com.codepunk.hollarhype.domain.model.Activity
 import com.codepunk.hollarhype.domain.model.Data
@@ -13,28 +14,25 @@ fun RemoteActivity.Type.toLocal(): LocalActivity.Type = when (this) {
     RemoteActivity.Type.VOICE_MESSAGE -> LocalActivity.Type.VOICE_MESSAGE
 }
 
-fun RemoteActivity.toLocal(): LocalActivity = LocalActivity(
-    id = id,
-    targetId = targetId,
-    targetGroupId = data.group?.id,
-    targetMessageId = data.message?.id,
-    targetRunId = data.run?.id,
-    targetUserId = data.user?.id,
-    activityText = activityText,
-    activityType = activityType.toLocal(),
-    userId = userId,
-    createdAt = createdAt
-)
-
-/*
-fun RemoteActivity.toLocalWithDetails(): LocalActivityWithDetails = LocalActivityWithDetails(
-    activity = toLocal(),
+fun RemoteActivity.toLocal(): LocalActivityWithDetails = LocalActivityWithDetails(
+    activity = LocalActivity(
+        id = id,
+        targetId = targetId,
+        targetGroupId = data.group?.id,
+        targetMessageId = data.message?.id,
+        targetRunId = data.run?.id,
+        targetUserId = data.user?.id,
+        activityText = activityText,
+        activityType = activityType.toLocal(),
+        userId = userId,
+        createdAt = createdAt
+    ),
     group = data.group?.toLocal(),
-    message = data.message?.toLocalWithDetails(),
-    run = data.run?.toLocalWithDetails(),
+    message = data.message?.toLocal(),
+    run = data.run?.toLocal(),
     user = data.user?.toLocal()
+
 )
- */
 
 fun LocalActivity.Type.toDomain(): Activity.Type = when (this) {
     LocalActivity.Type.CREATE_GROUP -> Activity.Type.CREATE_GROUP
@@ -44,27 +42,17 @@ fun LocalActivity.Type.toDomain(): Activity.Type = when (this) {
     LocalActivity.Type.VOICE_MESSAGE -> Activity.Type.VOICE_MESSAGE
 }
 
-fun LocalActivity.toDomain(): Activity = Activity(
-    id = id,
-    activityText = activityText,
-    activityType = activityType.toDomain(),
-    targetId = targetId,
-    data = Data(), // TODO
-    createdAt = createdAt
-)
-
-/*
 fun LocalActivityWithDetails.toDomain(): Activity = Activity(
     id = activity.id,
     activityText = activity.activityText,
     activityType = activity.activityType.toDomain(),
-    targetUserId = activity.targetUserId,
+    targetId = activity.targetId,
     data = Data(
         group = group?.toDomain(),
         user = user?.toDomain(),
         message = message?.toDomain(),
         run = run?.toDomain()
-    ),
+
+    ), // TODO
     createdAt = activity.createdAt
 )
- */

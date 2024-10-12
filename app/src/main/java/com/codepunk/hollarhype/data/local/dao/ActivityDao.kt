@@ -6,6 +6,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.codepunk.hollarhype.data.local.entity.LocalActivity
+import com.codepunk.hollarhype.data.local.relation.LocalActivityWithDetails
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -29,7 +30,7 @@ interface ActivityDao {
     fun getAllActivities(): Flow<LocalActivity>
 
     @Query("SELECT * FROM activity ORDER BY created_at DESC")
-    fun getActivitiesPaginated(): PagingSource<Int, LocalActivity>
+    fun getActivitiesPaginated(): PagingSource<Int, LocalActivityWithDetails>
 
     // endregion Methods
 

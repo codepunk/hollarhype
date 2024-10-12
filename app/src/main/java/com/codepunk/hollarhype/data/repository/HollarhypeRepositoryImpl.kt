@@ -17,7 +17,6 @@ import com.codepunk.hollarhype.data.local.HollarhypeDatabase
 import com.codepunk.hollarhype.data.mapper.toDomain
 import com.codepunk.hollarhype.data.mapper.toLocal
 import com.codepunk.hollarhype.data.mapper.toRepositoryException
-import com.codepunk.hollarhype.data.paging.ActivityFeedRemoteMediator
 import com.codepunk.hollarhype.data.paging.ActivityFeedRemoteMediatorFactory
 import com.codepunk.hollarhype.data.util.networkDataResource
 import com.codepunk.hollarhype.data.remote.webservice.HollarhypeWebservice
@@ -123,9 +122,7 @@ class HollarhypeRepositoryImpl(
             database.activityDao().getActivitiesPaginated()
         }
     ).flow.map { pagingData ->
-        pagingData.map {
-            it.toDomain()
-        }
+        pagingData.map { it.toDomain() }
     }
 
     companion object {

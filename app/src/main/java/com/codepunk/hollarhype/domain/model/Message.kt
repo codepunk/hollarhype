@@ -5,7 +5,6 @@ import kotlinx.datetime.Instant
 
 data class Message(
     val id: Long = -1L,
-    val run: Run? = null,
     val sender: User? = null,
     val recipientUserId: Long? = null,
     val voiceMessage: String = "",
