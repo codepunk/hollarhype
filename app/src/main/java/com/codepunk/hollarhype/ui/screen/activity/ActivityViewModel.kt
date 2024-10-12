@@ -2,6 +2,7 @@ package com.codepunk.hollarhype.ui.screen.activity
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.paging.cachedIn
 import com.codepunk.hollarhype.di.qualifier.IoDispatcher
 import com.codepunk.hollarhype.domain.repository.HollarhypeRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -52,10 +53,8 @@ class ActivityViewModel @Inject constructor(
         viewModelScope.launch(ioDispatcher) {
             repository.activityFeed(
                 deviceDateTime = deviceDateTime
-            ).collect { activityFeed ->
-                state = state.copy(
-                    activityFeed = activityFeed
-                )
+            ).cachedIn(viewModelScope).apply {
+                state = state.copy(activityFeedFlow = this)
             }
         }
     }

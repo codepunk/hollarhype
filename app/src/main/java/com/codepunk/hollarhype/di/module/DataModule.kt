@@ -4,7 +4,6 @@ import android.net.ConnectivityManager
 import androidx.datastore.core.DataStore
 import com.codepunk.hollarhype.data.datastore.entity.UserSettings
 import com.codepunk.hollarhype.data.local.HollarhypeDatabase
-import com.codepunk.hollarhype.data.paging.ActivityFeedRemoteMediator
 import com.codepunk.hollarhype.data.paging.ActivityFeedRemoteMediatorFactory
 import com.codepunk.hollarhype.data.remote.webservice.HollarhypeWebservice
 import com.codepunk.hollarhype.data.repository.HollarhypeRepositoryImpl

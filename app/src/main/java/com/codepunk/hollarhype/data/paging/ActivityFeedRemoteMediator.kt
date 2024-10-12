@@ -22,6 +22,15 @@ class ActivityFeedRemoteMediator(
     private val database: HollarhypeDatabase
 ) : RemoteMediator<Int, LocalActivityWithDetails>() {
 
+    // region Variables
+
+    private val activityDao = database.activityDao()
+    private val activityFeedDao = database.activityFeedDao()
+
+    // endregion Variables
+
+    // region Methods
+
     override suspend fun initialize(): InitializeAction {
         return super.initialize()
     }
@@ -62,14 +71,14 @@ class ActivityFeedRemoteMediator(
                         // Save
                         database.withTransaction {
                             if (loadType == LoadType.REFRESH) {
-                                database.activityFeedDao().clearActivityFeed()
-                                database.activityDao().clearActivities()
+                                activityFeedDao.clearActivityFeed()
+                                activityDao.clearActivities()
                             }
-                            database.activityDao().insertActivitiesWithDetails(
+                            activityDao.insertActivitiesWithDetails(
                                 activityFeed.activities.map { it.toLocal() }
                             )
-                            database.activityFeedDao().insertActivityFeed(
-                                // TODO Simplify? Better mapper?
+                            activityFeedDao.insertActivityFeed(
+                                // TODO NEXT Simplify? Better mapper?
                                 activityFeed.activities.map { activity ->
                                     LocalActivityFeedEntry(
                                         activityId = activity.id,
@@ -109,4 +118,7 @@ class ActivityFeedRemoteMediator(
             ).firstOrNull()
         }
     }
+
+    // endregion Methods
+
 }

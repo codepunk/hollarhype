@@ -14,13 +14,10 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.fromHtml
-import androidx.paging.cachedIn
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemKey
 import com.codepunk.hollarhype.R
@@ -28,8 +25,6 @@ import com.codepunk.hollarhype.ui.component.HollarHypeTopAppBar
 import com.codepunk.hollarhype.ui.preview.ScreenPreviews
 import com.codepunk.hollarhype.ui.theme.HollarhypeTheme
 import com.codepunk.hollarhype.ui.theme.LocalSizes
-import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.flowOf
 
 @Composable
 fun ActivityScreen(
@@ -37,10 +32,7 @@ fun ActivityScreen(
     state: ActivityState,
     onEvent: (ActivityEvent) -> Unit = {}
 ) {
-    val activityFeed = remember(state.activityFeed) {
-        flow { emit(state.activityFeed) }
-    }.collectAsLazyPagingItems()
-
+    val activityFeed = state.activityFeedFlow.collectAsLazyPagingItems()
     val activityFeedLazyListState = rememberLazyListState()
 
     Scaffold(
