@@ -25,7 +25,7 @@ class ActivityFeedRemoteMediator(
     // region Variables
 
     private val activityDao = database.activityDao()
-    private val activityFeedDao = database.activityFeedDao()
+    private val activityFeedDao = database.activityFeedEntryDao()
 
     // endregion Variables
 
@@ -71,13 +71,13 @@ class ActivityFeedRemoteMediator(
                         // Save
                         database.withTransaction {
                             if (loadType == LoadType.REFRESH) {
-                                activityFeedDao.clearActivityFeed()
+                                activityFeedDao.clearActivityFeedEntries()
                                 activityDao.clearActivities()
                             }
                             activityDao.insertActivitiesWithDetails(
                                 activityFeed.activities.map { it.toLocal() }
                             )
-                            activityFeedDao.insertActivityFeed(
+                            activityFeedDao.insertActivityFeedEntry(
                                 // TODO NEXT Simplify? Better mapper?
                                 activityFeed.activities.map { activity ->
                                     LocalActivityFeedEntry(
@@ -104,7 +104,7 @@ class ActivityFeedRemoteMediator(
     ): LocalActivityFeedEntry? = state.anchorPosition?.let { position ->
         state.closestItemToPosition(position)?.activity?.id?.let { activityId ->
             database.withTransaction {
-                database.activityFeedDao().getActivityFeedByActivityId(activityId).firstOrNull()
+                database.activityFeedEntryDao().getActivityFeedEntryByActivityId(activityId).firstOrNull()
             }
         }
     }
@@ -113,7 +113,7 @@ class ActivityFeedRemoteMediator(
         state: PagingState<Int, LocalActivityWithDetails>
     ): LocalActivityFeedEntry? = state.lastItemOrNull()?.let {
         database.withTransaction {
-            database.activityFeedDao().getActivityFeedByActivityId(
+            database.activityFeedEntryDao().getActivityFeedEntryByActivityId(
                 it.activity.id
             ).firstOrNull()
         }
