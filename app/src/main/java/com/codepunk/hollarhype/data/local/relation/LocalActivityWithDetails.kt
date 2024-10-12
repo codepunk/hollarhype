@@ -17,15 +17,17 @@ data class LocalActivityWithDetails(
     )
     val group: LocalGroup? = null,
     @Relation(
+        entity = LocalMessage::class,
         parentColumn = "data_message_id",
         entityColumn = "id"
     )
-    val message: LocalMessage? = null, // TODO NEXT Make this LocalMessageWithDetails
+    val message: LocalMessageWithDetails? = null,
     @Relation(
+        entity = LocalRun::class,
         parentColumn = "data_run_id",
         entityColumn = "id"
     )
-    val run: LocalRun? = null, // TODO NEXT Make this LocalRunWithDetails
+    val run: LocalRunWithDetails? = null,
     @Relation(
         parentColumn = "data_user_id",
         entityColumn = "id"

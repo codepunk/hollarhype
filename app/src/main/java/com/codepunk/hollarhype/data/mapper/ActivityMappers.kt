@@ -53,6 +53,6 @@ fun LocalActivityWithDetails.toDomain(): Activity = Activity(
         message = message?.toDomain(),
         run = run?.toDomain()
 
-    ), // TODO
+    ),
     createdAt = activity.createdAt
 )

@@ -10,7 +10,7 @@ data class LocalMessageWithDetails(
     @Embedded
     val message: LocalMessage = LocalMessage(),
     @Relation(
-        parentColumn = "user_id",
+        parentColumn = "sender_user_id",
         entityColumn = "id"
     )
     val sender: LocalUser? = null,

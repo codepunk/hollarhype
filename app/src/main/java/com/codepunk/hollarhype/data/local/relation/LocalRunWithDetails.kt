@@ -15,8 +15,9 @@ data class LocalRunWithDetails(
     )
     val user: LocalUser = LocalUser(),
     @Relation(
+        entity = LocalMessage::class,
         parentColumn = "id",
         entityColumn = "run_id"
     )
-    val messages: List<LocalMessage> = emptyList()
+    val messages: List<LocalMessageWithDetails> = emptyList()
 )

@@ -1,5 +1,6 @@
 package com.codepunk.hollarhype.ui.screen.activity
 
+import android.util.Log
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -69,7 +70,8 @@ fun ActivityScreen(
                     count = activityFeed.itemCount,
                     key = activityFeed.itemKey { it.id }
                 ) { index ->
-                    activityFeed[index]?.also { it ->
+                    activityFeed[index]?.also {
+                        Log.i("ActivityScreen", "Activity=$it")
                         Text(
                             modifier = Modifier
                                 .fillMaxWidth()
