@@ -3,6 +3,7 @@ package com.codepunk.hollarhype.ui.component
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -19,6 +20,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.codepunk.hollarhype.R
 import com.codepunk.hollarhype.ui.theme.HollarhypeTheme
+import com.codepunk.hollarhype.ui.theme.LocalSizes
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -33,10 +35,11 @@ fun HollarHypeTopAppBar(
             Box(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(dimensionResource(id = R.dimen.padding_tiny)),
+                    .padding(LocalSizes.current.paddingSmall),
                 contentAlignment = Alignment.Center
             ) {
                 Image(
+                    modifier = Modifier.height(LocalSizes.current.componentSmall),
                     painter = painterResource(id = R.drawable.app_bar_icon),
                     contentDescription = stringResource(id = R.string.content_hollarhype)
                 )
