@@ -77,7 +77,7 @@ val AppTypography = Typography(
     ),
     bodyMedium = baseline.bodyMedium.copy(
         fontFamily = poppinsFontFamily,
-        fontWeight = FontWeight.Bold
+        fontWeight = FontWeight.Normal
     ),
     bodySmall = baseline.bodySmall.copy(
         fontFamily = poppinsFontFamily,

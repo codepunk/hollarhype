@@ -13,13 +13,13 @@ data class LocalActivity(
     @ColumnInfo(name = "target_id")
     val targetId: Long? = null,
     @ColumnInfo(name = "data_group_id")
-    val targetGroupId: Long? = null,
+    val dataGroupId: Long? = null,
     @ColumnInfo(name = "data_message_id")
-    val targetMessageId: Long? = null,
+    val dataMessageId: Long? = null,
     @ColumnInfo(name = "data_run_id")
-    val targetRunId: Long? = null,
+    val dataRunId: Long? = null,
     @ColumnInfo(name = "data_user_id")
-    val targetUserId: Long? = null,
+    val dataUserId: Long? = null,
     @ColumnInfo(name = "activity_text")
     val activityText: String = "",
     @ColumnInfo(name = "activity_type")

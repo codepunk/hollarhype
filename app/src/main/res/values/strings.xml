@@ -22,6 +22,10 @@
     <string name="resend_otp">Resend verification code</string>
 
     <string name="activity_feed">Activity Feed</string>
+    <string name="group">Group</string>
+    <string name="message">Message</string>
+    <string name="run">Run</string>
+    <string name="user">User</string>
 
     <string name="unknown">Unknown</string>
 

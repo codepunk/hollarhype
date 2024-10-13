@@ -1,32 +1,55 @@
 package com.codepunk.hollarhype.ui.screen.activity
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.fromHtml
+import androidx.paging.PagingData
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemKey
+import coil3.compose.AsyncImage
+import coil3.request.ImageRequest
 import com.codepunk.hollarhype.R
 import com.codepunk.hollarhype.domain.model.Activity
+import com.codepunk.hollarhype.domain.model.Data
+import com.codepunk.hollarhype.domain.model.Run
+import com.codepunk.hollarhype.domain.model.User
+import com.codepunk.hollarhype.domain.util.getContentDescriptionResId
+import com.codepunk.hollarhype.domain.util.getImageUrl
+import com.codepunk.hollarhype.domain.util.getPlaceholderDrawableResId
 import com.codepunk.hollarhype.ui.component.HollarHypeTopAppBar
 import com.codepunk.hollarhype.ui.preview.ScreenPreviews
 import com.codepunk.hollarhype.ui.theme.HollarhypeTheme
 import com.codepunk.hollarhype.ui.theme.LocalSizes
+import kotlinx.coroutines.flow.flowOf
+import kotlinx.datetime.Clock
+import kotlin.time.Duration
+import kotlin.time.Duration.Companion.days
 
 @Composable
 fun ActivityScreen(
@@ -85,27 +108,91 @@ fun ActivityCard(
 ) {
     Card(
         modifier = modifier
-            .fillMaxWidth()
-            .height(LocalSizes.current.regionSmall),
+            .fillMaxWidth(),
         onClick = { /*TODO*/ }
     ) {
-        Text(
+        Column(
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(LocalSizes.current.padding),
-            text = AnnotatedString.fromHtml(activity.activityText)
-        )
+                .fillMaxSize()
+                .padding(LocalSizes.current.paddingLarge)
+        ) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(LocalSizes.current.padding)
+            ) {
+                AsyncImage(
+                    modifier = Modifier
+                        .width(LocalSizes.current.componentLarge)
+                        .aspectRatio(1f)
+                        .clip(CircleShape),
+                    model = ImageRequest.Builder(LocalContext.current)
+                        .data(activity.data.getImageUrl())
+                        .build(),
+                    placeholder = painterResource(id = activity.data.getPlaceholderDrawableResId()),
+                    error = painterResource(id = activity.data.getPlaceholderDrawableResId()),
+                    contentDescription = stringResource(
+                        activity.data.getContentDescriptionResId()
+                    ),
+                    contentScale = ContentScale.Crop
+                )
+
+                Text(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(LocalSizes.current.padding),
+                    text = AnnotatedString.fromHtml(activity.activityText),
+                    style = MaterialTheme.typography.bodyMedium
+                )
+            }
+            Text(
+                modifier = Modifier
+                    .align(Alignment.End),
+                text = "To contain timestamp",
+                style = MaterialTheme.typography.bodySmall
+            )
+        }
     }
 }
 
 @ScreenPreviews
 @Composable
 fun ActivityPreviews() {
+    val activities = listOf(
+        Activity(
+            id = 1,
+            activityText = "<b>User</b> ended a live session",
+            createdAt = Clock.System.now().minus(5.days)
+        ),
+        Activity(
+            id = 2,
+            activityText = "<b>User</b> went live",
+            createdAt = Clock.System.now().minus(8.days)
+        ),
+        Activity(
+            id = 3,
+            activityText = "<b>User</b> ended a live session",
+            createdAt = Clock.System.now().minus(10.days)
+        ),
+        Activity(
+            id = 4,
+            activityText = "<b>User A</b> messaged <b>User B</b>",
+            createdAt = Clock.System.now().minus(12.days)
+        ),
+        Activity(
+            id = 5,
+            activityText = "<b>User</b> went live",
+            createdAt = Clock.System.now().minus(18.days)
+        )
+    )
     HollarhypeTheme {
         Scaffold { padding ->
             ActivityScreen(
                 modifier = Modifier.padding(padding),
-                state = ActivityState()
+                state = ActivityState(
+                    activityFeedFlow = flowOf(
+                        PagingData.from(activities)
+                    )
+                )
             )
         }
     }
