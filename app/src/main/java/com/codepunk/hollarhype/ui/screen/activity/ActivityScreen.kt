@@ -1,7 +1,6 @@
 package com.codepunk.hollarhype.ui.screen.activity
 
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -36,19 +35,14 @@ import coil3.compose.AsyncImage
 import coil3.request.ImageRequest
 import com.codepunk.hollarhype.R
 import com.codepunk.hollarhype.domain.model.Activity
-import com.codepunk.hollarhype.domain.model.Data
-import com.codepunk.hollarhype.domain.model.Run
-import com.codepunk.hollarhype.domain.model.User
 import com.codepunk.hollarhype.domain.util.getContentDescriptionResId
-import com.codepunk.hollarhype.domain.util.getImageUrl
-import com.codepunk.hollarhype.domain.util.getPlaceholderDrawableResId
+import com.codepunk.hollarhype.domain.util.getAvatarUrl
 import com.codepunk.hollarhype.ui.component.HollarHypeTopAppBar
 import com.codepunk.hollarhype.ui.preview.ScreenPreviews
 import com.codepunk.hollarhype.ui.theme.HollarhypeTheme
 import com.codepunk.hollarhype.ui.theme.LocalSizes
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.datetime.Clock
-import kotlin.time.Duration
 import kotlin.time.Duration.Companion.days
 
 @Composable
@@ -126,10 +120,10 @@ fun ActivityCard(
                         .aspectRatio(1f)
                         .clip(CircleShape),
                     model = ImageRequest.Builder(LocalContext.current)
-                        .data(activity.data.getImageUrl())
+                        .data(activity.getAvatarUrl())
                         .build(),
-                    placeholder = painterResource(id = activity.data.getPlaceholderDrawableResId()),
-                    error = painterResource(id = activity.data.getPlaceholderDrawableResId()),
+                    placeholder = painterResource(id = R.drawable.img_default_avatar_opaque_96),
+                    error = painterResource(id = R.drawable.img_default_avatar_opaque_96),
                     contentDescription = stringResource(
                         activity.data.getContentDescriptionResId()
                     ),

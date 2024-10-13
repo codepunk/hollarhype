@@ -2,7 +2,6 @@ package com.codepunk.hollarhype.data.local.typeconverter
 
 import androidx.room.TypeConverter
 import kotlinx.datetime.LocalDate
-import java.time.format.DateTimeParseException
 
 class LocalDateTypeConverter {
 
@@ -14,7 +13,7 @@ class LocalDateTypeConverter {
         input?.let {
             try {
                 LocalDate.parse(it)
-            } catch (e: DateTimeParseException) {
+            } catch (e: Exception) {
                 LocalDate.fromEpochDays(0)
             }
         } ?: LocalDate.fromEpochDays(0)

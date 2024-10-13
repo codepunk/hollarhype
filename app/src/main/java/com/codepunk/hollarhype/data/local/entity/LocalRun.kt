@@ -15,7 +15,6 @@ import kotlinx.datetime.Instant
             parentColumns = ["id"],
             childColumns = ["user_id"],
             onUpdate = ForeignKey.CASCADE,
-            onDelete = ForeignKey.SET_NULL
         )
     ]
 )
@@ -23,7 +22,7 @@ data class LocalRun(
     @PrimaryKey(autoGenerate = false)
     val id: Long = -1L,
     @ColumnInfo(name = "user_id")
-    val userId: Long? = null,
+    val userId: Long = -1L,
     @ColumnInfo(name = "status_message")
     val statusMessage: String = "",
     val status: Status = Status.INACTIVE,

@@ -41,16 +41,16 @@ abstract class ActivityDao(
     suspend fun insertActivityWithDetails(
         activityWithDetails: LocalActivityWithDetails
     ) {
-        activityWithDetails.group?.also { group ->
+        activityWithDetails.dataGroup?.also { group ->
             groupDao.insertGroup(group)
         }
-        activityWithDetails.message?.also { message ->
+        activityWithDetails.dataMessage?.also { message ->
             messageDao.insertMessageWithDetails(message)
         }
-        activityWithDetails.run?.also { run ->
+        activityWithDetails.dataRun?.also { run ->
             runDao.insertRunWithDetails(run)
         }
-        activityWithDetails.user?.also { user ->
+        activityWithDetails.dataUser?.also { user ->
             userDao.insertUser(user)
         }
         return insertActivity(activityWithDetails.activity)

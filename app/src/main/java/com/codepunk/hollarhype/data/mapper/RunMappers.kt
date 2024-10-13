@@ -13,7 +13,7 @@ fun RemoteRun.Status.toLocal(): LocalRun.Status = when (this) {
 fun RemoteRun.toLocal(): LocalRunWithDetails = LocalRunWithDetails(
     run = LocalRun(
         id = id,
-        userId = userId,
+        userId = user.id,
         statusMessage = statusMessage,
         status = status.toLocal(),
         startTime = startTime,
@@ -26,7 +26,6 @@ fun RemoteRun.toLocal(): LocalRunWithDetails = LocalRunWithDetails(
     ),
     user = user.toLocal(),
     messages = messages.map { it.toLocal() }
-
 )
 
 fun LocalRun.Status.toDomain(): Run.Status = when (this) {
@@ -43,7 +42,6 @@ fun LocalRunWithDetails.toDomain(): Run = Run(
     distance = run.distance,
     user = user.toDomain(),
     messages = messages.map { it.toDomain() },
-    userId = run.userId,
     enableGps = run.enableGps,
     totalMessageCount = run.totalMessageCount,
     createdAt = run.createdAt,

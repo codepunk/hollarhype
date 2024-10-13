@@ -22,8 +22,6 @@ data class RemoteRun(
     @SerialName("athlete")
     val user: RemoteUser = RemoteUser(),
     val messages: List<RemoteMessage> = emptyList(),
-    @SerialName("athlete_id")
-    val userId: Long? = null,
     @SerialName("enable_gps")
     val enableGps: Boolean = false,
     @SerialName("total_message_count")

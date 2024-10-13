@@ -15,22 +15,22 @@ data class LocalActivityWithDetails(
         parentColumn = "data_group_id",
         entityColumn = "id"
     )
-    val group: LocalGroup? = null,
+    val dataGroup: LocalGroup? = null,
     @Relation(
         entity = LocalMessage::class,
         parentColumn = "data_message_id",
         entityColumn = "id"
     )
-    val message: LocalMessageWithDetails? = null,
+    val dataMessage: LocalMessageWithDetails? = null,
     @Relation(
         entity = LocalRun::class,
         parentColumn = "data_run_id",
         entityColumn = "id"
     )
-    val run: LocalRunWithDetails? = null,
+    val dataRun: LocalRunWithDetails? = null,
     @Relation(
         parentColumn = "data_user_id",
         entityColumn = "id"
     )
-    val user: LocalUser? = null,
+    val dataUser: LocalUser? = null,
 )

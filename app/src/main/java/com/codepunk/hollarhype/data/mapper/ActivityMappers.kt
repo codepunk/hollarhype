@@ -29,10 +29,10 @@ fun RemoteActivity.toLocal(): LocalActivityWithDetails = LocalActivityWithDetail
         userId = userId,
         createdAt = createdAt
     ),
-    group = data.group?.toLocal(),
-    message = data.message?.toLocal(),
-    run = data.run?.toLocal(),
-    user = data.user?.toLocal()
+    dataGroup = data.group?.toLocal(),
+    dataMessage = data.message?.toLocal(),
+    dataRun = data.run?.toLocal(),
+    dataUser = data.user?.toLocal()
 )
 
 fun LocalActivity.Type.toDomain(): Activity.Type = when (this) {
@@ -49,11 +49,10 @@ fun LocalActivityWithDetails.toDomain(): Activity = Activity(
     activityType = activity.activityType.toDomain(),
     targetId = activity.targetId,
     data = Data(
-        group = group?.toDomain(),
-        user = user?.toDomain(),
-        message = message?.toDomain(),
-        run = run?.toDomain()
-
+        group = dataGroup?.toDomain(),
+        user = dataUser?.toDomain(),
+        message = dataMessage?.toDomain(),
+        run = dataRun?.toDomain()
     ),
     createdAt = activity.createdAt
 )

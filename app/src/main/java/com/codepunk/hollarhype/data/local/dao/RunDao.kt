@@ -35,6 +35,7 @@ abstract class RunDao(
     suspend fun insertRunWithDetails(runWithDetails: LocalRunWithDetails) {
         userDao.insertUser(runWithDetails.user)
         messageDao.insertMessagesWithDetails(runWithDetails.messages)
+        insertRun(runWithDetails.run)
     }
 
     @Transaction

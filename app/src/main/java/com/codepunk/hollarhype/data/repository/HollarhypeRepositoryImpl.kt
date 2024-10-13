@@ -42,7 +42,8 @@ class HollarhypeRepositoryImpl(
     private val activityFeedRemoteMediatorFactory: ActivityFeedRemoteMediatorFactory
 ) : HollarhypeRepository {
 
-    private val userDao by lazy { database.userDao() }
+    private val activityDao = database.activityDao()
+    private val userDao = database.userDao()
 
     override fun authenticate(): Flow<Ior<RepositoryException, UserSession>> = flow {
         val userSettings = dataStore.data.firstOrNull()
@@ -119,7 +120,7 @@ class HollarhypeRepositoryImpl(
         ),
         remoteMediator = activityFeedRemoteMediatorFactory.create(deviceDateTime),
         pagingSourceFactory = {
-            database.activityDao().getActivitiesPaginated()
+            activityDao.getActivitiesPaginated()
         }
     ).flow.map { pagingData ->
         pagingData.map { it.toDomain() }

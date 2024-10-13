@@ -70,21 +70,21 @@ class ActivityFeedRemoteMediator(
                     ifLeft = { remoteError ->
                         MediatorResult.Error(remoteError.toRepositoryException(code, message))
                     },
-                    ifRight = { activityFeed ->
+                    ifRight = { activityFeedPage ->
                         // Save
                         database.withTransaction {
                             if (loadType == LoadType.REFRESH) {
                                 activityDao.clearActivityFeedAndActivities()
                             }
                             activityDao.insertActivitiesWithDetails(
-                                activityFeed.activities.map { it.toLocal() }
+                                activityFeedPage.activities.map { it.toLocal() }
                             )
                             activityDao.insertActivityFeedPageWithDetails(
-                                activityFeed.toLocal(page)
+                                activityFeedPage.toLocal(page)
                             )
                         }
 
-                        MediatorResult.Success(endOfPaginationReached = activityFeed.lastPage)
+                        MediatorResult.Success(endOfPaginationReached = activityFeedPage.lastPage)
                     }
                 )
             }
