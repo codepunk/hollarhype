@@ -1,5 +1,6 @@
 package com.codepunk.hollarhype.ui.screen.activity
 
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -10,11 +11,13 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Card
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -28,6 +31,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.fromHtml
+import androidx.paging.LoadState
 import androidx.paging.PagingData
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemKey
@@ -37,6 +41,7 @@ import com.codepunk.hollarhype.R
 import com.codepunk.hollarhype.domain.model.Activity
 import com.codepunk.hollarhype.domain.util.getContentDescriptionResId
 import com.codepunk.hollarhype.domain.util.getAvatarUrl
+import com.codepunk.hollarhype.ui.component.ContentLoadingIndicator
 import com.codepunk.hollarhype.ui.component.HollarHypeTopAppBar
 import com.codepunk.hollarhype.ui.preview.ScreenPreviews
 import com.codepunk.hollarhype.ui.theme.HollarhypeTheme
@@ -52,7 +57,22 @@ fun ActivityScreen(
     onEvent: (ActivityEvent) -> Unit = {}
 ) {
     val activityFeed = state.activityFeedFlow.collectAsLazyPagingItems()
+    val loadState = activityFeed.loadState
     val activityFeedLazyListState = rememberLazyListState()
+
+    val isLoading = when {
+        loadState.refresh is LoadState.Loading -> true
+        loadState.append is LoadState.Loading -> true
+        else -> false
+    }
+
+    val error = when {
+        loadState.refresh is LoadState.Error ->
+            (loadState.refresh as LoadState.Error).error
+        loadState.append is LoadState.Error ->
+            (loadState.append as LoadState.Error).error
+        else -> null
+    }
 
     Scaffold(
         modifier = modifier,
@@ -70,11 +90,25 @@ fun ActivityScreen(
                     end = LocalSizes.current.paddingLarge,
                 )
         ) {
-            Text(
+            Row(
                 modifier = Modifier.fillMaxWidth(),
-                style = MaterialTheme.typography.headlineSmall,
-                text = stringResource(id = R.string.activity_feed).uppercase()
-            )
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(LocalSizes.current.paddingLarge)
+            ) {
+                Text(
+                    style = MaterialTheme.typography.headlineSmall,
+                    text = stringResource(id = R.string.activity_feed).uppercase()
+                )
+                ContentLoadingIndicator(isLoading = isLoading) { isVisible ->
+                    if (isVisible) {
+                        CircularProgressIndicator(
+                            modifier = Modifier
+                                .size(LocalSizes.current.component2xSmall),
+                            strokeWidth = LocalSizes.current.border
+                        )
+                    }
+                }
+            }
             Spacer(modifier = Modifier.height(LocalSizes.current.padding))
             LazyColumn(
                 modifier = Modifier.fillMaxSize(),
@@ -101,8 +135,7 @@ fun ActivityCard(
     activity: Activity
 ) {
     Card(
-        modifier = modifier
-            .fillMaxWidth(),
+        modifier = modifier.fillMaxWidth(),
         onClick = { /*TODO*/ }
     ) {
         Column(

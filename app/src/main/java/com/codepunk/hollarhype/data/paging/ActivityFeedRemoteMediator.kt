@@ -40,26 +40,28 @@ class ActivityFeedRemoteMediator(
     ): MediatorResult {
         val page = when (loadType) {
             LoadType.REFRESH -> {
-                val activityFeed = getActivityFeedClosestToCurrentPosition(state)
+                val activityFeed = getRemoteKeysClosestToCurrentPosition(state)
                 activityFeed?.page ?: 1
             }
-            LoadType.PREPEND -> return MediatorResult.Success(endOfPaginationReached = true)
+
+            LoadType.PREPEND ->
+                return MediatorResult.Success(endOfPaginationReached = true)
+
             LoadType.APPEND -> {
-                val activityFeed = getActivityFeedForLastItem(state)
+                val activityFeedPage = getRemoteKeysForLastItem(state)
+                // There are three possible outcomes of getRemoteKeysForLastItem:
+                // activityFeedPage is null: We are just starting pagination, allow to keep going
+                // lastPage is true: This is a "real" end of pagination
+                // otherwise: set page to nextPage, allow to keep going
                 when {
-                    activityFeed == null -> return MediatorResult.Error(
-                        IllegalStateException("Result is empty")
-                    )
-                    activityFeed.lastPage ->
+                    activityFeedPage == null ->
+                        return MediatorResult.Success(endOfPaginationReached = false)
+                    activityFeedPage.lastPage ->
                         return MediatorResult.Success(endOfPaginationReached = true)
-                    else -> activityFeed.nextPage
+                    else -> activityFeedPage.nextPage
                 }
             }
         }
-
-        // TODO NEXT: Why doesn't 2nd page load upon 1st visit to activity feed?
-        //  (It only works if you load 1 page, then leave and come back, then paging
-        //  works as intended after that
 
         return try {
             webservice.activityFeed(
@@ -93,7 +95,7 @@ class ActivityFeedRemoteMediator(
         }
     }
 
-    private suspend fun getActivityFeedClosestToCurrentPosition(
+    private suspend fun getRemoteKeysClosestToCurrentPosition(
         state: PagingState<Int, LocalActivityWithDetails>
     ): LocalActivityFeedPage? = state.anchorPosition?.let { position ->
         state.closestItemToPosition(position)?.activity?.id?.let { activityId ->
@@ -103,13 +105,11 @@ class ActivityFeedRemoteMediator(
         }
     }
 
-    private suspend fun getActivityFeedForLastItem(
+    private suspend fun getRemoteKeysForLastItem(
         state: PagingState<Int, LocalActivityWithDetails>
     ): LocalActivityFeedPage? = state.lastItemOrNull()?.let {
         database.withTransaction {
             activityDao.getActivityFeedPageByActivityId(it.activity.id).firstOrNull()
-//                it.activity.id
-//            ).firstOrNull()
         }
     }
 
