@@ -168,7 +168,7 @@ class AuthViewModel @Inject constructor(
 
     private fun consumeLoginResult() {
         state = state.copy(
-            isLoginResultFresh = false,
+            isLoginResultFresh = false
         )
     }
 

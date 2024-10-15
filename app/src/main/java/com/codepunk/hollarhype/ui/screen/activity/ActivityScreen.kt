@@ -1,5 +1,6 @@
 package com.codepunk.hollarhype.ui.screen.activity
 
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -20,13 +21,17 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -46,11 +51,13 @@ import com.codepunk.hollarhype.R
 import com.codepunk.hollarhype.domain.model.Activity
 import com.codepunk.hollarhype.domain.util.getAvatarUrl
 import com.codepunk.hollarhype.domain.util.getContentDescriptionResId
+import com.codepunk.hollarhype.ui.common.showErrorSnackBar
 import com.codepunk.hollarhype.ui.component.ContentLoadingIndicator
 import com.codepunk.hollarhype.ui.component.HollarHypeTopAppBar
 import com.codepunk.hollarhype.ui.preview.ScreenPreviews
 import com.codepunk.hollarhype.ui.theme.HollarhypeTheme
 import com.codepunk.hollarhype.ui.theme.LocalSizes
+import com.codepunk.hollarhype.util.http.HttpStatusException
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.datetime.Clock
 import kotlin.time.Duration.Companion.days
@@ -62,34 +69,56 @@ fun ActivityScreen(
     state: ActivityState,
     onEvent: (ActivityEvent) -> Unit = {}
 ) {
+    val coroutineScope = rememberCoroutineScope()
+    val snackBarHostState = remember { SnackbarHostState() }
     val activityFeed = state.activityFeedFlow.collectAsLazyPagingItems()
     val loadState = activityFeed.loadState
     val activityFeedLazyListState = rememberLazyListState()
-    val pullToRefreshState = rememberPullToRefreshState()
+
+    // Handle refreshing, loading
+    val isRefreshing: Boolean by remember(loadState) {
+        mutableStateOf(
+            loadState.refresh is LoadState.Loading
+        )
+    }
 
     val isLoading: Boolean by remember(loadState) {
         mutableStateOf(
+            loadState.refresh is LoadState.Loading ||
+            loadState.append is LoadState.Loading
+        )
+    }
+
+    // Handle error
+    val error by remember(loadState) {
+        mutableStateOf(
             when {
-                loadState.refresh is LoadState.Loading -> true
-                loadState.append is LoadState.Loading -> true
-                else -> false
+                loadState.refresh is LoadState.Error ->
+                    (loadState.refresh as LoadState.Error).error
+                loadState.append is LoadState.Error ->
+                    (loadState.append as LoadState.Error).error
+                else -> null
             }
         )
     }
 
-    val error = when {
-        loadState.refresh is LoadState.Error ->
-            (loadState.refresh as LoadState.Error).error
-        loadState.append is LoadState.Error ->
-            (loadState.append as LoadState.Error).error
-        else -> null
+    error?.run {
+        if (this !is HttpStatusException) {
+            showErrorSnackBar(
+                cause = error,
+                context = LocalContext.current,
+                snackBarHostState = snackBarHostState,
+                coroutineScope = coroutineScope
+            )
+        }
     }
 
     Scaffold(
         modifier = modifier,
         topBar = {
             HollarHypeTopAppBar()
-        }
+        },
+        snackbarHost = { SnackbarHost(snackBarHostState) }
     ) { padding ->
         Column(
             modifier = Modifier
@@ -123,7 +152,7 @@ fun ActivityScreen(
             Spacer(modifier = Modifier.height(LocalSizes.current.padding))
             PullToRefreshBox(
                 modifier = Modifier.fillMaxSize(),
-                isRefreshing = isLoading,
+                isRefreshing = isRefreshing,
                 onRefresh = { onEvent(ActivityEvent.Load) }
             ) {
                 LazyColumn(

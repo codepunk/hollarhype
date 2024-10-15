@@ -9,6 +9,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock
 import kotlinx.datetime.LocalDateTime
@@ -45,6 +46,8 @@ class ActivityViewModel @Inject constructor(
 
     // region Methods
 
+    // Load data
+
     private fun loadActivityFeed(
         deviceDateTime: LocalDateTime = Clock.System.now().toLocalDateTime(TimeZone.UTC)
     ) {
@@ -52,14 +55,28 @@ class ActivityViewModel @Inject constructor(
             repository.loadActivityFeed(
                 deviceDateTime = deviceDateTime
             ).cachedIn(viewModelScope).apply {
-                state = state.copy(activityFeedFlow = this)
+                state = state.copy(
+                    activityFeedFlow = this,
+                    isActivityFeedFresh = true
+                )
             }
         }
     }
 
+    // Events/results
+
+    private fun consumeActivityFeed() {
+        state = state.copy(
+            isActivityFeedFresh = false
+        )
+    }
+
+    // Event delegate
+
     fun onEvent(event: ActivityEvent) {
         when (event) {
             ActivityEvent.Load -> loadActivityFeed()
+            ActivityEvent.ConsumeActivityFeed -> consumeActivityFeed()
         }
     }
 

@@ -119,9 +119,7 @@ class HollarhypeRepositoryImpl(
             enablePlaceholders = true
         ),
         remoteMediator = activityFeedRemoteMediatorFactory.create(deviceDateTime),
-        pagingSourceFactory = {
-            activityDao.getActivitiesPaginated()
-        }
+        pagingSourceFactory = { activityDao.getActivitiesPaginated() }
     ).flow.map { pagingData ->
         pagingData.map { it.toDomain() }
     }

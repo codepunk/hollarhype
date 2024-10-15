@@ -11,6 +11,7 @@ import com.codepunk.hollarhype.data.local.relation.LocalActivityWithDetails
 import com.codepunk.hollarhype.data.mapper.toLocal
 import com.codepunk.hollarhype.data.mapper.toRepositoryException
 import com.codepunk.hollarhype.data.remote.webservice.HollarhypeWebservice
+import com.codepunk.hollarhype.util.http.NoConnectivityException
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.datetime.LocalDateTime
 import java.io.IOException
