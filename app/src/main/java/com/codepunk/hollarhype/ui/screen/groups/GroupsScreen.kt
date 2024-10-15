@@ -8,10 +8,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import com.codepunk.hollarhype.ui.component.HollarHypeTopAppBar
 import com.codepunk.hollarhype.ui.preview.ScreenPreviews
-import com.codepunk.hollarhype.ui.screen.activity.ActivityScreen
 import com.codepunk.hollarhype.ui.theme.HollarhypeTheme
 
 @Composable
@@ -21,7 +19,9 @@ fun GroupsScreen(
     Scaffold(
         modifier = modifier,
         topBar = {
-            HollarHypeTopAppBar()
+            HollarHypeTopAppBar(
+                canNavigateBack = false
+            )
         }
     ) { innerPadding ->
         Box(

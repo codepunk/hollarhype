@@ -113,7 +113,9 @@ fun ActivityScreen(
     Scaffold(
         modifier = modifier,
         topBar = {
-            HollarHypeTopAppBar()
+            HollarHypeTopAppBar(
+                canNavigateBack = false
+            )
         },
         snackbarHost = { SnackbarHost(snackBarHostState) }
     ) { padding ->
