@@ -1,6 +1,5 @@
 package com.codepunk.hollarhype.ui.screen.activity
 
-import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -25,9 +24,7 @@ import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
-import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -120,41 +117,42 @@ fun ActivityScreen(
         },
         snackbarHost = { SnackbarHost(snackBarHostState) }
     ) { padding ->
-        Column(
+        PullToRefreshBox(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(padding)
-                .padding(
-                    start = LocalSizes.current.paddingLarge,
-                    top = LocalSizes.current.paddingLarge,
-                    end = LocalSizes.current.paddingLarge,
-                )
+                .padding(padding),
+            isRefreshing = isRefreshing,
+            onRefresh = { onEvent(ActivityEvent.Load) }
         ) {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(LocalSizes.current.paddingLarge)
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(
+                        start = LocalSizes.current.paddingLarge,
+                        top = LocalSizes.current.paddingLarge,
+                        end = LocalSizes.current.paddingLarge,
+                    )
             ) {
-                Text(
-                    style = MaterialTheme.typography.headlineSmall,
-                    text = stringResource(id = R.string.activity_feed).uppercase()
-                )
-                ContentLoadingIndicator(isLoading = isLoading) { isVisible ->
-                    if (isVisible) {
-                        CircularProgressIndicator(
-                            modifier = Modifier
-                                .size(LocalSizes.current.component2xSmall),
-                            strokeWidth = LocalSizes.current.border
-                        )
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(LocalSizes.current.paddingLarge)
+                ) {
+                    Text(
+                        style = MaterialTheme.typography.headlineSmall,
+                        text = stringResource(id = R.string.activity_feed).uppercase()
+                    )
+                    ContentLoadingIndicator(isLoading = isLoading) { isVisible ->
+                        if (isVisible) {
+                            CircularProgressIndicator(
+                                modifier = Modifier
+                                    .size(LocalSizes.current.component2xSmall),
+                                strokeWidth = LocalSizes.current.border
+                            )
+                        }
                     }
                 }
-            }
-            Spacer(modifier = Modifier.height(LocalSizes.current.padding))
-            PullToRefreshBox(
-                modifier = Modifier.fillMaxSize(),
-                isRefreshing = isRefreshing,
-                onRefresh = { onEvent(ActivityEvent.Load) }
-            ) {
+                Spacer(modifier = Modifier.height(LocalSizes.current.padding))
                 LazyColumn(
                     modifier = Modifier.fillMaxSize(),
                     verticalArrangement = Arrangement.spacedBy(LocalSizes.current.paddingLarge),
