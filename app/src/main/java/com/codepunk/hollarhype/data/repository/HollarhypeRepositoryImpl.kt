@@ -111,7 +111,7 @@ class HollarhypeRepositoryImpl(
     }
 
     @OptIn(ExperimentalPagingApi::class)
-    override fun activityFeed(
+    override fun loadActivityFeed(
         deviceDateTime: LocalDateTime
     ): Flow<PagingData<Activity>> = Pager(
         config = PagingConfig(

@@ -24,7 +24,7 @@ interface HollarhypeRepository {
         region: Region
     ): Flow<Either<RepositoryException, UserSession>>
 
-    fun activityFeed(
+    fun loadActivityFeed(
         deviceDateTime: LocalDateTime
     ): Flow<PagingData<Activity>>
 

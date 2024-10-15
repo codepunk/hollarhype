@@ -3,15 +3,12 @@ package com.codepunk.hollarhype.ui.screen.activity
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.cachedIn
-import androidx.paging.compose.collectAsLazyPagingItems
-import androidx.paging.map
 import com.codepunk.hollarhype.di.qualifier.IoDispatcher
 import com.codepunk.hollarhype.domain.repository.HollarhypeRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock
 import kotlinx.datetime.LocalDateTime
@@ -41,30 +38,29 @@ class ActivityViewModel @Inject constructor(
     // region Constructors
 
     init {
-        activityFeed(
-            deviceDateTime = Clock.System.now().toLocalDateTime(TimeZone.UTC)
-        )
+        loadActivityFeed()
     }
 
     // endregion Constructors
 
     // region Methods
 
-    private fun activityFeed(
-        deviceDateTime: LocalDateTime
+    private fun loadActivityFeed(
+        deviceDateTime: LocalDateTime = Clock.System.now().toLocalDateTime(TimeZone.UTC)
     ) {
         viewModelScope.launch(ioDispatcher) {
-            repository.activityFeed(
+            repository.loadActivityFeed(
                 deviceDateTime = deviceDateTime
             ).cachedIn(viewModelScope).apply {
-                
                 state = state.copy(activityFeedFlow = this)
             }
         }
     }
 
     fun onEvent(event: ActivityEvent) {
-
+        when (event) {
+            ActivityEvent.Load -> loadActivityFeed()
+        }
     }
 
     // endregion Methods

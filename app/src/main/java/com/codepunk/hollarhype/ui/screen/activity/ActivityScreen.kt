@@ -1,6 +1,5 @@
 package com.codepunk.hollarhype.ui.screen.activity
 
-import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -18,10 +17,16 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
+import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -39,8 +44,8 @@ import coil3.compose.AsyncImage
 import coil3.request.ImageRequest
 import com.codepunk.hollarhype.R
 import com.codepunk.hollarhype.domain.model.Activity
-import com.codepunk.hollarhype.domain.util.getContentDescriptionResId
 import com.codepunk.hollarhype.domain.util.getAvatarUrl
+import com.codepunk.hollarhype.domain.util.getContentDescriptionResId
 import com.codepunk.hollarhype.ui.component.ContentLoadingIndicator
 import com.codepunk.hollarhype.ui.component.HollarHypeTopAppBar
 import com.codepunk.hollarhype.ui.preview.ScreenPreviews
@@ -50,6 +55,7 @@ import kotlinx.coroutines.flow.flowOf
 import kotlinx.datetime.Clock
 import kotlin.time.Duration.Companion.days
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ActivityScreen(
     modifier: Modifier = Modifier,
@@ -59,11 +65,16 @@ fun ActivityScreen(
     val activityFeed = state.activityFeedFlow.collectAsLazyPagingItems()
     val loadState = activityFeed.loadState
     val activityFeedLazyListState = rememberLazyListState()
+    val pullToRefreshState = rememberPullToRefreshState()
 
-    val isLoading = when {
-        loadState.refresh is LoadState.Loading -> true
-        loadState.append is LoadState.Loading -> true
-        else -> false
+    val isLoading: Boolean by remember(loadState) {
+        mutableStateOf(
+            when {
+                loadState.refresh is LoadState.Loading -> true
+                loadState.append is LoadState.Loading -> true
+                else -> false
+            }
+        )
     }
 
     val error = when {
@@ -110,18 +121,24 @@ fun ActivityScreen(
                 }
             }
             Spacer(modifier = Modifier.height(LocalSizes.current.padding))
-            LazyColumn(
+            PullToRefreshBox(
                 modifier = Modifier.fillMaxSize(),
-                verticalArrangement = Arrangement.spacedBy(LocalSizes.current.paddingLarge),
-                state = activityFeedLazyListState,
-                contentPadding = PaddingValues(bottom = LocalSizes.current.paddingLarge)
+                isRefreshing = isLoading,
+                onRefresh = { onEvent(ActivityEvent.Load) }
             ) {
-                items(
-                    count = activityFeed.itemCount,
-                    key = activityFeed.itemKey { it.id }
-                ) { index ->
-                    activityFeed[index]?.also { activity ->
-                        ActivityCard(activity = activity)
+                LazyColumn(
+                    modifier = Modifier.fillMaxSize(),
+                    verticalArrangement = Arrangement.spacedBy(LocalSizes.current.paddingLarge),
+                    state = activityFeedLazyListState,
+                    contentPadding = PaddingValues(bottom = LocalSizes.current.paddingLarge)
+                ) {
+                    items(
+                        count = activityFeed.itemCount,
+                        key = activityFeed.itemKey { it.id }
+                    ) { index ->
+                        activityFeed[index]?.also { activity ->
+                            ActivityCard(activity = activity)
+                        }
                     }
                 }
             }
