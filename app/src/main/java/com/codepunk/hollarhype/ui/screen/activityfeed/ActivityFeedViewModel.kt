@@ -1,4 +1,4 @@
-package com.codepunk.hollarhype.ui.screen.activity
+package com.codepunk.hollarhype.ui.screen.activityfeed
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -9,7 +9,6 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock
 import kotlinx.datetime.LocalDateTime
@@ -18,7 +17,7 @@ import kotlinx.datetime.toLocalDateTime
 import javax.inject.Inject
 
 @HiltViewModel
-class ActivityViewModel @Inject constructor(
+class ActivityFeedViewModel @Inject constructor(
     private val repository: HollarhypeRepository,
     @IoDispatcher private val ioDispatcher: CoroutineDispatcher
 ) : ViewModel() {
@@ -27,10 +26,10 @@ class ActivityViewModel @Inject constructor(
 
     // We use StateFlow here instead of State/mutableStateOf to keep Compose-related
     // constructs out of ViewModel
-    private val _stateFlow: MutableStateFlow<ActivityState> = MutableStateFlow(ActivityState())
+    private val _stateFlow: MutableStateFlow<ActivityFeedState> = MutableStateFlow(ActivityFeedState())
     val stateFlow = _stateFlow.asStateFlow()
 
-    private var state: ActivityState
+    private var state: ActivityFeedState
         get() = _stateFlow.value
         set(value) { _stateFlow.value = value }
 
@@ -73,10 +72,10 @@ class ActivityViewModel @Inject constructor(
 
     // Event delegate
 
-    fun onEvent(event: ActivityEvent) {
+    fun onEvent(event: ActivityFeedEvent) {
         when (event) {
-            ActivityEvent.Load -> loadActivityFeed()
-            ActivityEvent.ConsumeActivityFeed -> consumeActivityFeed()
+            ActivityFeedEvent.Load -> loadActivityFeed()
+            ActivityFeedEvent.ConsumeActivityFeed -> consumeActivityFeed()
         }
     }
 

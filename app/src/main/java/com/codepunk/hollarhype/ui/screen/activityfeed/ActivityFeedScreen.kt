@@ -1,4 +1,4 @@
-package com.codepunk.hollarhype.ui.screen.activity
+package com.codepunk.hollarhype.ui.screen.activityfeed
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -61,10 +61,10 @@ import kotlin.time.Duration.Companion.days
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ActivityScreen(
+fun ActivityFeedScreen(
     modifier: Modifier = Modifier,
-    state: ActivityState,
-    onEvent: (ActivityEvent) -> Unit = {}
+    state: ActivityFeedState,
+    onEvent: (ActivityFeedEvent) -> Unit = {}
 ) {
     val coroutineScope = rememberCoroutineScope()
     val snackBarHostState = remember { SnackbarHostState() }
@@ -124,7 +124,7 @@ fun ActivityScreen(
                 .fillMaxSize()
                 .padding(padding),
             isRefreshing = isRefreshing,
-            onRefresh = { onEvent(ActivityEvent.Load) }
+            onRefresh = { onEvent(ActivityFeedEvent.Load) }
         ) {
             Column(
                 modifier = Modifier
@@ -229,7 +229,7 @@ fun ActivityCard(
 
 @ScreenPreviews
 @Composable
-fun ActivityPreviews() {
+fun ActivityFeedPreviews() {
     val activities = listOf(
         Activity(
             id = 1,
@@ -259,9 +259,9 @@ fun ActivityPreviews() {
     )
     HollarhypeTheme {
         Scaffold { padding ->
-            ActivityScreen(
+            ActivityFeedScreen(
                 modifier = Modifier.padding(padding),
-                state = ActivityState(
+                state = ActivityFeedState(
                     activityFeedFlow = flowOf(
                         PagingData.from(activities)
                     )
