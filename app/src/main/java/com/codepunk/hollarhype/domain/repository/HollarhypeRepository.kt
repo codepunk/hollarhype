@@ -28,4 +28,6 @@ interface HollarhypeRepository {
         deviceDateTime: LocalDateTime
     ): Flow<PagingData<Activity>>
 
+    fun getActivity(activityId: Long): Flow<Ior<RepositoryException, Activity?>>
+
 }

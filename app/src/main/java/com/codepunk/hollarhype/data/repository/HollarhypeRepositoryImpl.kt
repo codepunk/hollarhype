@@ -10,6 +10,7 @@ import androidx.paging.map
 import arrow.core.Either
 import arrow.core.Ior
 import arrow.core.left
+import arrow.core.right
 import arrow.core.rightIor
 import com.codepunk.hollarhype.data.util.cachedDataResource
 import com.codepunk.hollarhype.data.datastore.entity.UserSettings
@@ -18,6 +19,7 @@ import com.codepunk.hollarhype.data.mapper.toDomain
 import com.codepunk.hollarhype.data.mapper.toLocal
 import com.codepunk.hollarhype.data.mapper.toRepositoryException
 import com.codepunk.hollarhype.data.paging.ActivityFeedRemoteMediatorFactory
+import com.codepunk.hollarhype.data.remote.entity.RemoteActivity
 import com.codepunk.hollarhype.data.util.networkDataResource
 import com.codepunk.hollarhype.data.remote.webservice.HollarhypeWebservice
 import com.codepunk.hollarhype.domain.model.Activity
@@ -123,6 +125,20 @@ class HollarhypeRepositoryImpl(
     ).flow.map { pagingData ->
         pagingData.map { it.toDomain() }
     }
+
+    override fun getActivity(
+        activityId: Long
+    ): Flow<Ior<RepositoryException, Activity?>> = cachedDataResource<RemoteActivity?, Activity?, RepositoryException>(
+        query = {
+            activityDao.getActivity(activityId).map { it?.toDomain() }
+        },
+        fetch = {
+            try {
+                RemoteActivity().right()
+            } catch (cause: Throwable) { RepositoryException(cause = cause).left() }
+        },
+        saveFetchResult = { it?.apply { activityDao.insertActivityWithDetails(toLocal()) } }
+    )
 
     companion object {
 

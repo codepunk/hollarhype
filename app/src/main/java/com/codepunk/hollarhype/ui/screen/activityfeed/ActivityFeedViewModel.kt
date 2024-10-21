@@ -4,7 +4,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.cachedIn
 import com.codepunk.hollarhype.di.qualifier.IoDispatcher
+import com.codepunk.hollarhype.domain.model.Activity
 import com.codepunk.hollarhype.domain.repository.HollarhypeRepository
+import com.codepunk.hollarhype.ui.screen.auth.AuthEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -76,6 +78,11 @@ class ActivityFeedViewModel @Inject constructor(
         when (event) {
             ActivityFeedEvent.Load -> loadActivityFeed()
             ActivityFeedEvent.ConsumeActivityFeed -> consumeActivityFeed()
+
+            // The following events are propagated up to ActivityFeedListDetailScreen
+            // rather than being handled here
+            is ActivityFeedEvent.SelectActivity -> { /* No op */ }
+            ActivityFeedEvent.SelectNone -> { /* No op */ }
         }
     }
 

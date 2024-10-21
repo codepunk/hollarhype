@@ -166,7 +166,14 @@ fun ActivityFeedScreen(
                         key = activityFeed.itemKey { it.id }
                     ) { index ->
                         activityFeed[index]?.also { activity ->
-                            ActivityCard(activity = activity)
+                            ActivityCard(
+                                activity = activity,
+                                onClick = {
+                                    onEvent(
+                                        ActivityFeedEvent.SelectActivity(activity = activity)
+                                    )
+                                }
+                            )
                         }
                     }
                 }
@@ -178,11 +185,12 @@ fun ActivityFeedScreen(
 @Composable
 fun ActivityCard(
     modifier: Modifier = Modifier,
-    activity: Activity
+    activity: Activity,
+    onClick: () -> Unit
 ) {
     Card(
         modifier = modifier.fillMaxWidth(),
-        onClick = { /*TODO*/ }
+        onClick = onClick
     ) {
         Column(
             modifier = Modifier

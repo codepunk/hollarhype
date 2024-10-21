@@ -23,6 +23,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.window.core.layout.WindowHeightSizeClass
 import androidx.window.core.layout.WindowWidthSizeClass
 import com.codepunk.hollarhype.ui.preview.ScreenPreviews
+import com.codepunk.hollarhype.ui.screen.activityfeed.ActivityFeedListDetailScreen
 import com.codepunk.hollarhype.ui.screen.activityfeed.ActivityFeedScreen
 import com.codepunk.hollarhype.ui.screen.activityfeed.ActivityFeedViewModel
 import com.codepunk.hollarhype.ui.screen.golive.GoLiveScreen
@@ -88,14 +89,20 @@ fun LandingScreen(
             startDestination = LandingRoute.Activity
         ) {
             composable<LandingRoute.Activity> {
+                /*
                 val viewModel: ActivityFeedViewModel = hiltViewModel()
-                val activityState = viewModel.stateFlow.collectAsState()
+                val activityFeedState = viewModel.stateFlow.collectAsState()
                 ActivityFeedScreen(
                     modifier = modifier,
-                    state = activityState.value
+                    state = activityFeedState.value
                 ) { event ->
                     viewModel.onEvent(event)
                 }
+                 */
+
+                ActivityFeedListDetailScreen(
+                    modifier = modifier
+                )
             }
 
             composable<LandingRoute.GoLive> {

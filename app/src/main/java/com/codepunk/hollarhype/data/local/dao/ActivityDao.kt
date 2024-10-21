@@ -99,6 +99,9 @@ abstract class ActivityDao(
     """)
     abstract fun getActivityFeedPageByActivityId(activityId: Long): Flow<LocalActivityFeedPage?>
 
+    @Query("SELECT * FROM activity WHERE id = :activityId")
+    abstract fun getActivity(activityId: Long): Flow<LocalActivityWithDetails?>
+
     // Delete
 
     @Query("DELETE FROM activity")
