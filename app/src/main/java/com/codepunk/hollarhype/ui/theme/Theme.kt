@@ -420,7 +420,6 @@ private fun <S> chooseColorScheme(
     }
 }
 
-@Suppress("SpellCheckingInspection")
 @Composable
 fun HollarhypeTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),

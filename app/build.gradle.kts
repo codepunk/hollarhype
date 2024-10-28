@@ -10,7 +10,7 @@ plugins {
     alias(libs.plugins.hilt)
     alias(libs.plugins.compose.compiler)
     kotlin(libs.plugins.kotlin.serialization.get().pluginId) version libs.versions.kotlinJvm
-    id(libs.plugins.kotlin.parcelize.get().pluginId)
+    alias(libs.plugins.kotlin.parcelize)
 }
 
 android {
